@@ -115,16 +115,17 @@
     <section class="hero">
       <div>
         <div class="eyebrow">shell company screening · ER/BRB workflow page</div>
-        <div class="title">Universe → Case Input → Hard Filters → Deep Due Diligence</div>
+        <div class="title">ER and BRB–Based Hard Filter and Deep Due Diligence Workflow for Shell Company Screening</div>
         <div class="sub">
           这个页面只保留三层核心业务流：<strong>Universe Construction</strong>、<strong>Hard Filters</strong>、<strong>Deep Due Diligence</strong>。
-          HF 用来判断公司能不能进入 DD；DD 用来判断风险到底在哪里、能不能修、如果能修需要什么交易条件。
+          HF 用来判断公司能不能进入 DD；DD 用来判断风险到底在哪里、能不能修、如果能修需要什么交易条件。<br />
+          <strong>Case input</strong> 和 <strong>User settings</strong> 只是参数输入区，不算业务流层级。
         </div>
       </div>
       <div class="badge-row">
-        <span class="badge">Single page</span>
+        <span class="badge">3 core layers only</span>
+        <span class="badge">ER / BRB visible</span>
         <span class="badge">HF → DD inheritance</span>
-        <span class="badge">Each HF-passed company has DD</span>
       </div>
     </section>
 
@@ -161,9 +162,9 @@
       <section class="card">
         <div class="section-head">
           <div>
-            <div class="label">Step 1 · Case Input &amp; User settings</div>
+            <div class="label">Input zone · Case Input &amp; User settings</div>
             <div class="section-title">Case input &amp; User settings</div>
-            <div class="section-sub">下面把 Case input 和 User settings 改成上下结构；User settings 里再拆成 Evidential reliability、HF settings、DD settings 三组。</div>
+            <div class="section-sub">这块只是参数输入区，不算三层业务流。下面把 case input 放在上面，settings 放在下面，并把名字改得更通俗。</div>
           </div>
         </div>
         <div class="input-grid">
@@ -179,39 +180,39 @@
             <div class="label">User settings</div>
             <div class="setting-stack">
               <div class="setting-group">
-                <div class="setting-group-title">Evidential reliability</div>
+                <div class="setting-group-title">Source reliability</div>
                 <div class="field-grid" style="grid-template-columns:1fr 1fr">
-                  <label class="field"><div class="field-title">Official filings</div><div class="field-help">以官方公告和正式披露为主，默认最高可信度。</div><input id="relOfficial" type="number" min="0.5" max="1" step="0.1" value="1.0" /></label>
-                  <label class="field"><div class="field-title">Audit / notes</div><div class="field-help">审计报告、财务附注等次一级高可信来源。</div><input id="relAudit" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
-                  <label class="field"><div class="field-title">Court / petition</div><div class="field-help">法院、清盘呈请、诉讼程序相关记录。</div><input id="relCourt" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
-                  <label class="field"><div class="field-title">Shareholding disclosures</div><div class="field-help">股东披露、权益变动、控制权相关文件。</div><input id="relShareholder" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
-                  <label class="field"><div class="field-title">Financing terms</div><div class="field-help">配售、可转债、认股权证、稀释条款等。</div><input id="relFinancing" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
-                  <label class="field"><div class="field-title">Structured data</div><div class="field-help">结构化行情 / 财务数据库，适合做初筛和交叉验证。</div><input id="relStructured" type="number" min="0.3" max="1" step="0.1" value="0.8" /></label>
-                  <label class="field"><div class="field-title">Company IR</div><div class="field-help">公司 IR、官网说法，可参考但不作为最高级证据。</div><input id="relIR" type="number" min="0.2" max="1" step="0.1" value="0.7" /></label>
-                  <label class="field"><div class="field-title">Media</div><div class="field-help">媒体报道、二手信息，只作为补充线索。</div><input id="relMedia" type="number" min="0.2" max="1" step="0.1" value="0.6" /></label>
+                  <label class="field"><div class="field-title">官方公告 / 正式披露</div><div class="field-help">你有多相信公司正式公告、年报、中报这类一手披露。</div><input id="relOfficial" type="number" min="0.5" max="1" step="0.1" value="1.0" /></label>
+                  <label class="field"><div class="field-title">审计报告 / 财务附注</div><div class="field-help">你有多相信审计意见、附注、会计脚注里的信息。</div><input id="relAudit" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
+                  <label class="field"><div class="field-title">法院 / 清盘 / 诉讼记录</div><div class="field-help">你有多相信法院、清盘呈请、诉讼程序这些外部硬记录。</div><input id="relCourt" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
+                  <label class="field"><div class="field-title">股东 / 控制权披露</div><div class="field-help">你有多相信权益披露、股权变动、控制权相关文件。</div><input id="relShareholder" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
+                  <label class="field"><div class="field-title">融资条款 / 稀释条款</div><div class="field-help">你有多相信配售、可转债、权证、反稀释条款等融资文件。</div><input id="relFinancing" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
+                  <label class="field"><div class="field-title">结构化市场数据</div><div class="field-help">你有多相信结构化行情、估值、财务数据库里的标准化数字。</div><input id="relStructured" type="number" min="0.3" max="1" step="0.1" value="0.8" /></label>
+                  <label class="field"><div class="field-title">公司 IR / 官网口径</div><div class="field-help">你有多相信公司官网、IR 介绍、管理层对外口径。</div><input id="relIR" type="number" min="0.2" max="1" step="0.1" value="0.7" /></label>
+                  <label class="field"><div class="field-title">媒体 / 二手信息</div><div class="field-help">你有多相信媒体报道、访谈、转载和二手线索。</div><input id="relMedia" type="number" min="0.2" max="1" step="0.1" value="0.6" /></label>
                 </div>
               </div>
               <div class="setting-group">
-                <div class="setting-group-title">HF settings</div>
+                <div class="setting-group-title">HF rules</div>
                 <div class="field-grid">
-                  <label class="field"><div class="field-title">GEM board treatment</div><div class="field-help">GEM 板块在 HF-1 里如何对待。</div><select id="gemMode"><option value="warning">Warning（默认进 warning，不直接排除）</option><option value="strictWarning">Strict warning（明显抬高 warning 权重）</option><option value="exclude">Exclude（GEM 默认不纳入）</option><option value="pass">Neutral pass（不因 GEM 额外扣分）</option></select></label>
-                  <label class="field"><div class="field-title">Market cap upper bound (HKD m)</div><div class="field-help">HF-2 的市值上限，超过越多，越不容易进入 DD。</div><input id="marketCapUpper" type="number" min="100" step="50" value="2600" /></label>
-                  <label class="field"><div class="field-title">P/B upper bound</div><div class="field-help">HF-2 的估值上限；越低越偏向壳价值与困境机会。</div><select id="pbUpper"><option value="0.6">0.6（更严格）</option><option value="0.8" selected>0.8（基准）</option><option value="1.0">1.0（更宽松）</option></select></label>
-                  <label class="field"><div class="field-title">HF warning threshold</div><div class="field-help">超过该阈值的 warning 因子，会把公司推进 Needs DD。</div><input id="warningThreshold" type="range" min="25" max="60" step="5" value="40" /><div class="range-meta"><span>更容易进 DD</span><strong id="warningThresholdValue">40%</strong><span>更晚触发</span></div></label>
-                  <label class="field"><div class="field-title">Reporting continuity</div><div class="field-help">HF-5 对持续披露、审计连续性的要求。</div><select id="hfReportingStrictness"><option value="strict">Strict（披露稍弱就明显加重 warning / exclude）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许披露瑕疵先进入 DD）</option></select></label>
-                  <label class="field"><div class="field-title">Legal / regulatory screen</div><div class="field-help">HF-6 对重大诉讼、监管红旗的敏感度。</div><select id="hfLegalRiskStrictness"><option value="strict">Strict（对法律 / 监管问题更敏感）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许轻中度问题先进入 DD）</option></select></label>
-                  <label class="field"><div class="field-title">Platform fit requirement</div><div class="field-help">HF-7 对平台适配和业务延续性的要求。</div><select id="hfPlatformFitRequirement"><option value="strict">Strict（适配性弱就更难进入 DD）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（适配性一般也可先看 DD）</option></select></label>
+                  <label class="field"><div class="field-title">GEM 公司怎么处理</div><div class="field-help">GEM 公司在初筛里是直接排、先警示，还是和主板一样看待。</div><select id="gemMode"><option value="warning">先警示（默认保留，但明显推高 warning）</option><option value="strictWarning">强警示（更容易被推进 DD）</option><option value="exclude">直接排除（本轮先不看 GEM）</option><option value="pass">中性处理（不因为 GEM 额外扣分）</option></select></label>
+                  <label class="field"><div class="field-title">市值上限（HKD m）</div><div class="field-help">超过这个市值越多，就越不像本轮想找的壳 / 平台标的。</div><input id="marketCapUpper" type="number" min="100" step="50" value="2600" /></label>
+                  <label class="field"><div class="field-title">P/B 上限</div><div class="field-help">越低越偏向低估值、壳价值或困境机会。</div><select id="pbUpper"><option value="0.6">0.6（更严格）</option><option value="0.8" selected>0.8（基准）</option><option value="1.0">1.0（更宽松）</option></select></label>
+                  <label class="field"><div class="field-title">推进 DD 的 warning 门槛</div><div class="field-help">warning 累积到这个程度，就会从 HF 被推进 DD 继续看。</div><input id="warningThreshold" type="range" min="25" max="60" step="5" value="40" /><div class="range-meta"><span>更容易推进 DD</span><strong id="warningThresholdValue">40%</strong><span>更晚才推进</span></div></label>
+                  <label class="field"><div class="field-title">披露 / 审计要求</div><div class="field-help">你对持续披露、审计连续性、内控问题有多敏感。</div><select id="hfReportingStrictness"><option value="strict">严格（披露稍弱就明显加重 warning / exclude）</option><option value="normal" selected>中等（按基准处理）</option><option value="flexible">宽松（允许先带着瑕疵进 DD）</option></select></label>
+                  <label class="field"><div class="field-title">法律 / 监管红旗敏感度</div><div class="field-help">你对诉讼、监管、合规红旗有多敏感。</div><select id="hfLegalRiskStrictness"><option value="strict">严格（法律 / 监管问题会更快放大）</option><option value="normal" selected>中等（按基准处理）</option><option value="flexible">宽松（轻中度问题可先进入 DD）</option></select></label>
+                  <label class="field"><div class="field-title">平台适配要求</div><div class="field-help">你对业务延续性、平台适配度、协同线索的要求有多高。</div><select id="hfPlatformFitRequirement"><option value="strict">严格（适配度一般就更难进入 DD）</option><option value="normal" selected>中等（按基准处理）</option><option value="flexible">宽松（适配一般也可以先看 DD）</option></select></label>
                 </div>
               </div>
               <div class="setting-group">
-                <div class="setting-group-title">DD settings</div>
+                <div class="setting-group-title">DD rules</div>
                 <div class="field-grid">
-                  <label class="field"><div class="field-title">Control clarity requirement</div><div class="field-help">对控制权溯源、可谈判路径、冻结 / 纠纷容忍度的要求。</div><select id="ddControlClarityRequirement"><option value="strict">Strict（控制权稍不清晰就更快升级为高风险）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许边查边谈）</option></select></label>
-                  <label class="field"><div class="field-title">Debt / litigation tolerance</div><div class="field-help">对历史债务、诉讼、表外风险的容忍度。</div><select id="ddDebtLitigationTolerance"><option value="low">Low（轻度债务 / 诉讼也会明显加重风险）</option><option value="medium" selected>Medium（按基准权重处理）</option><option value="high">High（接受较多历史包袱先做交易设计）</option></select></label>
-                  <label class="field"><div class="field-title">Compliance strictness</div><div class="field-help">对审计、内控、停牌 / 除牌风险的严格程度。</div><select id="ddComplianceStrictness"><option value="strict">Strict（合规瑕疵会更快触发 hold / reject）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许先带条件推进）</option></select></label>
-                  <label class="field"><div class="field-title">Maintenance cost limit (HKD m / year)</div><div class="field-help">平台每年可接受的存续成本上限。</div><input id="ddMaintenanceCostLimit" type="number" min="1" step="0.5" value="12" /></label>
-                  <label class="field"><div class="field-title">Business substance requirement</div><div class="field-help">对真实业务存续、客户 / 供应商连续性的要求。</div><select id="ddBusinessSubstanceRequirement"><option value="strict">Strict（业务实质稍弱就更快转 high / critical）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（困境修复型标的也允许往下看）</option></select></label>
-                  <label class="field"><div class="field-title">Evidence gap escalation</div><div class="field-help">对证据缺口的敏感度，决定 unknown 多快升级成 hold。</div><select id="ddEvidenceGapEscalation"><option value="strict">Strict（证据稍弱就更快停下来补证）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许先继续做条件化判断）</option></select></label>
+                  <label class="field"><div class="field-title">控制权要多清楚</div><div class="field-help">你要求控制权路径、股东关系、能否谈交易要多明确。</div><select id="ddControlClarityRequirement"><option value="strict">严格（控制权稍不清楚就明显升风险）</option><option value="normal" selected>中等（按基准处理）</option><option value="flexible">宽松（允许边查边谈）</option></select></label>
+                  <label class="field"><div class="field-title">债务 / 诉讼容忍度</div><div class="field-help">你对历史债务、诉讼、表外风险能容忍到什么程度。</div><select id="ddDebtLitigationTolerance"><option value="low">低容忍（轻度问题也会明显加重风险）</option><option value="medium" selected>中容忍（按基准处理）</option><option value="high">高容忍（接受更重包袱先做交易设计）</option></select></label>
+                  <label class="field"><div class="field-title">合规问题有多严格</div><div class="field-help">你对审计、内控、停牌 / 除牌风险要卡得多严。</div><select id="ddComplianceStrictness"><option value="strict">严格（合规瑕疵更快触发 hold / reject）</option><option value="normal" selected>中等（按基准处理）</option><option value="flexible">宽松（允许先带条件推进）</option></select></label>
+                  <label class="field"><div class="field-title">年化存续成本上限（HKD m）</div><div class="field-help">平台每年最多能接受多少存续成本。</div><input id="ddMaintenanceCostLimit" type="number" min="1" step="0.5" value="12" /></label>
+                  <label class="field"><div class="field-title">业务真实度要求</div><div class="field-help">你对客户、供应商、业务延续、困境可修复性要卡得多严。</div><select id="ddBusinessSubstanceRequirement"><option value="strict">严格（业务实质偏弱就更快转 high / critical）</option><option value="normal" selected>中等（按基准处理）</option><option value="flexible">宽松（困境修复型标的也允许继续看）</option></select></label>
+                  <label class="field"><div class="field-title">证据不足时怎么升级风险</div><div class="field-help">证据一旦偏弱，是立刻 hold，还是允许先继续推演。</div><select id="ddEvidenceGapEscalation"><option value="strict">严格（证据稍弱就更快停下来补证）</option><option value="normal" selected>中等（按基准处理）</option><option value="flexible">宽松（允许先继续条件化判断）</option></select></label>
                 </div>
               </div>
             </div>
@@ -223,15 +224,16 @@
         <div class="section-head">
           <div>
             <div class="label">Step 2 · Hard Filters</div>
-            <div class="section-title">HF candidates entering DD</div>
-            <div class="section-sub">HF 只展示通过筛选、能够进入 DD 的 candidate；这里明确“通过 HF 的有哪几个、分别是谁”，以及哪些属于直接 pass、哪些属于 warning-driven pass-through。</div>
+            <div class="section-title">Hard Filters</div>
+            <div class="section-sub">HF 用来判断公司能不能进入 DD。这里不仅给整体 HF 决策，也直接展示每条 HF 条件的 belief distribution、证据强弱和 ER 聚合结果。</div>
           </div>
         </div>
         <div id="hfFunnel" class="funnel-grid"></div>
         <div id="hfOverviewGrid" class="overview-grid"></div>
+        <div id="hfBeliefTables" class="stack" style="margin-top:14px"></div>
         <div class="split-2" style="margin-top:14px">
           <div class="table-card">
-            <div class="label">Hard Filter Belief Table</div>
+            <div class="label">Overall HF decision summary</div>
             <table class="belief-table">
               <thead><tr><th>Company</th><th>Overall HF decision</th><th>Strongest warning</th><th>Strongest exclude</th><th>Main unknown</th></tr></thead>
               <tbody id="hfSummaryTableBody"></tbody>
@@ -248,10 +250,11 @@
         <div class="section-head">
           <div>
             <div class="label">Step 3 · Deep Due Diligence</div>
-            <div class="section-title">ER/BRB hard filter decision layer</div>
-            <div class="section-sub">DD 必须继承 HF 产生的问题和风险点。页面在 DD 这里收束，只给出 Proceed / Proceed with Conditions / Hold / Reject / Insufficient Evidence。</div>
+            <div class="section-title">Deep Due Diligence</div>
+            <div class="section-sub">DD 用来判断风险到底在哪里、能不能修、如果能修需要什么交易条件。这里会把每个 DD 模块的 belief distribution、证据可靠性和 ER 聚合路径直接展开。</div>
           </div>
         </div>
+        <div id="ddMethodBox" class="table-card" style="margin-bottom:14px"></div>
         <div id="ddOverviewGrid" class="overview-grid"></div>
         <div id="ddDossiers" class="stack" style="margin-top:14px"></div>
       </section>
@@ -302,8 +305,8 @@
       }
     ];
 
-    const HF_NAMES = ['HF-1 Listing status','HF-2 Valuation cost','HF-3 Control path','HF-4 Capital structure','HF-5 Compliance','HF-6 Fatal risk','HF-7 Platform fit'];
-    const DD_MODULES = ['9.1 控制权溯源','9.2 历史债务与诉讼','9.3 合规性审计','9.4 存续成本','9.5 业务存续价值与困境机会'];
+    const HF_NAMES = ['HF-1 上市状态 / 板块','HF-2 壳值 / 估值','HF-3 控制权路径','HF-4 融资结构','HF-5 披露 / 审计','HF-6 法律 / 监管红旗','HF-7 平台适配'];
+    const DD_MODULES = ['DD-1 控制权溯源','DD-2 历史债务 / 诉讼','DD-3 合规 / 审计','DD-4 存续成本','DD-5 业务实质 / 困境可修复性'];
 
     function esc(s){return String(s??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
     function round(n){return Math.round(n);}
@@ -313,6 +316,27 @@
     function avg(arr){return arr.reduce((a,b)=>a+b,0)/arr.length;}
     function enterDD(decision){return decision==='Pass'||decision==='Needs DD';}
     function pct(n,total){return total?Math.round(n/total*100):0;}
+    function reliabilityBand(v){return v>=0.85?'强证据':v>=0.7?'中等证据':'弱证据';}
+    function reliabilityText(v){return `${v.toFixed(1)} · ${reliabilityBand(v)}`;}
+    function evidenceBasis(rel,unknown){if(unknown>=25||rel<0.7)return'弱信号 / 未知偏高'; if(rel>=0.85&&unknown<=15)return'强证据'; return'中等证据';}
+    function dominantHFLabel(b){const items=[['Pass',b.pass],['Warning',b.warn],['Exclude',b.exclude],['Insufficient Evidence',b.unknown]];return items.sort((a,b)=>b[1]-a[1])[0][0];}
+    function dominantDDLabel(b){const items=[['Clean / Low Risk',b.clean],['Manageable Risk',b.manageable],['High Risk',b.high],['Critical / Not Tradable',b.critical],['Insufficient Evidence',b.unknown]];return items.sort((a,b)=>b[1]-a[1])[0][0];}
+    const HF_META=[
+      {key:'HF1',name:'HF-1 上市状态 / 板块',signal:'板块、流通量、除牌风险',rel:s=>avg([s.relOfficial,s.relStructured])},
+      {key:'HF2',name:'HF-2 壳值 / 估值',signal:'市值、P/B、低估值信号',rel:s=>s.relStructured},
+      {key:'HF3',name:'HF-3 控制权路径',signal:'控制权清晰度、股权集中度、冻结 / 纠纷',rel:s=>s.relShareholder},
+      {key:'HF4',name:'HF-4 融资结构',signal:'可转债、权证、稀释、融资复杂度',rel:s=>avg([s.relFinancing,s.relAudit])},
+      {key:'HF5',name:'HF-5 披露 / 审计',signal:'持续披露、审计、内控、董事 / 审计师变动',rel:s=>avg([s.relOfficial,s.relAudit])},
+      {key:'HF6',name:'HF-6 法律 / 监管红旗',signal:'诉讼、监管、表外风险、未决事项',rel:s=>avg([s.relCourt,s.relOfficial])},
+      {key:'HF7',name:'HF-7 平台适配',signal:'平台适配度、业务延续性、协同线索',rel:s=>avg([s.relIR,s.relStructured,s.relMedia])}
+    ];
+    const DD_META=[
+      {key:'DD1',name:'DD-1 控制权溯源',signal:'实际控制人、交易路径、冻结 / 纠纷',rel:s=>s.relShareholder},
+      {key:'DD2',name:'DD-2 历史债务 / 诉讼',signal:'债务、诉讼、表外风险、清理成本',rel:s=>avg([s.relCourt,s.relAudit,s.relOfficial])},
+      {key:'DD3',name:'DD-3 合规 / 审计',signal:'披露、审计、内控、停牌 / 除牌风险',rel:s=>avg([s.relOfficial,s.relAudit,s.relCourt])},
+      {key:'DD4',name:'DD-4 存续成本',signal:'年化 carry cost、一次性 cleanup cost',rel:s=>avg([s.relAudit,s.relOfficial,s.relFinancing])},
+      {key:'DD5',name:'DD-5 业务实质 / 困境可修复性',signal:'业务真实度、客户 / 供应商连续性、修复空间',rel:s=>avg([s.relIR,s.relMedia,s.relStructured])}
+    ];
 
     function settings(){
       return {
@@ -374,7 +398,7 @@
     }
 
     function overallHF(hf,s){
-      const entries=[['HF-1 Listing status',hf.HF1],['HF-2 Valuation cost',hf.HF2],['HF-3 Control path',hf.HF3],['HF-4 Capital structure',hf.HF4],['HF-5 Compliance',hf.HF5],['HF-6 Fatal risk',hf.HF6],['HF-7 Platform fit',hf.HF7]];
+      const entries=[[HF_NAMES[0],hf.HF1],[HF_NAMES[1],hf.HF2],[HF_NAMES[2],hf.HF3],[HF_NAMES[3],hf.HF4],[HF_NAMES[4],hf.HF5],[HF_NAMES[5],hf.HF6],[HF_NAMES[6],hf.HF7]];
       const strongestWarn=entries.reduce((a,b)=>a[1].warn>b[1].warn?a:b);
       const strongestExclude=entries.reduce((a,b)=>a[1].exclude>b[1].exclude?a:b);
       const mainUnknown=entries.reduce((a,b)=>a[1].unknown>b[1].unknown?a:b);
@@ -440,7 +464,7 @@
     function ddDecision(b){const m=Math.max(b.clean,b.manageable,b.high,b.critical,b.unknown);if(b.critical===m)return'Critical / Not Tradable';if(b.unknown===m)return'Insufficient Evidence';if(b.high===m)return'High Risk';if(b.manageable===m)return'Manageable Risk';return'Clean / Low Risk';}
 
     function overallDD(dd){
-      const entries=[['9.1 Control traceability',dd.DD1],['9.2 Historical debt & litigation',dd.DD2],['9.3 Compliance audit',dd.DD3],['9.4 Maintenance cost',dd.DD4],['9.5 Business substance',dd.DD5]];
+      const entries=[[DD_MODULES[0],dd.DD1],[DD_MODULES[1],dd.DD2],[DD_MODULES[2],dd.DD3],[DD_MODULES[3],dd.DD4],[DD_MODULES[4],dd.DD5]];
       const strongestClean=entries.reduce((a,b)=>a[1].clean>b[1].clean?a:b);
       const strongestRisk=entries.reduce((a,b)=>(a[1].high+a[1].critical)>(b[1].high+b[1].critical)?a:b);
       const mainUnknown=entries.reduce((a,b)=>a[1].unknown>b[1].unknown?a:b);
@@ -490,24 +514,21 @@
         <div class="table-card">
           <div class="label">HF gate summary</div>
           <div class="headline-title">Which names actually clear the HF gate?</div>
-          <div class="headline-copy">在这页 demo sample 里，HF 不再解释 universe 里的所有名字，而是只明确哪些公司真正进入 DD、属于直接 pass，哪些是 warning-driven pass-through。</div>
+          <div class="headline-copy">HF 只回答一件事：哪些公司能进入 DD。这里把 direct pass 和 warning-driven pass-through 分开列出来。</div>
           <div class="summary-grid" style="margin-top:12px;grid-template-columns:repeat(3,minmax(0,1fr))">
-            <div class="summary-card"><div class="kicker">Enter DD</div><div class="number-value">${enterDdResults.length}</div><div class="summary-copy">通过 HF、实际进入 DD 的 candidate 数量。</div></div>
-            <div class="summary-card"><div class="kicker">Direct pass</div><div class="number-value">${passResults.length}</div><div class="summary-copy">无需 warning 驱动、直接通过 HF 的名字。</div></div>
-            <div class="summary-card"><div class="kicker">Warning-driven pass-through</div><div class="number-value">${needsDdResults.length}</div><div class="summary-copy">因为 warning 被推进 DD、而不是被直接排除的名字。</div></div>
+            <div class="summary-card"><div class="kicker">Enter DD</div><div class="number-value">${enterDdResults.length}</div><div class="summary-copy">本页 sample 里真正通过 HF、进入 DD 的公司数。</div></div>
+            <div class="summary-card"><div class="kicker">Direct pass</div><div class="number-value">${passResults.length}</div><div class="summary-copy">整体证据够强，不需要靠 warning 才被推进 DD。</div></div>
+            <div class="summary-card"><div class="kicker">Warning-driven pass-through</div><div class="number-value">${needsDdResults.length}</div><div class="summary-copy">有明显 warning，但还没到直接排除，所以进入 DD 继续拆风险。</div></div>
           </div>
         </div>
         <div class="table-card">
-          <div class="label">Names entering DD</div>
-          <div class="summary-grid" style="grid-template-columns:1fr 1fr">
-            <div class="summary-card">
-              <div class="kicker">Direct pass</div>
-              <div class="name-list">${passResults.length?passResults.map(r=>`<span class="name-chip">${esc(r.c.ticker)} · ${esc(r.c.name)}</span>`).join(''):'<span class="empty-state">None</span>'}</div>
-            </div>
-            <div class="summary-card">
-              <div class="kicker">Warning-driven pass-through</div>
-              <div class="name-list">${needsDdResults.length?needsDdResults.map(r=>`<span class="name-chip">${esc(r.c.ticker)} · ${esc(r.c.name)}</span>`).join(''):'<span class="empty-state">None</span>'}</div>
-            </div>
+          <div class="label">ER / BRB path</div>
+          <div class="headline-title">Signal × reliability → belief distribution → ER aggregation → HF decision</div>
+          <div class="summary-grid" style="margin-top:12px;grid-template-columns:repeat(4,minmax(0,1fr))">
+            <div class="summary-card"><div class="kicker">1. Signals</div><div class="summary-copy">低市值、控制权、融资结构、披露、诉讼、平台适配等原始信号。</div></div>
+            <div class="summary-card"><div class="kicker">2. Reliability</div><div class="summary-copy">用 Source reliability 调整每类证据的可信度高低。</div></div>
+            <div class="summary-card"><div class="kicker">3. Beliefs</div><div class="summary-copy">每条 HF 都会形成 Pass / Warning / Exclude / Insufficient 的 belief distribution。</div></div>
+            <div class="summary-card"><div class="kicker">4. Aggregation</div><div class="summary-copy">再用 ER 聚合到整体 HF 决策，决定是 Pass、Needs DD、Exclude 还是 Insufficient Evidence。</div></div>
           </div>
         </div>`;
 
@@ -516,8 +537,34 @@
           <div class="result-code">${esc(r.c.ticker)} · ${esc(r.c.boardCn)}</div>
           <div class="result-name">${esc(r.c.name)}</div>
           <span class="decision-pill ${cls(r.hfResult.decision)}">${esc(r.hfResult.decision)}</span>
-          <div class="overview-copy">HF cleared and moved into DD as a ${r.hfResult.decision==='Pass'?'direct pass':'warning-driven pass-through'}.<br />Strongest warning: ${esc(r.hfResult.strongestWarn[0])}<br />Strongest exclude: ${esc(r.hfResult.strongestExclude[0])}</div>
+          <div class="overview-copy">${r.hfResult.decision==='Pass'?'Direct pass':'Warning-driven pass-through'}。<br />最强 warning：${esc(r.hfResult.strongestWarn[0])}<br />最强 exclude：${esc(r.hfResult.strongestExclude[0])}<br />主要 unknown：${esc(r.hfResult.mainUnknown[0])}</div>
         </div>`).join('') || '<div class="overall-box">No candidates currently pass HF under this setting set.</div>';
+
+      document.getElementById('hfBeliefTables').innerHTML=enterDdResults.map(r=>`
+        <div class="table-card">
+          <div class="label">HF module belief distribution</div>
+          <div class="section-sub" style="margin-bottom:12px">${esc(r.c.ticker)} · ${esc(r.c.name)}：把每条 HF 的原始信号和证据可靠性先转成 belief distribution，再聚合成整体 HF 决策。</div>
+          <table class="belief-table">
+            <thead><tr><th>HF rule</th><th>Signal focus</th><th>Source reliability</th><th>Belief distribution</th><th>Dominant output</th><th>Evidence basis</th></tr></thead>
+            <tbody>
+              ${HF_META.map(meta=>{
+                const b=r.hf[meta.key];
+                const rel=meta.rel(s);
+                return `<tr>
+                  <td><strong>${esc(meta.name)}</strong></td>
+                  <td>${esc(meta.signal)}</td>
+                  <td>${esc(reliabilityText(rel))}</td>
+                  <td>
+                    <div class="belief-bar"><div class="b-pass" style="width:${b.pass}%"></div><div class="b-warn" style="width:${b.warn}%"></div><div class="b-exclude" style="width:${b.exclude}%"></div><div class="b-unk" style="width:${b.unknown}%"></div></div>
+                    <div class="belief-meta"><span>Pass ${b.pass}%</span><span>Warning ${b.warn}%</span><span>Exclude ${b.exclude}%</span><span>Insufficient ${b.unknown}%</span></div>
+                  </td>
+                  <td><span class="decision-pill ${cls(dominantHFLabel(b))}">${esc(dominantHFLabel(b))}</span></td>
+                  <td>${esc(evidenceBasis(rel,b.unknown))}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>`).join('') || '<div class="overall-box">No HF module-level beliefs because no candidates currently pass HF.</div>';
 
       document.getElementById('hfSummaryTableBody').innerHTML=enterDdResults.map(r=>`
         <tr>
@@ -531,12 +578,22 @@
       document.getElementById('hfQuestionCards').innerHTML=enterDdResults.map(r=>`
         <div class="chip"><strong>${esc(r.c.ticker)} · ${esc(r.c.name)}</strong><br />${r.hfResult.nextQuestions.map(q=>esc(q)).join('<br />')}</div>`).join('') || '<div class="chip">No DD questions because no candidates currently pass HF.</div>';
 
+      document.getElementById('ddMethodBox').innerHTML=`
+        <div class="label">ER / BRB path</div>
+        <div class="headline-title">Evidence × reliability → module beliefs → ER aggregation → DD decision</div>
+        <div class="summary-grid" style="margin-top:12px;grid-template-columns:repeat(4,minmax(0,1fr))">
+          <div class="summary-card"><div class="kicker">1. Evidence</div><div class="summary-copy">控制权、债务 / 诉讼、合规、成本、业务实质五个 DD 模块分别看各自证据。</div></div>
+          <div class="summary-card"><div class="kicker">2. Reliability</div><div class="summary-copy">继续用 Source reliability，决定哪些证据算强证据，哪些只是弱信号或未知。</div></div>
+          <div class="summary-card"><div class="kicker">3. Module beliefs</div><div class="summary-copy">每个 DD 模块都会形成 Clean / Manageable / High / Critical / Insufficient 的 belief distribution。</div></div>
+          <div class="summary-card"><div class="kicker">4. Aggregation</div><div class="summary-copy">再用 ER 聚合成 Proceed / Proceed with Conditions / Hold / Reject / Insufficient Evidence。</div></div>
+        </div>`;
+
       document.getElementById('ddOverviewGrid').innerHTML=enterDdResults.map(r=>`
         <div class="overview-card">
           <div class="result-code">${esc(r.c.ticker)} · ${esc(r.c.boardCn)}</div>
           <div class="result-name">${esc(r.c.name)}</div>
           <span class="decision-pill ${cls(r.ddResult.decision)}">${esc(r.ddResult.decision)}</span>
-          <div class="overview-copy">Strongest clean: ${esc(r.ddResult.strongestClean[0])}<br />Strongest risk: ${esc(r.ddResult.strongestRisk[0])}<br />Main unknown: ${esc(r.ddResult.mainUnknown[0])}</div>
+          <div class="overview-copy">最强 clean：${esc(r.ddResult.strongestClean[0])}<br />最强 risk：${esc(r.ddResult.strongestRisk[0])}<br />主要 unknown：${esc(r.ddResult.mainUnknown[0])}</div>
         </div>`).join('') || '<div class="overall-box">No DD dossiers because no candidates currently pass HF.</div>';
 
       document.getElementById('ddDossiers').innerHTML=enterDdResults.map(r=>renderDossier(r,s)).join('');
@@ -551,9 +608,7 @@
       if(r.dd.DD5.manageable+r.dd.DD5.high>45)conditions.push('Verify business substance with customers, channels, suppliers and operating continuity.');
       if(!conditions.length)conditions.push('No major blocking condition beyond standard confirmatory DD.');
 
-      const risks=[
-        ['Control path',r.dd.DD1],['Historical debt & litigation',r.dd.DD2],['Compliance',r.dd.DD3],['Maintenance cost',r.dd.DD4],['Business substance',r.dd.DD5]
-      ];
+      const risks=DD_META.map(meta=>[meta.name,r.dd[meta.key],meta]);
 
       return `
         <section class="card">
@@ -571,6 +626,7 @@
               <div class="label">DD top-line readout</div>
               <div class="headline-title">${esc(r.ddResult.decision)}</div>
               <div class="headline-copy">${esc(ddHeadline(r))}</div>
+              <div class="overall-box" style="margin-top:12px">证据 → 可靠性 → DD 模块 belief distribution → ER 聚合 → 最终 DD 决策。<br />这里会同时标出哪些判断更偏<strong>强证据</strong>，哪些仍然只是<strong>弱信号 / 未知</strong>。</div>
             </div>
             <div class="number-strip">
               <div class="number-card"><div class="kicker">Market cap</div><div class="number-value">${esc(r.c.marketCap)}m</div><div class="note">HKD</div></div>
@@ -608,18 +664,24 @@
 
           <div class="split-2" style="margin-top:14px">
             <div class="table-card">
-              <div class="label">DD Module Belief Table</div>
+              <div class="label">DD module belief distribution</div>
               <table class="belief-table">
-                <thead><tr><th>Module</th><th>Belief distribution</th><th>Decision</th></tr></thead>
+                <thead><tr><th>DD module</th><th>Signal focus</th><th>Source reliability</th><th>Belief distribution</th><th>Dominant output</th><th>Evidence basis</th></tr></thead>
                 <tbody>
-                  ${risks.map((x,i)=>`<tr>
-                    <td><strong>${esc(DD_MODULES[i])}</strong></td>
-                    <td>
-                      <div class="belief-bar"><div class="b-clean" style="width:${x[1].clean}%"></div><div class="b-manageable" style="width:${x[1].manageable}%"></div><div class="b-high" style="width:${x[1].high}%"></div><div class="b-critical" style="width:${x[1].critical}%"></div><div class="b-unknown" style="width:${x[1].unknown}%"></div></div>
-                      <div class="dd-belief-meta"><span>Clean ${x[1].clean}%</span><span>Manageable ${x[1].manageable}%</span><span>High ${x[1].high}%</span><span>Critical ${x[1].critical}%</span><span>Unknown ${x[1].unknown}%</span></div>
-                    </td>
-                    <td><span class="decision-pill ${cls(ddDecision(x[1]))}">${esc(ddDecision(x[1]))}</span></td>
-                  </tr>`).join('')}
+                  ${risks.map(x=>{
+                    const rel=x[2].rel(s);
+                    return `<tr>
+                      <td><strong>${esc(x[0])}</strong></td>
+                      <td>${esc(x[2].signal)}</td>
+                      <td>${esc(reliabilityText(rel))}</td>
+                      <td>
+                        <div class="belief-bar"><div class="b-clean" style="width:${x[1].clean}%"></div><div class="b-manageable" style="width:${x[1].manageable}%"></div><div class="b-high" style="width:${x[1].high}%"></div><div class="b-critical" style="width:${x[1].critical}%"></div><div class="b-unknown" style="width:${x[1].unknown}%"></div></div>
+                        <div class="dd-belief-meta"><span>Clean ${x[1].clean}%</span><span>Manageable ${x[1].manageable}%</span><span>High ${x[1].high}%</span><span>Critical ${x[1].critical}%</span><span>Unknown ${x[1].unknown}%</span></div>
+                      </td>
+                      <td><span class="decision-pill ${cls(dominantDDLabel(x[1]))}">${esc(dominantDDLabel(x[1]))}</span></td>
+                      <td>${esc(evidenceBasis(rel,x[1].unknown))}</td>
+                    </tr>`;
+                  }).join('')}
                 </tbody>
               </table>
             </div>
