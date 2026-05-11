@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>shell company screening — ER/BRB hard filters</title>
+  <title>shell company screening — ER/BRB hard filters & deep due diligence</title>
   <style>
     :root{
-      --bg:#f4f7fb;--card:#ffffff;--line:#d9e3f0;--text:#182235;--muted:#6e7d97;
+      --bg:#f4f7fb;--card:#fff;--line:#d9e3f0;--text:#182235;--muted:#6e7d97;
       --accent:#2458d6;--accent-soft:#edf3ff;--good:#12915a;--good-soft:#def6ea;
       --warn:#c97916;--warn-soft:#fff0da;--bad:#be3d3d;--bad-soft:#fde8e8;
       --unk:#667085;--unk-soft:#edf0f5;--shadow:0 18px 40px rgba(21,34,55,.08);
@@ -14,46 +14,36 @@
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text)}
-    .page{max-width:1480px;margin:0 auto;padding:24px}
+    .page{max-width:1520px;margin:0 auto;padding:24px}
     .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
     .hero{padding:24px 26px;margin-bottom:18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start}
     .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:10px}
     .title{font-size:34px;font-weight:850;letter-spacing:-.04em;line-height:1.08}
-    .sub{margin-top:10px;font-size:14px;line-height:1.7;color:var(--muted);max-width:920px}
-    .badge-col{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
-    .badge,.pill,.mini-pill,.decision-pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;font-weight:780}
+    .sub{margin-top:10px;font-size:14px;line-height:1.7;color:var(--muted);max-width:960px}
+    .badge-col,.source-row,.signal-row,.legend-row,.tab-row,.chip-row,.btn-row{display:flex;flex-wrap:wrap;gap:8px}
+    .badge,.pill,.mini-pill,.decision-pill,.status-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;font-weight:780}
     .badge{padding:8px 12px;background:var(--accent-soft);color:var(--accent);font-size:12px}
     .pill{padding:7px 11px;font-size:12px;background:#f6f8fc;color:#41506a;border:1px solid var(--line)}
     .mini-pill{padding:4px 8px;font-size:11px;background:#f7f9fc;color:#50617b;border:1px solid var(--line)}
-    .decision-pill{padding:7px 12px;font-size:12px}
+    .decision-pill,.status-chip{padding:7px 12px;font-size:12px}
     .decision-pass{background:var(--good-soft);color:var(--good)}
     .decision-warning{background:var(--warn-soft);color:var(--warn)}
     .decision-exclude{background:var(--bad-soft);color:var(--bad)}
     .decision-unknown{background:var(--unk-soft);color:var(--unk)}
     .guardrail{margin-top:14px;padding:14px 16px;border-radius:16px;background:#f9fbff;border:1px dashed #c9d8f3;font-size:13px;line-height:1.7;color:#40506b}
-    .main-grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:18px;align-items:start}
+    .main-grid{display:grid;grid-template-columns:360px minmax(0,1fr);gap:18px;align-items:start}
     .stack{display:grid;gap:18px}
     .card{padding:20px}
+    .panel{position:sticky;top:18px}
+    .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:850;margin-bottom:10px}
     .section-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}
     .section-title{font-size:24px;font-weight:840;letter-spacing:-.03em}
     .section-sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.65}
-    .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:850;margin-bottom:10px}
-    .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-    .metric{border:1px solid var(--line);border-radius:16px;background:#fbfcff;padding:14px}
+    .metric-grid,.overview-grid,.universe-grid,.dd-overview-grid,.module-grid,.summary-grid,.condition-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .metric,.overview-card,.universe-card,.task-summary-card,.module-card,.summary-card,.condition-card,.hf-card,.overall-card,.result-card{border:1px solid var(--line);border-radius:16px;background:#fbfcff;padding:16px}
+    .metric-cap,.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:800}
     .metric-num{font-size:24px;font-weight:850;letter-spacing:-.03em}
-    .metric-cap{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:800}
-    .metric-note{margin-top:6px;font-size:12px;line-height:1.6;color:#4c5d78}
-    .source-row,.signal-row,.legend-row,.tab-row{display:flex;flex-wrap:wrap;gap:8px}
-    .universe-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
-    .universe-card,.result-card,.dd-card,.hf-card,.overview-card{border:1px solid var(--line);border-radius:16px;background:#fbfcff;padding:16px}
-    .universe-code,.result-code{font-size:12px;color:var(--muted);font-weight:850;letter-spacing:.12em}
-    .universe-name,.result-name{font-size:18px;font-weight:850;margin:8px 0}
-    .meta-list{display:grid;grid-template-columns:100px minmax(0,1fr);gap:8px 10px;font-size:13px;line-height:1.55;margin-top:10px}
-    .meta-list strong{color:#4b5b73}
-    .meta-list span{color:#22314a}
-    .note{margin-top:10px;font-size:12px;line-height:1.7;color:#4d5d77}
-    .panel{position:sticky;top:18px}
-    .panel .card{padding:18px}
+    .metric-note,.overview-text,.note,.summary-copy{margin-top:6px;font-size:12px;line-height:1.65;color:#4c5d78}
     .panel-grid{display:grid;gap:14px}
     .field{display:grid;gap:8px}
     .field-title{font-size:13px;font-weight:760;color:#23324b}
@@ -66,204 +56,276 @@
     .toggle span{font-size:13px;line-height:1.5;color:#243450;font-weight:700}
     .toggle small{display:block;font-size:11px;line-height:1.55;color:var(--muted);font-weight:500;margin-top:3px}
     .toggle input{width:18px;height:18px}
-    .reliability-table{display:grid;gap:8px}
-    .reliability-row{display:grid;grid-template-columns:minmax(0,1fr) 86px;gap:10px;align-items:center}
-    .reliability-row label{font-size:12px;line-height:1.45;color:#30415d}
-    .reliability-row input{border:1px solid var(--line);border-radius:10px;padding:8px 9px;font:inherit}
-    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
-    button{border:0;border-radius:14px;padding:12px 16px;font:inherit;font-weight:800;cursor:pointer}
-    .primary{background:var(--accent);color:#fff}
-    .secondary{background:#fff;color:var(--text);border:1px solid var(--line)}
-    .overview-grid,.result-grid,.dd-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-    .overview-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-    .overview-title{font-size:15px;font-weight:800}
-    .overview-text{margin-top:8px;font-size:12px;line-height:1.7;color:#475875}
+    .subsection{padding-top:4px;border-top:1px dashed #d9e3f0}
+    .subsection:first-of-type{padding-top:0;border-top:0}
     .tab{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:#31425d;font-size:12px;font-weight:800;cursor:pointer}
     .tab.active{background:var(--accent-soft);color:var(--accent);border-color:#cbd9f6}
-    .split{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:14px}
-    .belief-table{width:100%;border-collapse:collapse;font-size:13px}
-    .belief-table th,.belief-table td{padding:12px 10px;border-bottom:1px solid #e6edf7;vertical-align:top;text-align:left}
-    .belief-table th{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .belief-table,.task-table,.risk-table{width:100%;border-collapse:collapse;font-size:13px}
+    .belief-table th,.belief-table td,.task-table th,.task-table td,.risk-table th,.risk-table td{padding:12px 10px;border-bottom:1px solid #e6edf7;vertical-align:top;text-align:left}
+    .belief-table th,.task-table th,.risk-table th{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
     .belief-bar{display:flex;height:11px;border-radius:999px;overflow:hidden;background:#ecf1f7;border:1px solid #e3eaf3;min-width:220px}
     .b-pass{background:linear-gradient(90deg,#18a563,#12915a)}
     .b-warn{background:linear-gradient(90deg,#f3b04a,#c97916)}
     .b-exclude{background:linear-gradient(90deg,#e57373,#be3d3d)}
     .b-unk{background:linear-gradient(90deg,#96a3b8,#667085)}
+    .b-clean{background:linear-gradient(90deg,#19a06b,#12915a)}
+    .b-manageable{background:linear-gradient(90deg,#82c96b,#4d9f45)}
+    .b-high{background:linear-gradient(90deg,#f0a851,#c97916)}
+    .b-critical{background:linear-gradient(90deg,#e57373,#be3d3d)}
+    .b-unknown{background:linear-gradient(90deg,#96a3b8,#667085)}
     .belief-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:7px;font-size:11px;color:#586884}
-    .hf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .hf-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}
-    .hf-name{font-size:16px;font-weight:820}
-    .hf-desc{margin-top:4px;font-size:12px;line-height:1.6;color:var(--muted)}
-    .hf-rule,.overall-rule{margin-top:10px;padding:11px 12px;border-radius:12px;background:#fff;border:1px solid var(--line);font-size:12px;line-height:1.7;color:#30405b}
+    .dd-belief-meta{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:7px;font-size:11px;color:#586884}
+    .overview-head,.hf-title,.module-head,.summary-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .universe-code,.result-code{font-size:12px;color:var(--muted);font-weight:850;letter-spacing:.12em}
+    .universe-name,.result-name,.module-name{font-size:18px;font-weight:850;margin:8px 0}
+    .meta-list{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 10px;font-size:13px;line-height:1.55;margin-top:10px}
+    .meta-list strong{color:#4b5b73}
+    .meta-list span{color:#22314a}
+    .callout,.rule-box,.module-box,.overall-reason{padding:14px 16px;border-radius:16px;border:1px solid var(--line);font-size:13px;line-height:1.7;color:#30405b;background:#fff}
+    .callout{background:#fff7e8;border-color:#f5ddb1;color:#6c4d12}
+    .split-2{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:14px}
+    .split-3{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:14px}
+    .chip-list{display:grid;gap:8px}
+    .chip{padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:12px;line-height:1.65;color:#2d3c55}
     .bullet{margin:0;padding-left:18px}
     .bullet li{margin:5px 0;line-height:1.6}
-    .callout{padding:14px 16px;border-radius:16px;background:#fff7e8;border:1px solid #f5ddb1;color:#6c4d12;font-size:13px;line-height:1.7}
-    .overall-card{border:1px solid var(--line);border-radius:18px;background:#fcfdff;padding:18px}
-    .overall-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
-    .overall-item{padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff}
-    .overall-item .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:850}
-    .overall-item .v{margin-top:6px;font-size:13px;line-height:1.7;color:#223149}
-    .dd-card h4{margin:0;font-size:16px}
-    .dd-card p{margin:8px 0 0;font-size:13px;line-height:1.7;color:#40516c}
-    .dd-card ol{margin:10px 0 0;padding-left:19px}
-    .dd-card li{margin:5px 0;font-size:13px;line-height:1.65;color:#24334a}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     .placeholder{padding:18px;border:1px dashed #c9d8f3;border-radius:16px;background:#f9fbff;font-size:13px;line-height:1.8;color:#42526d}
     .footer-note{margin-top:18px;font-size:12px;line-height:1.75;color:var(--muted)}
-    @media(max-width:1280px){.universe-grid,.overview-grid,.result-grid,.dd-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.main-grid{grid-template-columns:1fr}.panel{position:static}.split,.hf-grid,.metric-grid{grid-template-columns:1fr}.belief-bar{min-width:0;width:100%}}
-    @media(max-width:760px){.page{padding:14px}.hero{grid-template-columns:1fr}.universe-grid,.overview-grid,.result-grid,.dd-grid{grid-template-columns:1fr}.section-title{font-size:22px}.title{font-size:28px}}
+    button{border:0;border-radius:14px;padding:12px 16px;font:inherit;font-weight:800;cursor:pointer}
+    .primary{background:var(--accent);color:#fff}
+    .secondary{background:#fff;color:var(--text);border:1px solid var(--line)}
+    @media(max-width:1320px){
+      .main-grid{grid-template-columns:1fr}.panel{position:static}
+      .metric-grid,.overview-grid,.universe-grid,.dd-overview-grid,.module-grid,.summary-grid,.condition-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .split-2,.split-3{grid-template-columns:1fr}
+    }
+    @media(max-width:760px){
+      .page{padding:14px}.hero{grid-template-columns:1fr}.title{font-size:28px}.section-title{font-size:22px}
+      .metric-grid,.overview-grid,.universe-grid,.dd-overview-grid,.module-grid,.summary-grid,.condition-grid{grid-template-columns:1fr}
+      .belief-bar{min-width:0;width:100%}.belief-meta,.dd-belief-meta{grid-template-columns:1fr 1fr}
+    }
   </style>
 </head>
 <body>
   <div class="page">
     <section class="hero">
       <div>
-        <div class="eyebrow">shell company screening · ER/BRB gating page</div>
-        <div class="title">Hard Filters as evidence gating — not final ranking</div>
+        <div class="eyebrow">shell company screening · ER/BRB gating + due diligence page</div>
+        <div class="title">From Hard Filter uncertainty to Deep DD risk diagnosis</div>
         <div class="sub">
-          这个页面只展示三层：<strong>Universe Construction</strong>、<strong>Hard Filters</strong>、<strong>Deep Due Diligence</strong>。
-          ER/BRB 只用于回答一个问题：<strong>这家公司能不能进入 Deep DD</strong>，而不是用于最终商业排序。核心原则写死在页面里：<strong>未发现风险证据 ≠ 风险不存在</strong>。
+          这个单页现在覆盖三层：<strong>Universe Construction</strong>、<strong>ER/BRB Hard Filters</strong>、<strong>ER/BRB-style Deep Due Diligence</strong>。
+          DD 不是普通尽调报告，也不是 Ranking；它承接 HF 输出的问题与不确定性，回答：<strong>风险到底在哪里、能不能修、如果能修需要什么交易条件、如果不能修是否应停止推进</strong>。
         </div>
         <div class="guardrail">
-          <strong>Design intent.</strong> Universe 只负责高召回构建候选池，不做 ER/BRB 判断；User Appetite Setting 进入 HF 前作为控制面板；HF-1 到 HF-7 输出 belief distribution；整体结论按业务优先级聚合，<strong>不允许低估值和平台故事掩盖 HF-4 / HF-5 / HF-6 的硬伤</strong>。
+          <strong>Core rule.</strong> Universe 不做过早剔除；HF 决定“能不能进入 DD”；DD 决定“如果进入 DD，这些风险是否可量化、可清理、可谈判，是否值得进入 Commercial Thesis 与 Transaction Structure”。
+          页面继续坚持：<strong>Not Found ≠ No Risk</strong>，<strong>Missing Evidence 不得支持 Clean / Low Risk</strong>。
         </div>
       </div>
       <div class="badge-col">
-        <span class="badge">Single-page demo</span>
-        <span class="badge">HF only for DD entry</span>
-        <span class="badge">Unknown ≠ clean</span>
-        <span class="badge">Interactive appetite panel</span>
+        <span class="badge">Single page only</span>
+        <span class="badge">HF → DD inheritance</span>
+        <span class="badge">Risk remediability</span>
+        <span class="badge">No ranking here</span>
       </div>
     </section>
 
     <div class="main-grid">
       <aside class="panel stack">
         <section class="card">
-          <div class="label">Step 1 · User Appetite Setting</div>
-          <div class="section-sub" style="margin-top:0;margin-bottom:12px">这些参数会直接改变 HF belief 分布和是否进入 Deep DD。</div>
+          <div class="label">Step 1 · Unified User Appetite Setting</div>
+          <div class="section-sub" style="margin-top:0;margin-bottom:12px">这一层同时服务 Hard Filters 和 Deep DD。上半部分控制 HF；下半部分控制 DD 的风险诊断和是否允许继续推进。</div>
           <div class="panel-grid">
-            <div class="field">
-              <div class="field-title">listing_board_preference</div>
-              <select id="boardPreference">
-                <option value="mainboard">主板优先</option>
-                <option value="neutral">主板 / GEM 中性</option>
-              </select>
-              <div class="field-help">GEM 不自动淘汰，但处理方式由下项决定。</div>
-            </div>
-
-            <div class="field">
-              <div class="field-title">GEM default handling</div>
-              <select id="gemMode">
-                <option value="warning">Warning</option>
-                <option value="strictWarning">Strict Warning</option>
-                <option value="exclude">Exclude</option>
-                <option value="pass">Pass</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <div class="field-title">market_cap_upper_bound (HKD m)</div>
-              <input id="marketCapUpper" type="number" min="100" step="50" value="2600" />
-              <div class="field-help">用于控制潜在控股权收购成本与重组成本。</div>
-            </div>
-
-            <div class="field">
-              <div class="field-title">pb_preferred_range upper bound</div>
-              <select id="pbUpper">
-                <option value="0.6">Strict · 0–0.6</option>
-                <option value="0.8" selected>Normal · 0–0.8</option>
-                <option value="1.0">Flexible · 0–1.0</option>
-              </select>
-              <div class="field-help">低 P/B 只能是正向支持证据，不能单独构成 Pass。</div>
-            </div>
-
-            <div class="field">
-              <div class="field-title">suspension_policy</div>
-              <select id="suspensionPolicy">
-                <option value="strict">长期停牌 + 复牌路径不清 → 高度 Exclude</option>
-                <option value="dd">有明确复牌路径可进入 Needs DD</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <div class="field-title">control_path_requirement</div>
-              <select id="controlPathRequirement">
-                <option value="clearOnly">要求路径明确；否则不得直接 Pass</option>
-                <option value="jointPathOk">接受分散股权 + 潜在联合重组路径</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <div class="field-title">toxic_financing_tolerance</div>
-              <select id="toxicTolerance">
-                <option value="conservative">Conservative</option>
-                <option value="normal" selected>Normal</option>
-                <option value="opportunistic">Opportunistic</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <div class="field-title">disclosure_compliance_strictness</div>
-              <select id="disclosureStrictness">
-                <option value="conservative">Conservative</option>
-                <option value="normal" selected>Normal</option>
-                <option value="flexible">Flexible</option>
-              </select>
-            </div>
-
-            <label class="toggle">
-              <div>
-                <span>fatal_risk_veto_policy</span>
-                <small>HF-6 高置信度 fatal risk 直接触发整体 Exclude。</small>
+            <div class="subsection">
+              <div class="label" style="margin-bottom:8px">HF settings</div>
+              <div class="field">
+                <div class="field-title">listing_board_preference</div>
+                <select id="boardPreference">
+                  <option value="mainboard">主板优先</option>
+                  <option value="neutral">主板 / GEM 中性</option>
+                </select>
               </div>
-              <input id="fatalVeto" type="checkbox" checked />
-            </label>
-
-            <div class="field">
-              <div class="field-title">unknown_evidence_policy</div>
-              <select id="unknownPolicy">
-                <option value="strict">Strict</option>
-                <option value="normal" selected>Normal</option>
-                <option value="flexible">Flexible</option>
-              </select>
+              <div class="field">
+                <div class="field-title">GEM default handling</div>
+                <select id="gemMode">
+                  <option value="warning">Warning</option>
+                  <option value="strictWarning">Strict Warning</option>
+                  <option value="exclude">Exclude</option>
+                  <option value="pass">Pass</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">market_cap_upper_bound (HKD m)</div>
+                <input id="marketCapUpper" type="number" min="100" step="50" value="2600" />
+              </div>
+              <div class="field">
+                <div class="field-title">pb_preferred_range upper bound</div>
+                <select id="pbUpper">
+                  <option value="0.6">Strict · 0–0.6</option>
+                  <option value="0.8" selected>Normal · 0–0.8</option>
+                  <option value="1.0">Flexible · 0–1.0</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">suspension_policy</div>
+                <select id="suspensionPolicy">
+                  <option value="strict">长期停牌 + 路径不清 → 高度 Exclude</option>
+                  <option value="dd">有明确复牌路径可进入 Needs DD</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">control_path_requirement</div>
+                <select id="controlPathRequirement">
+                  <option value="clearOnly">要求路径明确；否则不得直接 Pass</option>
+                  <option value="jointPathOk">接受分散股权 + 潜在联合重组路径</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">toxic_financing_tolerance</div>
+                <select id="toxicTolerance">
+                  <option value="conservative">Conservative</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="opportunistic">Opportunistic</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">disclosure_compliance_strictness</div>
+                <select id="disclosureStrictnessHF">
+                  <option value="conservative">Conservative</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </div>
+              <label class="toggle">
+                <div>
+                  <span>fatal_risk_veto_policy</span>
+                  <small>HF-6 高置信度 fatal risk 直接触发整体 Exclude。</small>
+                </div>
+                <input id="fatalVeto" type="checkbox" checked />
+              </label>
+              <div class="field">
+                <div class="field-title">unknown_evidence_policy_for_hf</div>
+                <select id="unknownPolicyHF">
+                  <option value="strict">Strict</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">core warning threshold</div>
+                <input id="warningThreshold" type="range" min="25" max="60" step="5" value="40" />
+                <div class="range-meta"><span>宽松</span><strong id="warningThresholdValue">40%</strong><span>严格</span></div>
+              </div>
+              <div class="field">
+                <div class="field-title">HF-6 exclude threshold</div>
+                <input id="hf6Threshold" type="range" min="45" max="80" step="5" value="60" />
+                <div class="range-meta"><span>45%</span><strong id="hf6ThresholdValue">60%</strong><span>80%</span></div>
+              </div>
             </div>
 
-            <div class="field">
-              <div class="field-title">core warning threshold</div>
-              <input id="warningThreshold" type="range" min="25" max="60" step="5" value="40" />
-              <div class="range-meta"><span>更宽松</span><strong id="warningThresholdValue">40%</strong><span>更严格</span></div>
-            </div>
-
-            <div class="field">
-              <div class="field-title">HF-6 exclude threshold</div>
-              <input id="hf6Threshold" type="range" min="45" max="80" step="5" value="60" />
-              <div class="range-meta"><span>45%</span><strong id="hf6ThresholdValue">60%</strong><span>80%</span></div>
+            <div class="subsection">
+              <div class="label" style="margin-bottom:8px">DD settings</div>
+              <div class="field">
+                <div class="field-title">control_clarity_requirement</div>
+                <select id="ddControlClarityRequirement">
+                  <option value="strict">Strict</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">debt_litigation_tolerance</div>
+                <select id="ddDebtLitigationTolerance">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">compliance_strictness</div>
+                <select id="ddComplianceStrictness">
+                  <option value="strict">Strict</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">listing_maintenance_cost_limit (HKD m / year)</div>
+                <input id="ddMaintenanceCostLimit" type="number" min="1" step="0.5" value="12" />
+              </div>
+              <div class="field">
+                <div class="field-title">business_substance_requirement</div>
+                <select id="ddBusinessSubstanceRequirement">
+                  <option value="strict">Strict</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">distress_reversibility_requirement</div>
+                <select id="ddDistressReversibilityRequirement">
+                  <option value="strict">Strict</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">cleanup_cost_tolerance</div>
+                <select id="ddCleanupCostTolerance">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">unknown_evidence_policy_for_dd</div>
+                <select id="ddUnknownPolicy">
+                  <option value="strict">Strict</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-title">dd_evidence_mode</div>
+                <select id="ddEvidenceMode">
+                  <option value="conservative">Conservative</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+                <div class="field-help">控制官方文件 / 审计 / 法院文件相对辅助证据的权重。</div>
+              </div>
             </div>
           </div>
         </section>
 
         <section class="card">
           <div class="label">Evidence reliability map</div>
-          <div class="reliability-table">
-            <div class="reliability-row"><label>HKEX announcement / annual report / circular</label><input id="relOfficial" type="number" min="0.5" max="1" step="0.01" value="0.96" /></div>
-            <div class="reliability-row"><label>Audit report / notes</label><input id="relAudit" type="number" min="0.5" max="1" step="0.01" value="0.95" /></div>
-            <div class="reliability-row"><label>Structured market data</label><input id="relStructured" type="number" min="0.3" max="1" step="0.01" value="0.78" /></div>
-            <div class="reliability-row"><label>Announcement title / metadata</label><input id="relMeta" type="number" min="0.2" max="1" step="0.01" value="0.68" /></div>
-            <div class="reliability-row"><label>Mainstream media</label><input id="relMedia" type="number" min="0.2" max="1" step="0.01" value="0.56" /></div>
-            <div class="reliability-row"><label>LLM inference</label><input id="relLLM" type="number" min="0.1" max="1" step="0.01" value="0.30" /></div>
+          <div class="section-sub" style="margin-top:0;margin-bottom:10px">DD 阶段继承 HF 的 evidence map，并增加法院文件、主要股东披露、融资条款等高可靠来源。</div>
+          <div class="panel-grid">
+            <div class="field"><div class="field-title">HKEX / annual / interim / circular</div><input id="relOfficial" type="number" min="0.5" max="1" step="0.01" value="0.96" /></div>
+            <div class="field"><div class="field-title">Audit report / notes / contingent liabilities</div><input id="relAudit" type="number" min="0.5" max="1" step="0.01" value="0.95" /></div>
+            <div class="field"><div class="field-title">Court / winding-up / arbitration filings</div><input id="relCourt" type="number" min="0.5" max="1" step="0.01" value="0.92" /></div>
+            <div class="field"><div class="field-title">Major shareholder / pledge disclosures</div><input id="relShareholder" type="number" min="0.5" max="1" step="0.01" value="0.89" /></div>
+            <div class="field"><div class="field-title">Formal financing terms / placement / warrants</div><input id="relFinancing" type="number" min="0.5" max="1" step="0.01" value="0.88" /></div>
+            <div class="field"><div class="field-title">Structured market data</div><input id="relStructured" type="number" min="0.3" max="1" step="0.01" value="0.78" /></div>
+            <div class="field"><div class="field-title">Company IR / website / management deck</div><input id="relIR" type="number" min="0.2" max="1" step="0.01" value="0.66" /></div>
+            <div class="field"><div class="field-title">Mainstream financial media</div><input id="relMedia" type="number" min="0.2" max="1" step="0.01" value="0.56" /></div>
+            <div class="field"><div class="field-title">Metadata / title signals</div><input id="relMeta" type="number" min="0.2" max="1" step="0.01" value="0.68" /></div>
+            <div class="field"><div class="field-title">LLM inference</div><input id="relLLM" type="number" min="0.1" max="1" step="0.01" value="0.30" /></div>
           </div>
-          <div class="field-help" style="margin-top:12px">未找到证据不会被视为低风险；相反，它会抬高 <strong>Insufficient Evidence</strong>。</div>
+          <div class="field-help" style="margin-top:12px">Rules: Not Found ≠ No Risk；Weak Signal 不能单独支持正面结论；Conflicting Evidence 必须进入人工复核。</div>
         </section>
 
         <section class="card">
-          <div class="label">Decision guardrails</div>
-          <ul class="bullet" style="margin:0">
-            <li>HF-6 / HF-5 / HF-4 / HF-3 不是简单平均，而是优先级聚合。</li>
-            <li>HF-2 低估值不得抵消 HF-3、HF-4、HF-5、HF-6 的 Warning / Exclude。</li>
-            <li>HF-7 只能增强进入 DD 的理由，不能覆盖硬伤。</li>
-            <li>HF-3 / HF-4 / HF-5 关键证据缺失时，不允许 clean Pass。</li>
+          <div class="label">Guardrails</div>
+          <ul class="bullet" style="margin:0 0 12px">
+            <li>DD 不能从零开始泛泛分析，必须先读取 HF 产生的 DD questions。</li>
+            <li>9.1 / 9.2 / 9.3 属于 DD 核心模块：控制权、历史债务诉讼、合规状态不能靠猜。</li>
+            <li>9.5 业务存续价值只能增强推进理由，不能掩盖壳风险硬伤。</li>
+            <li>如果核心 DD 模块主要依赖低可靠性证据，则该模块最高只能是 Manageable Risk 或 Insufficient Evidence。</li>
           </ul>
-          <div class="btn-row" style="margin-top:14px">
-            <button class="primary" id="runBtn">Run ER/BRB Hard Filters</button>
+          <div class="btn-row">
+            <button class="primary" id="runBtn">Run HF → DD</button>
             <button class="secondary" id="resetBtn">Reset</button>
           </div>
         </section>
@@ -274,125 +336,191 @@
           <div class="section-head">
             <div>
               <div class="label">Step 0 · Universe Construction</div>
-              <div class="section-title">Candidate universe stays high-recall and judgment-light</div>
-              <div class="section-sub">这一层故意不做 ER/BRB 判断。它只负责把“值得看”的候选壳平台先召回出来，不做过早筛除。</div>
+              <div class="section-title">High-recall candidate universe remains judgment-light</div>
+              <div class="section-sub">Universe 只负责构建候选池，不在这里做 ER/BRB 判断，也不假装筛掉“看起来麻烦”的公司。</div>
             </div>
-            <div class="badge-col">
-              <span class="badge">No ER/BRB here</span>
-              <span class="badge">High recall first</span>
-            </div>
+            <div class="badge-col"><span class="badge">No ER/BRB here</span><span class="badge">High recall first</span></div>
           </div>
-
           <div class="metric-grid">
-            <div class="metric"><div class="metric-cap">Universe size</div><div class="metric-num">3,146</div><div class="metric-note">港股全市场清洗后的初始候选池。</div></div>
-            <div class="metric"><div class="metric-cap">Sample cards</div><div class="metric-num">4</div><div class="metric-note">页面用 4 家样例公司解释 HF / DD 思路。</div></div>
-            <div class="metric"><div class="metric-cap">Source families</div><div class="metric-num">5</div><div class="metric-note">HKEX filings、listing status、market data、media、LLM inference。</div></div>
-            <div class="metric"><div class="metric-cap">Recall signals</div><div class="metric-num">6</div><div class="metric-note">低估值、小市值、停牌、控制权线索、融资结构、平台适配信号。</div></div>
+            <div class="metric"><div class="metric-cap">Universe size</div><div class="metric-num">3,146</div><div class="metric-note">清洗后的港股 candidate universe。</div></div>
+            <div class="metric"><div class="metric-cap">Sample cards</div><div class="metric-num">4</div><div class="metric-note">页面用 4 家样例公司展示 HF → DD 的逻辑。</div></div>
+            <div class="metric"><div class="metric-cap">Source families</div><div class="metric-num">10</div><div class="metric-note">官方文件、审计、法院、股东披露、融资条款、结构化数据、IR、媒体、metadata、LLM。</div></div>
+            <div class="metric"><div class="metric-cap">Critical reminder</div><div class="metric-num">0</div><div class="metric-note">Universe 阶段不应做 0 成本的“假确定性”。</div></div>
           </div>
-
           <div style="margin-top:16px" class="source-row">
             <span class="pill">HKEX announcements</span>
             <span class="pill">Annual / interim reports</span>
-            <span class="pill">Listing status / suspension pages</span>
+            <span class="pill">Court / petition records</span>
+            <span class="pill">Shareholding / pledge filings</span>
+            <span class="pill">Financing term sheets</span>
             <span class="pill">Structured market data</span>
-            <span class="pill">Public media & metadata</span>
           </div>
           <div style="margin-top:10px" class="signal-row">
             <span class="mini-pill">低市值 / 低 P/B</span>
-            <span class="mini-pill">历史资产出售 / 重组痕迹</span>
-            <span class="mini-pill">持续经营压力</span>
-            <span class="mini-pill">控制权谈判线索</span>
+            <span class="mini-pill">业务困境与估值压制</span>
+            <span class="mini-pill">控制权与退出线索</span>
             <span class="mini-pill">融资复杂度</span>
-            <span class="mini-pill">平台适配初信号</span>
+            <span class="mini-pill">合规 / 停牌 / 除牌风险</span>
+            <span class="mini-pill">平台适配信号</span>
           </div>
-
-          <div id="universeGrid" class="universe-grid"></div>
+          <div id="universeGrid" class="universe-grid" style="margin-top:14px"></div>
         </section>
 
         <section class="card">
           <div class="section-head">
             <div>
               <div class="label">Step 2 · Hard Filters HF-1 to HF-7</div>
-              <div class="section-title">ER/BRB-style belief distribution for DD entry</div>
-              <div class="section-sub">每个 HF 输出四类 belief：<strong>Pass</strong> / <strong>Needs DD</strong> / <strong>Exclude</strong> / <strong>Insufficient Evidence</strong>。整体结论按业务优先级而不是简单平均来聚合。</div>
+              <div class="section-title">ER/BRB hard filter decision layer</div>
+              <div class="section-sub">HF 仍然先运行，但它现在显式输出 belief distribution、overall HF result 和下一步 DD questions。Step 3 必须读取这些输出，不能另起炉灶。</div>
             </div>
-            <div class="badge-col">
-              <span class="badge">HF-6 veto aware</span>
-              <span class="badge">Unknown preserved</span>
-            </div>
+            <div class="badge-col"><span class="badge">Unknown preserved</span><span class="badge">HF-generated DD questions</span></div>
           </div>
-
-          <div class="callout">
-            <strong>Critical principle.</strong> The most dangerous failure mode is not “finding risk”; it is <strong>pretending incomplete evidence means clean risk</strong>. So this layer is designed to preserve uncertainty explicitly, especially in HF-3, HF-4, and HF-5.
-          </div>
-
-          <div style="margin-top:14px" class="label">Overall sample-pool result under current appetite</div>
-          <div id="overviewGrid" class="overview-grid"></div>
+          <div class="callout"><strong>HF asks:</strong> 这家公司能不能进入 DD？<br /><strong>DD asks:</strong> 如果进入 DD，它到底哪里有风险？这些风险能不能修？如果能修，需要什么交易条件？</div>
+          <div style="margin-top:14px" class="label">Sample-pool hard filter overview</div>
+          <div id="overviewGridHF" class="overview-grid"></div>
 
           <div style="margin-top:18px" class="section-head">
             <div>
-              <div class="label">Selected company deep dive</div>
-              <div class="section-sub" style="margin-top:0">选中一家公司，看 HF-1 到 HF-7 的 belief 组成、关键证据、理由和 DD question。</div>
+              <div class="label">Selected company hard filter output</div>
+              <div class="section-sub" style="margin-top:0">先看 HF 结论和 inherited DD questions，再往下读 DD dossier。</div>
             </div>
           </div>
           <div id="companyTabs" class="tab-row" style="margin-bottom:14px"></div>
 
-          <div class="split">
+          <div class="split-2">
             <div class="overall-card">
-              <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+              <div class="summary-head">
                 <div>
-                  <div class="label" style="margin-bottom:6px">Overall hard filter decision</div>
-                  <div id="selectedCompanyName" class="section-title" style="font-size:22px"></div>
-                  <div id="selectedCompanyMeta" class="section-sub"></div>
+                  <div class="label" style="margin-bottom:6px">Overall Hard Filter Result</div>
+                  <div id="selectedCompanyNameHF" class="section-title" style="font-size:22px"></div>
+                  <div id="selectedCompanyMetaHF" class="section-sub"></div>
                 </div>
-                <div id="overallDecisionPill"></div>
+                <div id="overallDecisionPillHF"></div>
               </div>
-              <div id="overallReason" class="overall-rule"></div>
-              <div class="overall-grid">
-                <div class="overall-item"><div class="k">Strongest pass factor</div><div class="v" id="strongestPass"></div></div>
-                <div class="overall-item"><div class="k">Strongest warning factor</div><div class="v" id="strongestWarn"></div></div>
-                <div class="overall-item"><div class="k">Strongest exclude factor</div><div class="v" id="strongestExclude"></div></div>
-                <div class="overall-item"><div class="k">Main unknown</div><div class="v" id="mainUnknown"></div></div>
-                <div class="overall-item"><div class="k">Enter DD because</div><div class="v" id="enterDdReason"></div></div>
-                <div class="overall-item"><div class="k">Manual review priority</div><div class="v" id="reviewPriority"></div></div>
+              <div id="overallReasonHF" class="overall-reason" style="margin-top:12px"></div>
+              <div class="summary-grid" style="margin-top:14px">
+                <div class="summary-card"><div class="kicker">Strongest warning factor</div><div class="summary-copy" id="strongestWarnHF"></div></div>
+                <div class="summary-card"><div class="kicker">Strongest exclude factor</div><div class="summary-copy" id="strongestExcludeHF"></div></div>
+                <div class="summary-card"><div class="kicker">Main unknown</div><div class="summary-copy" id="mainUnknownHF"></div></div>
+                <div class="summary-card"><div class="kicker">Enter DD reason</div><div class="summary-copy" id="enterDdReasonHF"></div></div>
+                <div class="summary-card"><div class="kicker">Manual review priority</div><div class="summary-copy" id="reviewPriorityHF"></div></div>
+                <div class="summary-card"><div class="kicker">Next DD questions</div><div class="summary-copy" id="nextQuestionsCountHF"></div></div>
               </div>
             </div>
-
             <div class="card" style="padding:16px;margin:0;box-shadow:none">
-              <div class="label">Hard Filter belief table</div>
+              <div class="label">Hard Filter Belief Table</div>
               <table class="belief-table">
-                <thead>
-                  <tr>
-                    <th>HF</th>
-                    <th>Belief distribution</th>
-                    <th>Decision</th>
-                  </tr>
-                </thead>
-                <tbody id="beliefTableBody"></tbody>
+                <thead><tr><th>HF</th><th>Belief distribution</th><th>Decision</th></tr></thead>
+                <tbody id="beliefTableBodyHF"></tbody>
               </table>
             </div>
           </div>
 
-          <div style="margin-top:14px" class="hf-grid" id="hfGrid"></div>
+          <div style="margin-top:14px" class="split-3">
+            <div class="card" style="padding:16px;margin:0;box-shadow:none">
+              <div class="label">Inherited DD Questions from HF</div>
+              <div id="hfQuestionList" class="chip-list"></div>
+            </div>
+            <div class="card" style="padding:16px;margin:0;box-shadow:none">
+              <div class="label">HF Module Notes</div>
+              <div id="hfModuleGrid" class="module-grid" style="grid-template-columns:1fr 1fr"></div>
+            </div>
+          </div>
         </section>
 
         <section class="card">
           <div class="section-head">
             <div>
-              <div class="label">Deep Due Diligence</div>
-              <div class="section-title">DD workstreams triggered by HF output</div>
-              <div class="section-sub">这里不展开完整 DD 报告，只展示：HF 之后为什么进入 DD、优先查什么、先问什么问题。这样页面焦点仍然是 HF → DD entry 的逻辑。</div>
+              <div class="label">Step 3 · Deep Due Diligence</div>
+              <div class="section-title">Evidence-backed DD dossier that inherits HF questions</div>
+              <div class="section-sub">DD 层输出五类判断：<strong>Clean / Low Risk</strong>、<strong>Manageable Risk</strong>、<strong>High Risk</strong>、<strong>Critical / Not Tradable</strong>、<strong>Insufficient Evidence</strong>。整体 DD 结论则是 Proceed / Proceed with Conditions / Hold / Reject / Insufficient Evidence。</div>
             </div>
-            <div class="badge-col">
-              <span class="badge">DD entry only</span>
-              <span class="badge">Ranking intentionally omitted</span>
+            <div class="badge-col"><span class="badge">Investigation task log</span><span class="badge">Risk remediability</span></div>
+          </div>
+
+          <div class="callout"><strong>DD is not a normal report.</strong> 它的任务不是把故事写顺，而是承接 HF 输出的 strongest warning / exclude / unknown / dd questions，把风险诊断得更具体：能不能交易、能不能修、修要花多少钱、需要什么交易条件。</div>
+
+          <div style="margin-top:14px" class="label">Sample-pool DD overview</div>
+          <div id="overviewGridDD" class="dd-overview-grid"></div>
+
+          <div style="margin-top:18px" class="split-2">
+            <div class="overall-card">
+              <div class="summary-head">
+                <div>
+                  <div class="label" style="margin-bottom:6px">Candidate Overview</div>
+                  <div id="candidateOverviewName" class="section-title" style="font-size:22px"></div>
+                  <div id="candidateOverviewMeta" class="section-sub"></div>
+                </div>
+                <div id="overallDecisionPillDD"></div>
+              </div>
+              <div id="overallReasonDD" class="overall-reason" style="margin-top:12px"></div>
+              <div class="summary-grid" style="margin-top:14px">
+                <div class="summary-card"><div class="kicker">Inherited HF decision</div><div class="summary-copy" id="inheritedHfDecision"></div></div>
+                <div class="summary-card"><div class="kicker">Strongest clean factor</div><div class="summary-copy" id="strongestCleanDD"></div></div>
+                <div class="summary-card"><div class="kicker">Strongest risk factor</div><div class="summary-copy" id="strongestRiskDD"></div></div>
+                <div class="summary-card"><div class="kicker">Main unknown</div><div class="summary-copy" id="mainUnknownDD"></div></div>
+                <div class="summary-card"><div class="kicker">Remediability summary</div><div class="summary-copy" id="remediabilitySummaryDD"></div></div>
+                <div class="summary-card"><div class="kicker">Next step recommendation</div><div class="summary-copy" id="nextStepRecommendationDD"></div></div>
+              </div>
+            </div>
+            <div class="card" style="padding:16px;margin:0;box-shadow:none">
+              <div class="label">Overall DD Result</div>
+              <div class="chip-list" id="requiredConditionsList"></div>
             </div>
           </div>
-          <div id="ddGrid" class="dd-grid"></div>
-          <div id="ddPlaceholder" class="placeholder" style="display:none"></div>
-          <div class="footer-note">
-            This page intentionally stops at DD entry. Ranking、commercial thesis、transaction structure 和 final report 被刻意拿掉，是为了让 ER/BRB 的用途更清楚：<strong>它负责证据化筛选，不负责最终投资排序</strong>。
+
+          <div style="margin-top:14px" class="card" style="padding:16px">
+            <div class="label">DD Investigation Task Log</div>
+            <table class="task-table">
+              <thead>
+                <tr>
+                  <th>Question from HF</th>
+                  <th>DD module</th>
+                  <th>Investigation status</th>
+                  <th>Finding</th>
+                  <th>Source / reliability</th>
+                  <th>Remaining gap</th>
+                </tr>
+              </thead>
+              <tbody id="taskTableBody"></tbody>
+            </table>
           </div>
+
+          <div style="margin-top:14px" class="split-2">
+            <div class="card" style="padding:16px;margin:0;box-shadow:none">
+              <div class="label">DD Module Belief Table</div>
+              <table class="belief-table">
+                <thead><tr><th>Module</th><th>Belief distribution</th><th>Decision</th></tr></thead>
+                <tbody id="beliefTableBodyDD"></tbody>
+              </table>
+            </div>
+            <div class="card" style="padding:16px;margin:0;box-shadow:none">
+              <div class="label">Reasons for entering next step / hold / stop</div>
+              <div id="stepReasonBox" class="chip-list"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px" class="module-grid" id="ddModuleGrid"></div>
+
+          <div style="margin-top:14px" class="card" style="padding:16px">
+            <div class="label">Risk Remediability Table</div>
+            <table class="risk-table">
+              <thead>
+                <tr>
+                  <th>Risk item</th>
+                  <th>Severity</th>
+                  <th>Quantifiable</th>
+                  <th>Negotiable</th>
+                  <th>Cleanable</th>
+                  <th>Estimated cleanup cost</th>
+                  <th>Required transaction condition</th>
+                </tr>
+              </thead>
+              <tbody id="riskTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="footer-note">This page still stops before Ranking. 即使 DD 对某家公司比较乐观，页面也只会给出 “Proceed to Commercial Thesis & Transaction Structure” 或其条件化版本，不会在这里偷跑成 final ranking。</div>
         </section>
       </main>
     </div>
@@ -409,6 +537,9 @@
         fatalRegulatory:5, majorLitigation:12, offBalanceRisk:14, unresolvedRisk:10,
         platformFit:82, businessContinuity:80, synergyEvidence:76, licenseValue:72, narrativeStrength:84,
         unknownControl:26, unknownCapital:20, unknownCompliance:18, unknownPlatform:22,
+        annualAuditCost:2.2, annualLegalCost:1.8, annualComplianceCost:1.2, annualCompanySecCost:0.8, annualIRCost:0.6, minimumOpsCost:2.4,
+        cleanupCostEstimate:3.5, businessReality:82, customerContinuity:78, supplierContinuity:74, employeeContinuity:72,
+        distressClarity:70, distressReversibility:74, tontonRepairFit:82,
         sources:['HKEX annual report','HKEX announcements','Listing status page','Structured market data'],
         note:'平台适配度较强，但控制权谈判路径和品牌/许可在控制权变化后的连续性仍需专项 DD。'
       },
@@ -421,6 +552,9 @@
         fatalRegulatory:7, majorLitigation:15, offBalanceRisk:16, unresolvedRisk:12,
         platformFit:78, businessContinuity:86, synergyEvidence:80, licenseValue:66, narrativeStrength:76,
         unknownControl:22, unknownCapital:24, unknownCompliance:18, unknownPlatform:18,
+        annualAuditCost:2.6, annualLegalCost:2.1, annualComplianceCost:1.5, annualCompanySecCost:0.9, annualIRCost:0.6, minimumOpsCost:3.0,
+        cleanupCostEstimate:4.2, businessReality:88, customerContinuity:82, supplierContinuity:84, employeeContinuity:80,
+        distressClarity:62, distressReversibility:68, tontonRepairFit:78,
         sources:['HKEX annual report','Announcements metadata','Structured market data','Public media'],
         note:'业务场景和平台价值较强，但集团系统较重，控制权与资产边界仍需要 DD 拆开看。'
       },
@@ -433,6 +567,9 @@
         fatalRegulatory:16, majorLitigation:34, offBalanceRisk:28, unresolvedRisk:24,
         platformFit:60, businessContinuity:58, synergyEvidence:52, licenseValue:42, narrativeStrength:56,
         unknownControl:28, unknownCapital:32, unknownCompliance:24, unknownPlatform:26,
+        annualAuditCost:2.3, annualLegalCost:2.4, annualComplianceCost:1.6, annualCompanySecCost:0.8, annualIRCost:0.5, minimumOpsCost:2.6,
+        cleanupCostEstimate:8.5, businessReality:58, customerContinuity:54, supplierContinuity:56, employeeContinuity:50,
+        distressClarity:48, distressReversibility:46, tontonRepairFit:52,
         sources:['HKEX announcements','Annual report','Public media','Structured market data'],
         note:'估值便宜，但 litigation / borrowings / 资产边界使其更像 angle-specific reserve，而不是 clean pass。'
       },
@@ -445,35 +582,72 @@
         fatalRegulatory:10, majorLitigation:12, offBalanceRisk:18, unresolvedRisk:16,
         platformFit:46, businessContinuity:40, synergyEvidence:34, licenseValue:28, narrativeStrength:38,
         unknownControl:34, unknownCapital:30, unknownCompliance:28, unknownPlatform:32,
+        annualAuditCost:1.6, annualLegalCost:1.3, annualComplianceCost:1.0, annualCompanySecCost:0.6, annualIRCost:0.4, minimumOpsCost:1.8,
+        cleanupCostEstimate:5.0, businessReality:38, customerContinuity:34, supplierContinuity:30, employeeContinuity:28,
+        distressClarity:42, distressReversibility:38, tontonRepairFit:34,
         sources:['HKEX GEM filings','Structured market data','Announcement metadata'],
         note:'适合展示 GEM policy 如何影响 HF-1 与整体结论：不是自动淘汰，但通常不会 clean pass。'
       }
     ];
 
     const HF_META = [
-      {id:'HF-1', name:'上市状态与板块', desc:'上市平台可用性：主板 / GEM、停牌、复牌路径、公众持股、除牌风险。'},
-      {id:'HF-2', name:'低估值与交易成本', desc:'低市值 / 低 P-B 只构成正向支持证据，不能抵消硬风险。'},
-      {id:'HF-3', name:'股权结构与控制权路径', desc:'重点不是“有没有控股股东”，而是有没有可谈对象、动机与路径。'},
-      {id:'HF-4', name:'资本结构与融资历史', desc:'判断是 clean、manageable、complex 还是 toxic，且有较强 veto 属性。'},
-      {id:'HF-5', name:'持续披露与上市合规', desc:'判断上市资格稳定性，而不是简单看“有没有公告”。'},
-      {id:'HF-6', name:'重大不可修复风险', desc:'veto module：监管调查、重大诉讼、造假、除牌风险、表外负债等。'},
-      {id:'HF-7', name:'初步资产注入可行性与平台适配度', desc:'只能作为进入 DD 的正向补充，不能覆盖硬伤。'}
+      {id:'HF-1', key:'HF1', name:'上市状态与板块', desc:'主板 / GEM、停牌、复牌路径、公众持股、除牌风险。'},
+      {id:'HF-2', key:'HF2', name:'低估值与交易成本', desc:'低市值 / 低 P/B 只构成支持证据，不得抵消硬风险。'},
+      {id:'HF-3', key:'HF3', name:'股权结构与控制权路径', desc:'有没有可谈对象、有没有动机、有没有拿控制权的路径。'},
+      {id:'HF-4', key:'HF4', name:'资本结构与融资历史', desc:'是 clean、manageable、complex 还是 toxic。'},
+      {id:'HF-5', key:'HF5', name:'持续披露与上市合规', desc:'平台未来是否可能被审计 / 合规 / 停牌风险拖住。'},
+      {id:'HF-6', key:'HF6', name:'重大不可修复风险', desc:'veto module：监管调查、重大诉讼、表外负债、除牌风险等。'},
+      {id:'HF-7', key:'HF7', name:'平台适配与初步可用性', desc:'只能增强进入 DD 的理由，不能掩盖硬伤。'}
+    ];
+
+    const DD_META = [
+      {id:'9.1', key:'DD1', name:'控制权溯源', desc:'判断控制权是否清晰、可谈、可转让。'},
+      {id:'9.2', key:'DD2', name:'历史债务与诉讼', desc:'判断历史包袱是否可量化、可谈判、可清理。'},
+      {id:'9.3', key:'DD3', name:'合规性审计', desc:'判断上市地位是否稳定，披露与治理是否足以支撑交易。'},
+      {id:'9.4', key:'DD4', name:'存续成本', desc:'判断壳体维护和清理成本是否可承受。'},
+      {id:'9.5', key:'DD5', name:'业务存续价值与困境机会', desc:'判断业务是否真实存在，困境是否可逆。'}
     ];
 
     const DEFAULTS = {
       boardPreference:'mainboard', gemMode:'warning', marketCapUpper:2600, pbUpper:0.8,
-      suspensionPolicy:'strict', controlPathRequirement:'clearOnly', toxicTolerance:'normal',
-      disclosureStrictness:'normal', fatalVeto:true, unknownPolicy:'normal', warningThreshold:40,
-      hf6Threshold:60, relOfficial:0.96, relAudit:0.95, relStructured:0.78, relMeta:0.68, relMedia:0.56, relLLM:0.30
+      suspensionPolicy:'strict', controlPathRequirement:'clearOnly', toxicTolerance:'normal', disclosureStrictnessHF:'normal',
+      fatalVeto:true, unknownPolicyHF:'normal', warningThreshold:40, hf6Threshold:60,
+      ddControlClarityRequirement:'normal', ddDebtLitigationTolerance:'medium', ddComplianceStrictness:'normal',
+      ddMaintenanceCostLimit:12, ddBusinessSubstanceRequirement:'normal', ddDistressReversibilityRequirement:'normal',
+      ddCleanupCostTolerance:'medium', ddUnknownPolicy:'normal', ddEvidenceMode:'normal',
+      relOfficial:0.96, relAudit:0.95, relCourt:0.92, relShareholder:0.89, relFinancing:0.88, relStructured:0.78, relIR:0.66, relMedia:0.56, relMeta:0.68, relLLM:0.30
     };
 
     let selectedTicker = '00831.HK';
 
     const byId = (id) => document.getElementById(id);
-    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-    const round = (n) => Math.round(n);
     const esc = (s) => String(s ?? '').replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    const avgRel = (s) => (s.relOfficial + s.relAudit + s.relStructured + s.relMeta + s.relMedia + s.relLLM) / 6;
+    const round = (n) => Math.round(n);
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+    function normalize4(a,b,c,d){ const t = a+b+c+d; return {pass:round(a/t*100), warn:round(b/t*100), exclude:round(c/t*100), unknown:round(d/t*100)}; }
+    function normalize5(a,b,c,d,e){ const t = a+b+c+d+e; return {clean:round(a/t*100), manageable:round(b/t*100), high:round(c/t*100), critical:round(d/t*100), unknown:round(e/t*100)}; }
+    function decisionClass(label){
+      if (/Reject|Exclude|Critical|Not Tradable|Stop/.test(label)) return 'decision-exclude';
+      if (/Unknown|Insufficient|Not Found/.test(label)) return 'decision-unknown';
+      if (/Warning|Needs DD|Manageable|Hold|Conditions|High Risk/.test(label)) return 'decision-warning';
+      return 'decision-pass';
+    }
+    function hfDecision(b){
+      if (b.exclude >= Math.max(b.pass, b.warn, b.unknown)) return 'Exclude';
+      if (b.unknown >= Math.max(b.pass, b.warn, b.exclude)) return 'Insufficient Evidence';
+      if (b.warn >= Math.max(b.pass, b.exclude, b.unknown)) return 'Needs DD';
+      return b.warn >= 25 ? 'Pass with warning' : 'Pass';
+    }
+    function ddDecision(b){
+      const maxVal = Math.max(b.clean, b.manageable, b.high, b.critical, b.unknown);
+      if (b.critical === maxVal) return 'Critical / Not Tradable';
+      if (b.unknown === maxVal) return 'Insufficient Evidence';
+      if (b.high === maxVal) return 'High Risk';
+      if (b.manageable === maxVal) return 'Manageable Risk';
+      return 'Clean / Low Risk';
+    }
+    function boolWord(v){ return v ? 'Yes' : 'No'; }
 
     function getSettings(){
       return {
@@ -484,53 +658,31 @@
         suspensionPolicy: byId('suspensionPolicy').value,
         controlPathRequirement: byId('controlPathRequirement').value,
         toxicTolerance: byId('toxicTolerance').value,
-        disclosureStrictness: byId('disclosureStrictness').value,
+        disclosureStrictnessHF: byId('disclosureStrictnessHF').value,
         fatalVeto: byId('fatalVeto').checked,
-        unknownPolicy: byId('unknownPolicy').value,
+        unknownPolicyHF: byId('unknownPolicyHF').value,
         warningThreshold: Number(byId('warningThreshold').value),
         hf6Threshold: Number(byId('hf6Threshold').value),
-        relOfficial: Number(byId('relOfficial').value),
-        relAudit: Number(byId('relAudit').value),
-        relStructured: Number(byId('relStructured').value),
-        relMeta: Number(byId('relMeta').value),
-        relMedia: Number(byId('relMedia').value),
-        relLLM: Number(byId('relLLM').value)
+        ddControlClarityRequirement: byId('ddControlClarityRequirement').value,
+        ddDebtLitigationTolerance: byId('ddDebtLitigationTolerance').value,
+        ddComplianceStrictness: byId('ddComplianceStrictness').value,
+        ddMaintenanceCostLimit: Number(byId('ddMaintenanceCostLimit').value),
+        ddBusinessSubstanceRequirement: byId('ddBusinessSubstanceRequirement').value,
+        ddDistressReversibilityRequirement: byId('ddDistressReversibilityRequirement').value,
+        ddCleanupCostTolerance: byId('ddCleanupCostTolerance').value,
+        ddUnknownPolicy: byId('ddUnknownPolicy').value,
+        ddEvidenceMode: byId('ddEvidenceMode').value,
+        relOfficial:Number(byId('relOfficial').value), relAudit:Number(byId('relAudit').value), relCourt:Number(byId('relCourt').value),
+        relShareholder:Number(byId('relShareholder').value), relFinancing:Number(byId('relFinancing').value), relStructured:Number(byId('relStructured').value),
+        relIR:Number(byId('relIR').value), relMedia:Number(byId('relMedia').value), relMeta:Number(byId('relMeta').value), relLLM:Number(byId('relLLM').value)
       };
     }
 
-    function normalize(pass, warn, exclude, unknown){
-      const total = pass + warn + exclude + unknown;
-      return {
-        pass: round(pass / total * 100),
-        warn: round(warn / total * 100),
-        exclude: round(exclude / total * 100),
-        unknown: round(unknown / total * 100)
-      };
-    }
-
-    function hfDecision(b){
-      if (b.exclude >= Math.max(b.pass, b.warn, b.unknown)) return 'Exclude';
-      if (b.unknown >= Math.max(b.pass, b.warn, b.exclude)) return 'Insufficient Evidence';
-      if (b.warn >= Math.max(b.pass, b.exclude, b.unknown)) return 'Needs DD';
-      return b.warn >= 25 ? 'Pass with warning' : 'Pass';
-    }
-
-    function decisionClass(decision){
-      if (/Exclude/.test(decision)) return 'decision-exclude';
-      if (/Unknown|Insufficient/.test(decision)) return 'decision-unknown';
-      if (/Warning|Needs DD/.test(decision)) return 'decision-warning';
-      return 'decision-pass';
-    }
-
-    function evidencePenalty(value, rel, factor=18){
-      return (100 - value) * (1.1 - rel) / 100 * factor;
-    }
+    function avg(...nums){ return nums.reduce((a,b)=>a+b,0)/nums.length; }
+    function evidenceModeUnknownBoost(mode){ return mode === 'conservative' ? 12 : mode === 'flexible' ? -4 : 0; }
+    function evidencePenalty(value, rel, factor=18){ return (100 - value) * (1.08 - rel) / 100 * factor; }
 
     function computeHF(company, s){
-      const reliability = avgRel(s);
-      const lowConfidenceBoost = (1 - reliability) * 16;
-
-      // HF-1
       let h1Pass = company.board === 'Main Board' ? 62 : 40;
       let h1Warn = company.board === 'GEM' ? 24 : 12;
       let h1Exclude = company.board === 'GEM' && s.gemMode === 'exclude' ? 34 : 6;
@@ -548,9 +700,8 @@
       h1Exclude += company.publicFloatRisk * 0.35 + company.delistingRisk * 0.35;
       h1Warn += company.goingConcernRisk * 0.22;
       h1Unknown += evidencePenalty(100 - company.publicFloatRisk, s.relOfficial, 8);
-      const HF1 = normalize(h1Pass, h1Warn, h1Exclude, h1Unknown);
+      const HF1 = normalize4(h1Pass, h1Warn, h1Exclude, h1Unknown);
 
-      // HF-2
       let h2Pass = (company.pb > 0 && company.pb <= s.pbUpper ? 38 : 20) + (company.marketCap <= s.marketCapUpper ? 22 : 6);
       let h2Warn = company.marketCap > s.marketCapUpper ? 26 : 18;
       let h2Exclude = company.marketCap > s.marketCapUpper * 1.35 ? 18 : 6;
@@ -559,149 +710,360 @@
       if (company.pb < 0.35) { h2Pass += 8; h2Warn += 12; }
       h2Warn += (company.majorLitigation + company.auditIssue) * 0.12;
       h2Unknown += evidencePenalty(72, s.relStructured, 12);
-      const HF2 = normalize(h2Pass, h2Warn, h2Exclude, h2Unknown);
+      const HF2 = normalize4(h2Pass, h2Warn, h2Exclude, h2Unknown);
 
-      // HF-3
       let h3Pass = company.controlClarity * 0.42 + company.controlConcentration * 0.18;
       let h3Warn = (100 - company.controlClarity) * 0.22 + (100 - company.sellerSignal) * 0.18 + company.pledgeRisk * 0.20;
       let h3Exclude = company.controlDispute * 0.75 + company.freezeRisk * 0.55;
-      let h3Unknown = company.unknownControl + lowConfidenceBoost;
+      let h3Unknown = company.unknownControl + evidencePenalty(company.controlClarity, s.relShareholder, 14);
       if (s.controlPathRequirement === 'clearOnly') { h3Pass -= 8; h3Warn += 10; h3Unknown += 6; }
       if (s.controlPathRequirement === 'jointPathOk') { h3Warn -= 4; h3Pass += 3; }
       if (company.controlClarity < 50) h3Warn += 10;
       if (company.controlDispute > 20) h3Exclude += 10;
-      const HF3 = normalize(h3Pass, h3Warn, h3Exclude, h3Unknown);
+      const HF3 = normalize4(h3Pass, h3Warn, h3Exclude, h3Unknown);
 
-      // HF-4
       let toleranceHit = s.toxicTolerance === 'conservative' ? 1.12 : s.toxicTolerance === 'opportunistic' ? 0.82 : 1;
       let h4Pass = 54 - company.toxicFinancing * 0.28 - company.dilutionOverhang * 0.18 - company.warrantMessiness * 0.12;
       let h4Warn = company.debtStress * 0.28 + company.dilutionOverhang * 0.42 + (company.fixedCB ? 14 : 6);
       let h4Exclude = (company.toxicFinancing * 0.68 + company.warrantMessiness * 0.36) * toleranceHit + (company.variablePriceFinancing ? 16 : 0);
-      let h4Unknown = company.unknownCapital + evidencePenalty(68, Math.min(s.relOfficial, s.relAudit), 16);
-      const HF4 = normalize(h4Pass, h4Warn, h4Exclude, h4Unknown);
+      let h4Unknown = company.unknownCapital + evidencePenalty(68, avg(s.relFinancing,s.relAudit), 18);
+      const HF4 = normalize4(h4Pass, h4Warn, h4Exclude, h4Unknown);
 
-      // HF-5
-      let strictness = s.disclosureStrictness === 'conservative' ? 1.14 : s.disclosureStrictness === 'flexible' ? 0.84 : 1;
+      let strictnessHF = s.disclosureStrictnessHF === 'conservative' ? 1.14 : s.disclosureStrictnessHF === 'flexible' ? 0.84 : 1;
       let h5Pass = company.disclosureTimeliness * 0.48 + (100 - company.auditIssue) * 0.14;
-      let h5Warn = (company.auditIssue + company.auditorChange + company.directorChange + company.internalControlIssue) * 0.42 * strictness;
-      let h5Exclude = (company.delistingRisk * 0.42 + company.disciplinaryRisk * 0.45) * strictness;
+      let h5Warn = (company.auditIssue + company.auditorChange + company.directorChange + company.internalControlIssue) * 0.42 * strictnessHF;
+      let h5Exclude = (company.delistingRisk * 0.42 + company.disciplinaryRisk * 0.45) * strictnessHF;
       let h5Unknown = company.unknownCompliance + evidencePenalty(company.disclosureTimeliness, s.relOfficial, 14);
-      const HF5 = normalize(h5Pass, h5Warn, h5Exclude, h5Unknown);
+      const HF5 = normalize4(h5Pass, h5Warn, h5Exclude, h5Unknown);
 
-      // HF-6
       let h6Pass = 68 - company.fatalRegulatory * 0.4 - company.majorLitigation * 0.18 - company.unresolvedRisk * 0.18;
       let h6Warn = company.majorLitigation * 0.44 + company.unresolvedRisk * 0.42 + company.offBalanceRisk * 0.18;
       let h6Exclude = company.fatalRegulatory * 0.9 + company.offBalanceRisk * 0.26 + company.majorLitigation * 0.32;
-      let h6Unknown = 8 + evidencePenalty(66, Math.min(s.relOfficial, s.relMedia), 12);
+      let h6Unknown = 8 + evidencePenalty(66, avg(s.relOfficial,s.relCourt,s.relMedia), 12);
       if (!s.fatalVeto) h6Exclude *= 0.84;
-      const HF6 = normalize(h6Pass, h6Warn, h6Exclude, h6Unknown);
+      const HF6 = normalize4(h6Pass, h6Warn, h6Exclude, h6Unknown);
 
-      // HF-7
       let h7Pass = company.platformFit * 0.44 + company.businessContinuity * 0.18 + company.synergyEvidence * 0.16;
       let h7Warn = (100 - company.synergyEvidence) * 0.24 + (100 - company.businessContinuity) * 0.18;
       let h7Exclude = (100 - company.platformFit) * 0.10 + (company.businessContinuity < 35 ? 14 : 4);
-      let h7Unknown = company.unknownPlatform + evidencePenalty(company.synergyEvidence, Math.min(s.relStructured, s.relMedia), 18);
-      const HF7 = normalize(h7Pass, h7Warn, h7Exclude, h7Unknown);
+      let h7Unknown = company.unknownPlatform + evidencePenalty(company.synergyEvidence, avg(s.relStructured,s.relMedia,s.relIR), 18);
+      const HF7 = normalize4(h7Pass, h7Warn, h7Exclude, h7Unknown);
 
       return {HF1,HF2,HF3,HF4,HF5,HF6,HF7};
     }
 
-    function overallDecision(hfMap, company, s){
-      const core = [hfMap.HF3, hfMap.HF4, hfMap.HF5, hfMap.HF6];
+    function buildHFQuestions(company){
+      return [
+        {question:'Who is the effective controlling shareholder?', module:'9.1 控制权溯源'},
+        {question:'Is there a feasible control transfer path?', module:'9.1 控制权溯源'},
+        {question:'Are there convertible bonds, warrants or variable-price financing instruments?', module:'9.2 历史债务与诉讼'},
+        {question:'Is public float compliant after a potential asset injection?', module:'9.3 合规性审计'},
+        {question:'Are there unresolved litigation, regulatory or audit risks?', module:'9.3 合规性审计'},
+        {question:'Is maintenance cost still acceptable after cleanup?', module:'9.4 存续成本'},
+        {question:'Does the platform still have real operating substance?', module:'9.5 业务存续价值与困境机会'}
+      ];
+    }
+
+    function overallHFDecision(hf, company, s){
+      const core = [hf.HF3,hf.HF4,hf.HF5,hf.HF6];
       let decision = 'Pass';
       let reason = 'Core hard filters are broadly supportable under current user appetite.';
-
-      if (s.fatalVeto && hfMap.HF6.exclude >= s.hf6Threshold) {
+      if (s.fatalVeto && hf.HF6.exclude >= s.hf6Threshold) {
         decision = 'Exclude';
-        reason = `HF-6 exclude belief reaches ${hfMap.HF6.exclude}%, above the veto threshold ${s.hf6Threshold}%. Fatal risk cannot be offset by valuation or platform story.`;
-      } else if (hfMap.HF5.exclude >= 60) {
+        reason = `HF-6 exclude belief reaches ${hf.HF6.exclude}%, above the veto threshold ${s.hf6Threshold}%. Fatal risk cannot be offset by valuation or platform story.`;
+      } else if (hf.HF5.exclude >= 60) {
         decision = 'Exclude';
-        reason = `HF-5 exclude belief reaches ${hfMap.HF5.exclude}%, indicating listing-stability risk is too high for DD entry.`;
-      } else if (hfMap.HF4.exclude >= 70) {
+        reason = `HF-5 exclude belief reaches ${hf.HF5.exclude}%, indicating listing-stability risk is too high for DD entry.`;
+      } else if (hf.HF4.exclude >= 70) {
         decision = 'Exclude';
-        reason = `HF-4 exclude belief reaches ${hfMap.HF4.exclude}%; capital structure is too toxic / unstable to treat as a priority shell candidate.`;
-      } else if (hfMap.HF3.exclude >= 70) {
+        reason = `HF-4 exclude belief reaches ${hf.HF4.exclude}%; capital structure is too toxic / unstable to treat as a priority shell candidate.`;
+      } else if (hf.HF3.exclude >= 70) {
         decision = 'Exclude';
-        reason = `HF-3 exclude belief reaches ${hfMap.HF3.exclude}%; control path obstacle is too severe.`;
-      } else if ([hfMap.HF3,hfMap.HF4,hfMap.HF5].some(hf => hf.unknown >= 50)) {
-        decision = s.unknownPolicy === 'strict' ? 'Insufficient Evidence' : 'Needs DD';
-        reason = `At least one core HF has unknown belief ≥ 50%, so the system preserves uncertainty instead of faking a clean pass.`;
-      } else if (core.some(hf => hf.warn >= s.warningThreshold)) {
+        reason = `HF-3 exclude belief reaches ${hf.HF3.exclude}%; control path obstacle is too severe.`;
+      } else if ([hf.HF3,hf.HF4,hf.HF5].some(x => x.unknown >= 50)) {
+        decision = s.unknownPolicyHF === 'strict' ? 'Insufficient Evidence' : 'Needs DD';
+        reason = 'At least one core HF has unknown belief ≥ 50%, so the system preserves uncertainty instead of faking a clean pass.';
+      } else if (core.some(x => x.warn >= s.warningThreshold)) {
         decision = 'Needs DD';
         reason = `At least one core HF warning belief crosses ${s.warningThreshold}%, so the company may proceed only as a DD case, not as a clean pass.`;
       } else if (company.board === 'GEM' && s.gemMode !== 'pass') {
         decision = 'Needs DD';
         reason = 'GEM status is not an automatic rejection, but under current appetite it remains at least a warning-level gating factor.';
       }
-
       const entries = [
-        ['HF-1 Listing status', hfMap.HF1], ['HF-2 Valuation cost', hfMap.HF2], ['HF-3 Control path', hfMap.HF3],
-        ['HF-4 Capital structure', hfMap.HF4], ['HF-5 Disclosure & compliance', hfMap.HF5], ['HF-6 Fatal risk', hfMap.HF6], ['HF-7 Platform fit', hfMap.HF7]
+        ['HF-1 Listing status', hf.HF1], ['HF-2 Valuation cost', hf.HF2], ['HF-3 Control path', hf.HF3],
+        ['HF-4 Capital structure', hf.HF4], ['HF-5 Disclosure & compliance', hf.HF5], ['HF-6 Fatal risk', hf.HF6], ['HF-7 Platform fit', hf.HF7]
       ];
       const strongestPass = entries.reduce((a,b)=> a[1].pass > b[1].pass ? a : b);
       const strongestWarn = entries.reduce((a,b)=> a[1].warn > b[1].warn ? a : b);
       const strongestExclude = entries.reduce((a,b)=> a[1].exclude > b[1].exclude ? a : b);
       const strongestUnknown = entries.reduce((a,b)=> a[1].unknown > b[1].unknown ? a : b);
-      let reviewPriority = decision === 'Exclude' ? 'Do not enter DD unless veto assumptions are challenged.' : decision === 'Insufficient Evidence' ? 'High — evidence gaps must be closed before any DD budget is committed.' : decision === 'Needs DD' ? 'High — enter focused DD, not broad optimism.' : 'Medium — clean enough for DD entry, but still needs human review.';
-      let enterDdReason = decision === 'Exclude' ? 'No DD entry under current settings.' : `${strongestWarn[0]} and ${strongestUnknown[0]} are the main reasons DD should be evidence-closing rather than thesis-confirming.`;
-      return {decision,reason,strongestPass,strongestWarn,strongestExclude,strongestUnknown,reviewPriority,enterDdReason};
+      const manualReviewPriority = decision === 'Exclude' ? 'Do not enter DD unless veto assumptions are challenged.' : decision === 'Insufficient Evidence' ? 'High — evidence gaps must be closed before spending DD budget.' : decision === 'Needs DD' ? 'High — enter focused DD, not broad optimism.' : 'Medium — clean enough for DD entry, but still needs human review.';
+      const enterDdReason = decision === 'Exclude' ? 'No DD entry under current settings.' : `${strongestWarn[0]} and ${strongestUnknown[0]} are the main reasons DD should be evidence-closing rather than thesis-confirming.`;
+      return {
+        decision, reason, strongestPass, strongestWarn, strongestExclude, strongestUnknown,
+        manualReviewPriority, enterDdReason, nextQuestions: buildHFQuestions(company)
+      };
     }
 
-    function buildHFDetail(company, s, hfKey, belief){
-      const detail = {
-        HF1: {
-          evidence:[`${company.boardCn}上市`, company.tradingNormal ? '当前交易状态正常' : '当前交易状态异常', `公众持股 / 除牌风险信号：${company.publicFloatRisk + company.delistingRisk}`],
-          sources:['HKEX listing status','Trading status page','Announcement record'],
-          rel:`${round(s.relOfficial*100)}% official filings`,
-          reasoning: company.board === 'GEM'
-            ? 'GEM 在这里不自动淘汰，但默认被作为 Warning-level platform quality issue 处理。'
-            : '主板、正常交易、无明显除牌风险时，HF-1 倾向 Pass。',
-          dd:'若存在停牌、公众持股或持续经营疑点，先查复牌路径、公众持股修复空间与除牌时间表。'
-        },
-        HF2: {
-          evidence:[`市值约 HKD ${company.marketCap}m`, `P/B ${company.pb}`, company.pb < 0.4 ? '估值很低，需解释为什么便宜' : '估值在可接受区间内'],
-          sources:['Structured market data','Annual report balance sheet','Analyst normalization'],
-          rel:`${round(s.relStructured*100)}% structured data`,
-          reasoning:'HF-2 只能说明“便宜，值得看”，不能说明“便宜，所以适合交易”。',
-          dd:'追问低估值的来源：资产质量、历史亏损、审计问题、停牌 / 合规压力是否导致估值折价。'
-        },
-        HF3: {
-          evidence:[`控制权清晰度 ${company.controlClarity}`, `控股集中度 ${company.controlConcentration}`, `出售 / 重组意愿信号 ${company.sellerSignal}`],
-          sources:['Annual report shareholding','Announcements','Media / governance traces'],
-          rel:`${round(((s.relOfficial+s.relMedia)/2)*100)}% mixed reliability`,
-          reasoning:'HF-3 关注的是有没有谈判对象、有没有转让动机、有没有拿控制权的路径，而不是只看“是否存在控股股东”。',
-          dd:'有效控制人是谁？是否有质押 / 冻结 / 债务压力？控制权取得后公众持股会不会出问题？'
-        },
-        HF4: {
-          evidence:[`融资复杂度 ${company.toxicFinancing}`, `潜在稀释 overhang ${company.dilutionOverhang}`, company.fixedCB ? '存在固定价格可转债 / 类似工具' : '未见明确固定价可转工具'],
-          sources:['Notes to financial statements','Capital raising announcements','Term summary extraction'],
-          rel:`${round(((s.relOfficial+s.relAudit)/2)*100)}% filings + audit notes`,
-          reasoning:'HF-4 有较强 veto 属性。资本结构 toxic 时，协同再好、估值再低，也不该进入优先候选。',
-          dd:'是否存在可变价格融资、折价可转债、复杂权证、交叉违约、不可控稀释路径？'
-        },
-        HF5: {
-          evidence:[`披露及时性 ${company.disclosureTimeliness}`, `审计 / 内控问题综合信号 ${company.auditIssue + company.internalControlIssue}`, `管理层变动信号 ${company.auditorChange + company.directorChange}`],
-          sources:['HKEX disclosures','Audit opinion','Director / auditor announcements'],
-          rel:`${round(s.relOfficial*100)}% official disclosure`,
-          reasoning:'HF-5 判断的是上市资格稳定性：平台未来会不会出停牌、除牌、审计、内控或监管问题。',
-          dd:'近期核数师 / 董事变更是否反映审计困难、治理冲突或内部控制缺陷？'
-        },
-        HF6: {
-          evidence:[`重大诉讼信号 ${company.majorLitigation}`, `监管 / 诚信风险 ${company.fatalRegulatory}`, `表外 / 未解决负债风险 ${company.offBalanceRisk + company.unresolvedRisk}`],
-          sources:['Litigation disclosures','Regulatory announcements','Public reporting'],
-          rel:`${round(((s.relOfficial+s.relMedia)/2)*100)}% official + media`,
-          reasoning:'HF-6 是 veto module。只要 fatal risk 的 exclude belief 足够高，就不该被低估值或平台故事抵消。',
-          dd:'是否存在尚未解决的调查、诉讼、表外负债、控制权纠纷或除牌风险？'
-        },
-        HF7: {
-          evidence:[`平台适配度 ${company.platformFit}`, `业务存续价值 ${company.businessContinuity}`, `公开协同证据 ${company.synergyEvidence}`],
-          sources:['Business description','Operating footprint','Public market narrative'],
-          rel:`${round(((s.relStructured+s.relMedia)/2)*100)}% market + media`,
-          reasoning:'HF-7 只能作为正向补充：回答“有没有初步平台价值”，不回答“是不是最佳交易对象”。',
-          dd:'客户 / 渠道 / 供应链 / 牌照 / 品牌连续性是否真能支撑吨吨叙事，而不是纯想象？'
-        }
+    function hfModuleNote(metaKey, company, s, hf){
+      const notes = {
+        HF1:{evidence:`${company.boardCn}上市；公众持股/除牌信号 ${company.publicFloatRisk + company.delistingRisk}` , reasoning: company.board === 'GEM' ? 'GEM 不自动淘汰，但默认至少 Warning。' : '主板且正常交易时 HF-1 倾向 Pass。'},
+        HF2:{evidence:`市值 HKD ${company.marketCap}m；P/B ${company.pb}` , reasoning:'HF-2 只能支持“便宜，值得看”，不能证明“便宜，所以适合交易”。'},
+        HF3:{evidence:`控制清晰度 ${company.controlClarity}；集中度 ${company.controlConcentration}` , reasoning:'HF-3 看的是谈判对象、动机与路径，不是简单有无控股股东。'},
+        HF4:{evidence:`融资复杂度 ${company.toxicFinancing}；稀释 overhang ${company.dilutionOverhang}` , reasoning:'HF-4 有较强 veto 属性；toxic 结构不能被故事抵消。'},
+        HF5:{evidence:`披露及时性 ${company.disclosureTimeliness}；审计/内控问题 ${company.auditIssue + company.internalControlIssue}` , reasoning:'HF-5 关注平台稳定性，而不是公告数量。'},
+        HF6:{evidence:`诉讼信号 ${company.majorLitigation}；监管风险 ${company.fatalRegulatory}` , reasoning:'HF-6 是 fatal risk veto module。'},
+        HF7:{evidence:`平台适配 ${company.platformFit}；业务存续 ${company.businessContinuity}` , reasoning:'HF-7 只能增强进入 DD 的理由，不能覆盖 HF-4/5/6。'}
       };
-      return detail[hfKey];
+      const n = notes[metaKey];
+      return `<div class="hf-card"><div class="kicker">${esc(metaKey.replace('HF','HF-'))}</div><div class="summary-copy"><strong>${esc(n.evidence)}</strong><br />${esc(n.reasoning)}<br /><span class="mono">Decision: ${esc(hfDecision(hf[metaKey]))}</span></div></div>`;
+    }
+
+    function computeDD(company, s, hfOverall){
+      const unknownBoost = evidenceModeUnknownBoost(s.ddEvidenceMode);
+      const totalMaintenance = company.annualAuditCost + company.annualLegalCost + company.annualComplianceCost + company.annualCompanySecCost + company.annualIRCost + company.minimumOpsCost;
+      const cleanupToleranceMult = s.ddCleanupCostTolerance === 'low' ? 1.18 : s.ddCleanupCostTolerance === 'high' ? 0.82 : 1;
+      const debtToleranceMult = s.ddDebtLitigationTolerance === 'low' ? 1.18 : s.ddDebtLitigationTolerance === 'high' ? 0.82 : 1;
+      const complianceMult = s.ddComplianceStrictness === 'strict' ? 1.18 : s.ddComplianceStrictness === 'flexible' ? 0.84 : 1;
+      const controlMult = s.ddControlClarityRequirement === 'strict' ? 1.16 : s.ddControlClarityRequirement === 'flexible' ? 0.84 : 1;
+      const substanceMult = s.ddBusinessSubstanceRequirement === 'strict' ? 1.14 : s.ddBusinessSubstanceRequirement === 'flexible' ? 0.84 : 1;
+      const reversibilityMult = s.ddDistressReversibilityRequirement === 'strict' ? 1.14 : s.ddDistressReversibilityRequirement === 'flexible' ? 0.84 : 1;
+
+      // 9.1 Control traceability
+      let d1Clean = company.controlClarity * 0.34 + company.controlConcentration * 0.18 + company.sellerSignal * 0.12 - company.freezeRisk * 0.08;
+      let d1Manage = (100 - company.controlClarity) * 0.18 + company.sellerSignal * 0.22 + company.pledgeRisk * 0.18;
+      let d1High = ((100 - company.controlClarity) * 0.30 + company.controlDispute * 0.28) * controlMult;
+      let d1Critical = (company.freezeRisk * 0.65 + company.controlDispute * 0.72) * controlMult;
+      let d1Unknown = company.unknownControl + evidencePenalty(company.controlClarity, avg(s.relShareholder,s.relOfficial), 16) + unknownBoost;
+      const DD1 = normalize5(d1Clean,d1Manage,d1High,d1Critical,d1Unknown);
+
+      // 9.2 Historical debt & litigation
+      let d2Clean = 62 - company.majorLitigation * 0.22 - company.offBalanceRisk * 0.16 - company.debtStress * 0.14;
+      let d2Manage = (company.debtStress * 0.34 + company.majorLitigation * 0.24 + company.cleanupCostEstimate * 3.2) * (s.ddDebtLitigationTolerance === 'high' ? 1.08 : 1);
+      let d2High = (company.majorLitigation * 0.34 + company.offBalanceRisk * 0.28 + company.unresolvedRisk * 0.30) * debtToleranceMult;
+      let d2Critical = (company.offBalanceRisk * 0.52 + company.majorLitigation * 0.38 + company.cleanupCostEstimate * 2.8) * debtToleranceMult * cleanupToleranceMult;
+      let d2Unknown = company.unknownCapital + evidencePenalty(100 - company.offBalanceRisk, avg(s.relCourt,s.relAudit,s.relOfficial), 18) + unknownBoost;
+      const DD2 = normalize5(d2Clean,d2Manage,d2High,d2Critical,d2Unknown);
+
+      // 9.3 Compliance audit
+      let d3Clean = company.disclosureTimeliness * 0.32 + (100 - company.auditIssue) * 0.18 + (100 - company.fatalRegulatory) * 0.12;
+      let d3Manage = (company.auditIssue + company.auditorChange + company.directorChange + company.internalControlIssue) * 0.28;
+      let d3High = (company.auditIssue * 0.42 + company.internalControlIssue * 0.32 + company.disciplinaryRisk * 0.28) * complianceMult;
+      let d3Critical = (company.fatalRegulatory * 0.76 + company.delistingRisk * 0.42 + company.suspended * 20) * complianceMult;
+      let d3Unknown = company.unknownCompliance + evidencePenalty(company.disclosureTimeliness, avg(s.relOfficial,s.relAudit), 15) + unknownBoost;
+      const DD3 = normalize5(d3Clean,d3Manage,d3High,d3Critical,d3Unknown);
+
+      // 9.4 Maintenance cost
+      const maintenanceGap = totalMaintenance - s.ddMaintenanceCostLimit;
+      let d4Clean = totalMaintenance <= s.ddMaintenanceCostLimit ? 62 - company.cleanupCostEstimate * 1.5 : 28;
+      let d4Manage = (Math.max(totalMaintenance, s.ddMaintenanceCostLimit) / s.ddMaintenanceCostLimit) * 20 + company.cleanupCostEstimate * 2.1;
+      let d4High = maintenanceGap > 0 ? maintenanceGap * 6 + company.cleanupCostEstimate * 2.6 : company.cleanupCostEstimate * 1.8;
+      let d4Critical = (company.cleanupCostEstimate > s.ddMaintenanceCostLimit ? company.cleanupCostEstimate * 4.2 : company.cleanupCostEstimate * 1.2) * cleanupToleranceMult;
+      let d4Unknown = evidencePenalty(70, avg(s.relOfficial,s.relAudit,s.relFinancing), 12) + (s.ddEvidenceMode === 'conservative' ? 8 : 3);
+      const DD4 = normalize5(d4Clean,d4Manage,d4High,d4Critical,d4Unknown);
+
+      // 9.5 Business substance & distress opportunity
+      let d5Clean = company.businessReality * 0.28 + company.customerContinuity * 0.14 + company.supplierContinuity * 0.12 + company.distressReversibility * 0.16;
+      let d5Manage = (100 - company.businessReality) * 0.16 + company.tontonRepairFit * 0.22 + company.distressClarity * 0.18;
+      let d5High = ((100 - company.businessReality) * 0.28 + (100 - company.distressReversibility) * 0.28) * substanceMult * reversibilityMult;
+      let d5Critical = ((100 - company.businessContinuity) * 0.34 + (100 - company.platformFit) * 0.18) * substanceMult;
+      let d5Unknown = company.unknownPlatform + evidencePenalty(company.businessReality, avg(s.relIR,s.relMedia,s.relStructured), 18) + unknownBoost;
+      if (avg(s.relIR,s.relMedia,s.relStructured) < 0.7) { d5Clean *= 0.72; d5Manage += 8; d5Unknown += 6; }
+      const DD5 = normalize5(d5Clean,d5Manage,d5High,d5Critical,d5Unknown);
+
+      return {DD1,DD2,DD3,DD4,DD5,totalMaintenance:round(totalMaintenance*10)/10};
+    }
+
+    function buildTaskLog(company, s, hfOverall, dd){
+      const relControl = round(avg(s.relOfficial,s.relShareholder)*100);
+      const relFinancing = round(avg(s.relFinancing,s.relAudit,s.relOfficial)*100);
+      const relCompliance = round(avg(s.relOfficial,s.relAudit,s.relCourt)*100);
+      const relBusiness = round(avg(s.relIR,s.relMedia,s.relStructured)*100);
+
+      const tasks = [
+        {
+          question:'Who is the effective controlling shareholder?',
+          module:'9.1 控制权溯源',
+          status: company.controlClarity >= 65 ? 'Answered' : company.controlClarity >= 48 ? 'Partially Answered' : 'Requires Manual Review',
+          finding: company.controlClarity >= 65 ? 'Largest shareholder and control path are identifiable in public filings, though sale willingness still needs confirmation.' : company.controlClarity >= 48 ? 'Annual report identifies a lead shareholder block, but concert-party relationships or sale willingness remain unclear.' : 'Public materials do not establish a sufficiently clear effective controller.',
+          source:'Annual report / shareholder disclosure', reliability:`${relControl}%`, gap:'Confirm concert party status, exit pressure, and whether the block is actually transferable.'
+        },
+        {
+          question:'Is there a feasible control transfer path?',
+          module:'9.1 控制权溯源',
+          status: company.sellerSignal >= 55 ? 'Partially Answered' : company.controlDispute > 16 ? 'Requires Manual Review' : 'Partially Answered',
+          finding: company.sellerSignal >= 55 ? 'A negotiated transfer path looks directionally feasible, but approvals and economics still need work.' : 'A potential path exists, but transaction mechanics, approvals, and willingness are not yet validated.',
+          source:'Announcements / governance disclosures / media', reliability:`${round(avg(s.relOfficial,s.relShareholder,s.relMedia)*100)}%`, gap:'Check whether transfer needs creditor consent, shareholder approval, or regulatory clearance.'
+        },
+        {
+          question:'Are there convertible bonds, warrants or variable-price financing instruments?',
+          module:'9.2 历史债务与诉讼',
+          status: company.toxicFinancing < 15 && !company.fixedCB ? 'Answered' : company.toxicFinancing < 35 ? 'Partially Answered' : 'Requires Manual Review',
+          finding: company.fixedCB ? 'Some fixed-price or structured financing history exists; latest filings do not yet prove the full dilution path is clean.' : 'No obviously fatal variable-price financing is visible, but historical financing review is still required.',
+          source:'Financing announcements / audit notes', reliability:`${relFinancing}%`, gap:'Verify legacy placements, outstanding rights, and post-injection dilution impact.'
+        },
+        {
+          question:'Is public float compliant after a potential asset injection?',
+          module:'9.3 合规性审计',
+          status: company.publicFloatRisk <= 12 ? 'Requires Manual Review' : 'Requires Manual Review',
+          finding:'Current float appears directionally workable, but the effect of a control transfer plus asset injection has not been modeled in this page.',
+          source:'Listing rules / current ownership disclosures', reliability:`${round(avg(s.relOfficial,s.relShareholder)*100)}%`, gap:'Model post-transaction public float and concentration outcomes.'
+        },
+        {
+          question:'Are there unresolved litigation, regulatory or audit risks?',
+          module:'9.3 合规性审计',
+          status: company.fatalRegulatory < 10 && company.majorLitigation < 20 ? 'Answered' : company.fatalRegulatory < 18 && company.majorLitigation < 35 ? 'Partially Answered' : 'Requires Manual Review',
+          finding: company.fatalRegulatory < 10 && company.majorLitigation < 20 ? 'No confirmed fatal regulatory issue is visible in high-reliability sources, but history still needs cleanup costing.' : 'Risk signals exist, but current evidence does not yet show whether they are fatal, manageable, or partly historical.',
+          source:'Official filings / court or regulatory records', reliability:`${relCompliance}%`, gap:'Quantify unresolved items and determine whether they affect listing stability or closing feasibility.'
+        },
+        {
+          question:'Is maintenance cost still acceptable after cleanup?',
+          module:'9.4 存续成本',
+          status: company.cleanupCostEstimate + company.minimumOpsCost < s.ddMaintenanceCostLimit ? 'Partially Answered' : 'Requires Manual Review',
+          finding:'Base listing maintenance cost is estimable, but cleanup cost still depends on legal / financing / litigation scoping.',
+          source:'Audit / legal / compliance cost assumptions', reliability:`${round(avg(s.relAudit,s.relOfficial,s.relFinancing)*100)}%`, gap:'Validate legal, advisory and cleanup budget under the actual transaction perimeter.'
+        },
+        {
+          question:'Does the platform still have real operating substance?',
+          module:'9.5 业务存续价值与困境机会',
+          status: company.businessReality >= 75 ? 'Answered' : company.businessReality >= 45 ? 'Partially Answered' : 'Requires Manual Review',
+          finding: company.businessReality >= 75 ? 'Operating substance is visible through business continuity, customer and supplier evidence.' : company.businessReality >= 45 ? 'Some business substance still exists, but it is not strong enough to be treated as fully proven platform value.' : 'Public evidence of real, reusable operating substance is weak.',
+          source:'Business disclosures / IR / market evidence', reliability:`${relBusiness}%`, gap:'Confirm current customer, supplier, channel, staff, and asset continuity.'
+        }
+      ];
+      return tasks;
+    }
+
+    function riskSeverityByModule(b){
+      if (b.critical >= 60) return 'Critical';
+      if (b.high >= 40) return 'High';
+      if (b.manageable >= Math.max(b.clean,b.high,b.critical,b.unknown)) return 'Medium';
+      if (b.clean >= Math.max(b.manageable,b.high,b.critical,b.unknown)) return 'Low';
+      return 'High';
+    }
+
+    function buildRemediability(company, s, dd){
+      const items = [
+        {
+          risk:'Control path clarity',
+          severity:riskSeverityByModule(dd.DD1),
+          quantifiable: company.controlClarity >= 45,
+          negotiable: company.sellerSignal >= 34,
+          cleanable: company.freezeRisk < 20 && company.controlDispute < 20,
+          cost:`HKD ${(company.cleanupCostEstimate * 0.9).toFixed(1)}m`,
+          condition:'Confirm effective controller, sale willingness, and transaction path before commercial thesis work.'
+        },
+        {
+          risk:'Historical debt / litigation overhang',
+          severity:riskSeverityByModule(dd.DD2),
+          quantifiable: company.offBalanceRisk < 35,
+          negotiable: company.majorLitigation < 40,
+          cleanable: company.cleanupCostEstimate < 10,
+          cost:`HKD ${(company.cleanupCostEstimate * 1.0).toFixed(1)}m`,
+          condition:'Price adjustment, seller cleanup, escrow, indemnity, or pre-closing settlement if liabilities remain.'
+        },
+        {
+          risk:'Compliance / listing stability',
+          severity:riskSeverityByModule(dd.DD3),
+          quantifiable: company.disclosureTimeliness >= 60,
+          negotiable: company.fatalRegulatory < 18,
+          cleanable: company.delistingRisk < 22,
+          cost:`HKD ${(company.annualComplianceCost + company.annualLegalCost).toFixed(1)}m / year`,
+          condition:'Confirm public float, audit remediation, and no unresolved suspension / delisting blocker.'
+        },
+        {
+          risk:'Maintenance & cleanup cost burden',
+          severity:riskSeverityByModule(dd.DD4),
+          quantifiable: true,
+          negotiable: true,
+          cleanable: company.cleanupCostEstimate <= s.ddMaintenanceCostLimit,
+          cost:`HKD ${dd.totalMaintenance.toFixed(1)}m / year + cleanup`,
+          condition:'Reserve budget or require seller-side cleanup if cost exceeds user appetite.'
+        },
+        {
+          risk:'Business substance & reversibility',
+          severity:riskSeverityByModule(dd.DD5),
+          quantifiable: company.businessReality >= 45,
+          negotiable: company.tontonRepairFit >= 45,
+          cleanable: company.distressReversibility >= 45,
+          cost:`HKD ${(Math.max(1.5, (100 - company.distressReversibility)/18)).toFixed(1)}m strategic stabilization`,
+          condition:'Proceed only if business substance can be evidenced and distress has a credible repair path.'
+        }
+      ];
+      return items;
+    }
+
+    function overallDDDecision(dd, company, s, hfOverall){
+      let decision = 'Proceed to Commercial Thesis & Transaction Structure';
+      let reason = 'Risk profile is sufficiently clean for next-step structuring under current DD appetite.';
+      if (dd.DD1.critical >= 60 || dd.DD2.critical >= 60 || dd.DD3.critical >= 60) {
+        decision = 'Reject / Stop';
+        reason = 'One core DD module reaches Critical ≥ 60%, indicating a control, historical liability, or compliance blocker that makes the case non-tradable under current settings.';
+      } else if (dd.DD1.unknown >= 50 || dd.DD2.unknown >= 50 || dd.DD3.unknown >= 50) {
+        decision = s.ddUnknownPolicy === 'strict' ? 'Insufficient Evidence' : 'Hold for Further DD / Cleanup';
+        reason = 'At least one core DD module has Insufficient Evidence ≥ 50%, so the system refuses to convert uncertainty into a positive recommendation.';
+      } else if (dd.DD1.high >= 40 || dd.DD2.high >= 40 || dd.DD3.high >= 40) {
+        decision = 'Hold for Further DD / Cleanup';
+        reason = 'At least one core DD module reaches High Risk ≥ 40%, so the case cannot move directly into thesis / structure work.';
+      } else if ([dd.DD1,dd.DD2,dd.DD3,dd.DD4].some(x => x.manageable >= Math.max(x.clean,x.high,x.critical,x.unknown))) {
+        decision = 'Proceed with Conditions';
+        reason = 'Main risks appear quantifiable, negotiable, or potentially cleanable, but not clean enough for unconditional progression.';
+      }
+
+      const entries = [
+        ['9.1 Control traceability', dd.DD1], ['9.2 Historical debt & litigation', dd.DD2], ['9.3 Compliance audit', dd.DD3],
+        ['9.4 Maintenance cost', dd.DD4], ['9.5 Business substance & distress opportunity', dd.DD5]
+      ];
+      const strongestClean = entries.reduce((a,b)=> a[1].clean > b[1].clean ? a : b);
+      const strongestRisk = entries.reduce((a,b)=> (a[1].critical + a[1].high) > (b[1].critical + b[1].high) ? a : b);
+      const mainUnknown = entries.reduce((a,b)=> a[1].unknown > b[1].unknown ? a : b);
+
+      const requiredConditions = [];
+      if (decision !== 'Reject / Stop' && decision !== 'Insufficient Evidence') {
+        if (dd.DD1.manageable + dd.DD1.high > 45) requiredConditions.push('Confirm effective controller, sale willingness, and transaction path.');
+        if (dd.DD2.manageable + dd.DD2.high > 45) requiredConditions.push('Quantify litigation / debt cleanup cost and decide whether it is seller-side, escrowed, or priced in.');
+        if (dd.DD3.manageable + dd.DD3.high > 45) requiredConditions.push('Confirm public float, audit / governance remediation, and no unresolved listing-status blocker.');
+        if (dd.DD4.manageable + dd.DD4.high > 45) requiredConditions.push('Reserve listing maintenance and cleanup budget or require pre-closing cleanup.');
+        if (dd.DD5.manageable + dd.DD5.high > 45) requiredConditions.push('Prove business substance with customer / channel / supplier / license continuity evidence.');
+      }
+      if (requiredConditions.length === 0 && decision === 'Proceed to Commercial Thesis & Transaction Structure') {
+        requiredConditions.push('No major blocking condition identified beyond standard confirmatory DD.');
+      }
+
+      const stopReasons = [];
+      if (decision === 'Reject / Stop') {
+        if (dd.DD1.critical >= 60) stopReasons.push('Control path problem: controller not transferable or too disputed.');
+        if (dd.DD2.critical >= 60) stopReasons.push('Historical burden problem: liabilities / litigation may be non-quantifiable or value-destructive.');
+        if (dd.DD3.critical >= 60) stopReasons.push('Compliance problem: listing stability too weak for a tradable shell platform.');
+      }
+      if (decision === 'Hold for Further DD / Cleanup' || decision === 'Insufficient Evidence') {
+        if (dd.DD1.high >= 40 || dd.DD1.unknown >= 50) stopReasons.push('Control path still too unclear.');
+        if (dd.DD2.high >= 40 || dd.DD2.unknown >= 50) stopReasons.push('Historical debt / litigation still not cleanly quantified.');
+        if (dd.DD3.high >= 40 || dd.DD3.unknown >= 50) stopReasons.push('Compliance / listing stability still not sufficiently resolved.');
+      }
+
+      const remediabilitySummary = decision === 'Reject / Stop'
+        ? 'At least one core risk looks non-tradable under current appetite.'
+        : decision === 'Proceed with Conditions'
+          ? 'Main risks appear potentially manageable through pricing, cleanup, covenants, indemnity, escrow, or pre-closing conditions.'
+          : decision === 'Hold for Further DD / Cleanup'
+            ? 'Some risks may be remediable, but evidence or cleanup planning is not strong enough yet.'
+            : decision === 'Insufficient Evidence'
+              ? 'Evidence gaps dominate the case; no positive progression should be inferred.'
+              : 'Risk profile is relatively clean, though confirmatory DD remains necessary.';
+
+      const nextStepRecommendation = decision === 'Proceed to Commercial Thesis & Transaction Structure'
+        ? 'Move into commercial thesis design and transaction structure work.'
+        : decision === 'Proceed with Conditions'
+          ? 'Proceed, but only with explicit conditions and transaction protections.'
+          : decision === 'Hold for Further DD / Cleanup'
+            ? 'Pause commercial work; focus on cleanup, documentation, and gating issues first.'
+            : decision === 'Reject / Stop'
+              ? 'Stop unless the blocking assumptions materially change.'
+              : 'Do not proceed until high-priority evidence gaps are closed.';
+
+      return {decision, reason, strongestClean, strongestRisk, mainUnknown, remediabilitySummary, nextStepRecommendation, requiredConditions, stopReasons};
     }
 
     function renderUniverse(){
@@ -709,14 +1071,12 @@
         <div class="universe-card">
           <div class="universe-code">${esc(c.ticker)} · ${esc(c.boardCn)}</div>
           <div class="universe-name">${esc(c.name)}</div>
-          <div class="source-row">
-            ${c.sources.map(s => `<span class="mini-pill">${esc(s)}</span>`).join('')}
-          </div>
+          <div class="source-row">${c.sources.map(s => `<span class="mini-pill">${esc(s)}</span>`).join('')}</div>
           <div class="meta-list">
             <strong>Market cap</strong><span>HKD ${esc(c.marketCap)}m</span>
             <strong>P/B</strong><span>${esc(c.pb)}</span>
-            <strong>Listing</strong><span>${esc(c.boardCn)} · ${c.tradingNormal ? '正常交易' : '交易异常'}</span>
-            <strong>Why in universe</strong><span>低估值 / 控制权线索 / 平台适配 / 风险待核</span>
+            <strong>Core clue</strong><span>低估值 / 控制权线索 / 风险待核 / 平台适配</span>
+            <strong>Universe role</strong><span>High-recall candidate, not yet judgment-heavy</span>
           </div>
           <div class="note">${esc(c.note)}</div>
         </div>
@@ -728,194 +1088,200 @@
       byId('companyTabs').querySelectorAll('.tab').forEach(btn => btn.onclick = () => { selectedTicker = btn.dataset.ticker; render(); });
     }
 
-    function renderOverview(results){
-      byId('overviewGrid').innerHTML = results.map(({company, overall, hf}) => `
+    function render(){
+      const s = getSettings();
+      byId('warningThresholdValue').textContent = `${s.warningThreshold}%`;
+      byId('hf6ThresholdValue').textContent = `${s.hf6Threshold}%`;
+      renderTabs();
+
+      const results = COMPANY_DATA.map(company => {
+        const hf = computeHF(company, s);
+        const hfOverall = overallHFDecision(hf, company, s);
+        const tasks = buildTaskLog(company, s, hfOverall, null);
+        const dd = computeDD(company, s, hfOverall);
+        const ddOverall = overallDDDecision(dd, company, s, hfOverall);
+        return {company, hf, hfOverall, tasks, dd, ddOverall};
+      });
+
+      renderHFOverview(results);
+      renderDDOverview(results);
+      const selected = results.find(x => x.company.ticker === selectedTicker) || results[0];
+      renderSelectedHF(selected);
+      renderSelectedDD(selected);
+    }
+
+    function renderHFOverview(results){
+      byId('overviewGridHF').innerHTML = results.map(({company, hfOverall}) => `
         <div class="overview-card">
           <div class="overview-head">
             <div>
               <div class="result-code">${esc(company.ticker)} · ${esc(company.boardCn)}</div>
               <div class="result-name">${esc(company.name)}</div>
             </div>
-            <span class="decision-pill ${decisionClass(overall.decision)}">${esc(overall.decision)}</span>
+            <span class="decision-pill ${decisionClass(hfOverall.decision)}">${esc(hfOverall.decision)}</span>
           </div>
-          <div class="overview-text">
-            <strong>${esc(overall.strongestWarn[0])}</strong> 是最强 warning；
-            <strong>${esc(overall.strongestExclude[0])}</strong> 是主要 exclude 压力；
-            <strong>${esc(overall.strongestUnknown[0])}</strong> 仍有明显证据缺口。
-          </div>
-          <div class="overall-rule">${esc(overall.reason)}</div>
+          <div class="overview-text">${esc(hfOverall.reason)}</div>
+          <div class="rule-box" style="margin-top:10px"><strong>Inherited DD focus:</strong> ${esc(hfOverall.strongestWarn[0])} / ${esc(hfOverall.strongestExclude[0])} / ${esc(hfOverall.strongestUnknown[0])}</div>
         </div>
       `).join('');
     }
 
-    function renderSelected(selected, settings){
-      const {company, hf, overall} = selected;
-      byId('selectedCompanyName').textContent = `${company.ticker} · ${company.name}`;
-      byId('selectedCompanyMeta').textContent = `${company.boardCn} · Market cap HKD ${company.marketCap}m · P/B ${company.pb} · Sources: ${company.sources.join(' / ')}`;
-      byId('overallDecisionPill').innerHTML = `<span class="decision-pill ${decisionClass(overall.decision)}">${esc(overall.decision)}</span>`;
-      byId('overallReason').textContent = overall.reason;
-      byId('strongestPass').textContent = `${overall.strongestPass[0]} (${overall.strongestPass[1].pass}%)`;
-      byId('strongestWarn').textContent = `${overall.strongestWarn[0]} (${overall.strongestWarn[1].warn}%)`;
-      byId('strongestExclude').textContent = `${overall.strongestExclude[0]} (${overall.strongestExclude[1].exclude}%)`;
-      byId('mainUnknown').textContent = `${overall.strongestUnknown[0]} (${overall.strongestUnknown[1].unknown}%)`;
-      byId('enterDdReason').textContent = overall.enterDdReason;
-      byId('reviewPriority').textContent = overall.reviewPriority;
+    function renderSelectedHF(selected){
+      const {company, hf, hfOverall} = selected;
+      byId('selectedCompanyNameHF').textContent = `${company.ticker} · ${company.name}`;
+      byId('selectedCompanyMetaHF').textContent = `${company.boardCn} · Market cap HKD ${company.marketCap}m · P/B ${company.pb} · Universe sources: ${company.sources.join(' / ')}`;
+      byId('overallDecisionPillHF').innerHTML = `<span class="decision-pill ${decisionClass(hfOverall.decision)}">${esc(hfOverall.decision)}</span>`;
+      byId('overallReasonHF').textContent = hfOverall.reason;
+      byId('strongestWarnHF').textContent = `${hfOverall.strongestWarn[0]} (${hfOverall.strongestWarn[1].warn}%)`;
+      byId('strongestExcludeHF').textContent = `${hfOverall.strongestExclude[0]} (${hfOverall.strongestExclude[1].exclude}%)`;
+      byId('mainUnknownHF').textContent = `${hfOverall.strongestUnknown[0]} (${hfOverall.strongestUnknown[1].unknown}%)`;
+      byId('enterDdReasonHF').textContent = hfOverall.enterDdReason;
+      byId('reviewPriorityHF').textContent = hfOverall.manualReviewPriority;
+      byId('nextQuestionsCountHF').textContent = `${hfOverall.nextQuestions.length} inherited questions to convert into DD investigation tasks.`;
 
-      const rows = ['HF1','HF2','HF3','HF4','HF5','HF6','HF7'].map((key, idx) => {
-        const b = hf[key];
+      byId('beliefTableBodyHF').innerHTML = HF_META.map(meta => {
+        const b = hf[meta.key];
         return `
           <tr>
-            <td><strong>${HF_META[idx].id}</strong><br /><span style="color:var(--muted);font-size:12px">${esc(HF_META[idx].name)}</span></td>
+            <td><strong>${esc(meta.id)}</strong><br /><span style="color:var(--muted);font-size:12px">${esc(meta.name)}</span></td>
             <td>
-              <div class="belief-bar">
-                <div class="b-pass" style="width:${b.pass}%"></div>
-                <div class="b-warn" style="width:${b.warn}%"></div>
-                <div class="b-exclude" style="width:${b.exclude}%"></div>
-                <div class="b-unk" style="width:${b.unknown}%"></div>
-              </div>
-              <div class="belief-meta">
-                <span>Pass ${b.pass}%</span>
-                <span>Warning ${b.warn}%</span>
-                <span>Exclude ${b.exclude}%</span>
-                <span>Unknown ${b.unknown}%</span>
-              </div>
+              <div class="belief-bar"><div class="b-pass" style="width:${b.pass}%"></div><div class="b-warn" style="width:${b.warn}%"></div><div class="b-exclude" style="width:${b.exclude}%"></div><div class="b-unk" style="width:${b.unknown}%"></div></div>
+              <div class="belief-meta"><span>Pass ${b.pass}%</span><span>Warning ${b.warn}%</span><span>Exclude ${b.exclude}%</span><span>Unknown ${b.unknown}%</span></div>
             </td>
             <td><span class="decision-pill ${decisionClass(hfDecision(b))}">${esc(hfDecision(b))}</span></td>
+          </tr>`;
+      }).join('');
+
+      byId('hfQuestionList').innerHTML = hfOverall.nextQuestions.map(q => `<div class="chip"><strong>${esc(q.module)}</strong><br />${esc(q.question)}</div>`).join('');
+      byId('hfModuleGrid').innerHTML = HF_META.map(meta => hfModuleNote(meta.key, company, getSettings(), hf)).join('');
+    }
+
+    function renderDDOverview(results){
+      byId('overviewGridDD').innerHTML = results.map(({company, ddOverall}) => `
+        <div class="task-summary-card">
+          <div class="overview-head">
+            <div>
+              <div class="result-code">${esc(company.ticker)} · ${esc(company.boardCn)}</div>
+              <div class="result-name">${esc(company.name)}</div>
+            </div>
+            <span class="decision-pill ${decisionClass(ddOverall.decision)}">${esc(ddOverall.decision)}</span>
+          </div>
+          <div class="overview-text">${esc(ddOverall.reason)}</div>
+          <div class="rule-box" style="margin-top:10px"><strong>DD focus:</strong> ${esc(ddOverall.strongestRisk[0])} is the strongest risk driver; ${esc(ddOverall.mainUnknown[0])} remains the main unknown.</div>
+        </div>
+      `).join('');
+    }
+
+    function renderSelectedDD(selected){
+      const {company, hfOverall, tasks, dd, ddOverall} = selected;
+      byId('candidateOverviewName').textContent = `${company.ticker} · ${company.name}`;
+      byId('candidateOverviewMeta').textContent = `Inherited from HF: ${hfOverall.decision} · Enter DD because: ${hfOverall.enterDdReason}`;
+      byId('overallDecisionPillDD').innerHTML = `<span class="decision-pill ${decisionClass(ddOverall.decision)}">${esc(ddOverall.decision)}</span>`;
+      byId('overallReasonDD').textContent = ddOverall.reason;
+      byId('inheritedHfDecision').textContent = hfOverall.decision;
+      byId('strongestCleanDD').textContent = `${ddOverall.strongestClean[0]} (${ddOverall.strongestClean[1].clean}%)`;
+      byId('strongestRiskDD').textContent = `${ddOverall.strongestRisk[0]} (High+Critical ${ddOverall.strongestRisk[1].high + ddOverall.strongestRisk[1].critical}%)`;
+      byId('mainUnknownDD').textContent = `${ddOverall.mainUnknown[0]} (${ddOverall.mainUnknown[1].unknown}%)`;
+      byId('remediabilitySummaryDD').textContent = ddOverall.remediabilitySummary;
+      byId('nextStepRecommendationDD').textContent = ddOverall.nextStepRecommendation;
+      byId('requiredConditionsList').innerHTML = ddOverall.requiredConditions.map(c => `<div class="chip">${esc(c)}</div>`).join('');
+
+      byId('taskTableBody').innerHTML = tasks.map(t => `
+        <tr>
+          <td>${esc(t.question)}</td>
+          <td>${esc(t.module)}</td>
+          <td><span class="status-chip ${decisionClass(t.status)}">${esc(t.status)}</span></td>
+          <td>${esc(t.finding)}</td>
+          <td>${esc(t.source)}<br /><span style="color:var(--muted)">${esc(t.reliability)}</span></td>
+          <td>${esc(t.gap)}</td>
+        </tr>
+      `).join('');
+
+      byId('beliefTableBodyDD').innerHTML = DD_META.map(meta => {
+        const b = dd[meta.key];
+        return `
+          <tr>
+            <td><strong>${esc(meta.id)}</strong><br /><span style="color:var(--muted);font-size:12px">${esc(meta.name)}</span></td>
+            <td>
+              <div class="belief-bar"><div class="b-clean" style="width:${b.clean}%"></div><div class="b-manageable" style="width:${b.manageable}%"></div><div class="b-high" style="width:${b.high}%"></div><div class="b-critical" style="width:${b.critical}%"></div><div class="b-unknown" style="width:${b.unknown}%"></div></div>
+              <div class="dd-belief-meta"><span>Clean ${b.clean}%</span><span>Manageable ${b.manageable}%</span><span>High ${b.high}%</span><span>Critical ${b.critical}%</span><span>Unknown ${b.unknown}%</span></div>
+            </td>
+            <td><span class="decision-pill ${decisionClass(ddDecision(b))}">${esc(ddDecision(b))}</span></td>
           </tr>
         `;
       }).join('');
-      byId('beliefTableBody').innerHTML = rows;
 
-      byId('hfGrid').innerHTML = ['HF1','HF2','HF3','HF4','HF5','HF6','HF7'].map((key, idx) => {
-        const meta = HF_META[idx];
-        const b = hf[key];
-        const detail = buildHFDetail(company, settings, key, b);
-        return `
-          <div class="hf-card">
-            <div class="hf-title">
-              <div>
-                <div class="hf-name">${esc(meta.id)} · ${esc(meta.name)}</div>
-                <div class="hf-desc">${esc(meta.desc)}</div>
-              </div>
-              <span class="decision-pill ${decisionClass(hfDecision(b))}">${esc(hfDecision(b))}</span>
-            </div>
-            <div class="belief-bar">
-              <div class="b-pass" style="width:${b.pass}%"></div>
-              <div class="b-warn" style="width:${b.warn}%"></div>
-              <div class="b-exclude" style="width:${b.exclude}%"></div>
-              <div class="b-unk" style="width:${b.unknown}%"></div>
-            </div>
-            <div class="belief-meta">
-              <span>Pass ${b.pass}%</span><span>Warning ${b.warn}%</span><span>Exclude ${b.exclude}%</span><span>Unknown ${b.unknown}%</span>
-            </div>
-            <div class="hf-rule"><strong>Key evidence:</strong> ${detail.evidence.map(esc).join('；')}</div>
-            <div class="hf-rule"><strong>Evidence source:</strong> ${detail.sources.map(esc).join(' / ')} · <strong>Reliability:</strong> ${esc(detail.rel)}</div>
-            <div class="hf-rule"><strong>Reasoning:</strong> ${esc(detail.reasoning)}</div>
-            <div class="hf-rule"><strong>DD question:</strong> ${esc(detail.dd)}</div>
-          </div>
-        `;
-      }).join('');
+      byId('stepReasonBox').innerHTML = [
+        `<div class="chip"><strong>Proceed reason</strong><br />${esc(ddOverall.nextStepRecommendation)}</div>`,
+        `<div class="chip"><strong>Control path reason</strong><br />${esc(dd.DD1.manageable >= dd.DD1.clean ? 'Control path may be feasible, but still needs evidence-closing DD.' : 'Control path is relatively clearer than other modules, but still not assumed risk-free.')}</div>`,
+        `<div class="chip"><strong>Clean shell reason</strong><br />${esc(dd.DD2.critical < 20 && dd.DD3.critical < 20 ? 'No fatal shell contamination is confirmed in core sources, but cleanup scoping still matters.' : 'Shell cleanliness is not yet strong enough for unconditional progression.')}</div>`,
+        `<div class="chip"><strong>Business substance reason</strong><br />${esc(dd.DD5.clean + dd.DD5.manageable > 60 ? 'Some operating substance appears reusable, which helps the platform story.' : 'Business substance is too weak or too uncertain to be treated as a strong support factor.')}</div>`,
+        `<div class="chip"><strong>Stop / hold reasons</strong><br />${esc(ddOverall.stopReasons.length ? ddOverall.stopReasons.join(' ') : 'No hard stop reason dominates beyond the listed conditions.')}</div>`
+      ].join('');
 
-      const ddGrid = byId('ddGrid');
-      const ddPlaceholder = byId('ddPlaceholder');
-      if (overall.decision === 'Exclude') {
-        ddGrid.innerHTML = '';
-        ddPlaceholder.style.display = 'block';
-        ddPlaceholder.innerHTML = `<strong>${esc(company.ticker)} is blocked at HF stage.</strong><br />Current appetite yields <strong>${esc(overall.decision)}</strong>. 这意味着页面应该诚实地停在 HF，而不是假装进入 DD。只有当 veto 假设被挑战、或者出现新的高可靠度证据时，才值得重新打开 DD。`;
-      } else {
-        ddPlaceholder.style.display = 'none';
-        const ddCards = [
-          {
-            title:'DD-1 控制权专项',
-            desc:'把 HF-3 的 warning / unknown 真正拆开，看是否存在可谈对象、出售动机和可执行路径。',
-            qs:[
-              'Who is the effective controlling shareholder or negotiable block holder?',
-              '是否存在质押、冻结、债务压力或潜在控制权纠纷？',
-              '协议转让 / 新股认购 / 联合重组哪条路径最现实？'
-            ]
-          },
-          {
-            title:'DD-2 资本结构与历史融资专项',
-            desc:'把 HF-4 里的“manageable / complex / toxic”从模糊判断变成条款级判断。',
-            qs:[
-              'Are there convertible bonds, warrants, options or variable-price instruments?',
-              '历史配售、优先股、交叉违约会不会在资产注入后稀释控制权？',
-              '哪些工具可以回购、清理、重组或协商撤出？'
-            ]
-          },
-          {
-            title:'DD-3 上市资格与合规稳定性',
-            desc:'把 HF-5 与 HF-6 的潜在风险闭环掉，避免“没搜到风险”被误写成“没有风险”。',
-            qs:[
-              'Is public float compliant before and after a potential asset injection?',
-              '是否存在核数师辞任、保留意见、监管问询、纪律处分或停牌 / 除牌时间表？',
-              '重大诉讼 / 监管调查 / 表外负债是否会实质吞噬平台价值？'
-            ]
-          },
-          {
-            title:'DD-4 平台适配真实性验证',
-            desc:'HF-7 只给入场理由，不给最终结论；DD 要验证协同是不是事实支持，而不是故事。',
-            qs:[
-              '客户 / 渠道 / 供应链 / 牌照哪一项是真正可复用的平台资产？',
-              '控制权变化后品牌、许可、 franchise 或经营牌照会不会失效？',
-              '平台升级叙事能否避免被市场理解为“纯借壳故事”？'
-            ]
-          }
-        ];
-        ddGrid.innerHTML = ddCards.map(card => `
-          <div class="dd-card">
-            <h4>${esc(card.title)}</h4>
-            <p>${esc(card.desc)}</p>
-            <ol>${card.qs.map(q => `<li>${esc(q)}</li>`).join('')}</ol>
-          </div>
-        `).join('');
-      }
+      byId('ddModuleGrid').innerHTML = DD_META.map(meta => renderDDModule(meta, company, dd[meta.key], tasks, getSettings(), ddOverall)).join('');
+      const rem = buildRemediability(company, getSettings(), dd);
+      byId('riskTableBody').innerHTML = rem.map(r => `
+        <tr>
+          <td>${esc(r.risk)}</td>
+          <td><span class="status-chip ${decisionClass(r.severity)}">${esc(r.severity)}</span></td>
+          <td>${boolWord(r.quantifiable)}</td>
+          <td>${boolWord(r.negotiable)}</td>
+          <td>${boolWord(r.cleanable)}</td>
+          <td>${esc(r.cost)}</td>
+          <td>${esc(r.condition)}</td>
+        </tr>
+      `).join('');
     }
 
-    function render(){
-      const s = getSettings();
-      byId('warningThresholdValue').textContent = `${s.warningThreshold}%`;
-      byId('hf6ThresholdValue').textContent = `${s.hf6Threshold}%`;
-      renderTabs();
-      const results = COMPANY_DATA.map(company => {
-        const hf = computeHF(company, s);
-        const overall = overallDecision(hf, company, s);
-        return {company, hf, overall};
-      });
-      renderOverview(results);
-      const selected = results.find(r => r.company.ticker === selectedTicker) || results[0];
-      renderSelected(selected, s);
+    function renderDDModule(meta, company, belief, tasks, s, ddOverall){
+      const moduleTasks = tasks.filter(t => t.module === meta.name);
+      const evidenceByModule = {
+        DD1:{key:`实控人清晰度 ${company.controlClarity}；集中度 ${company.controlConcentration}；出售意愿信号 ${company.sellerSignal}`, source:'Shareholder disclosure / annual report / announcements', rel:`${round(avg(s.relOfficial,s.relShareholder)*100)}%`, reasoning:'控制权模块的重点不是“谁最大”，而是“谁能谈、是否可转、需不需要额外审批或债权人同意”。', remaining:'确认一致行动人、质押 / 冻结、退出压力、审批路径。'},
+        DD2:{key:`诉讼 ${company.majorLitigation}；表外/未解决风险 ${company.offBalanceRisk + company.unresolvedRisk}；清理成本估计 HKD ${company.cleanupCostEstimate}m`, source:'Court filings / audit notes / official filings', rel:`${round(avg(s.relCourt,s.relAudit,s.relOfficial)*100)}%`, reasoning:'这一层判断历史包袱是否可量化、可谈判、可清理，而不是只看有没有风险信号。', remaining:'量化未决诉讼金额、担保责任、表外负债和债务重组空间。'},
+        DD3:{key:`披露及时性 ${company.disclosureTimeliness}；审计问题 ${company.auditIssue}；监管风险 ${company.fatalRegulatory}`, source:'HKEX disclosures / audit opinion / regulatory records', rel:`${round(avg(s.relOfficial,s.relAudit,s.relCourt)*100)}%`, reasoning:'DD 合规模块判断的是上市平台是否稳定、是否足以支撑控制权交易和后续资产注入。', remaining:'确认公众持股、审计整改、除牌与停牌风险是否真实存在。'},
+        DD4:{key:`年度维护成本约 HKD ${(company.annualAuditCost+company.annualLegalCost+company.annualComplianceCost+company.annualCompanySecCost+company.annualIRCost+company.minimumOpsCost).toFixed(1)}m；清理成本 HKD ${company.cleanupCostEstimate}m`, source:'Audit / legal / compliance cost assumptions', rel:`${round(avg(s.relAudit,s.relOfficial,s.relFinancing)*100)}%`, reasoning:'存续成本不是纯后台数字；它会决定壳价值是否被维护成本与清理成本吞掉。', remaining:'确认诉讼、法律、融资清理和顾问预算是否在用户容忍度内。'},
+        DD5:{key:`业务真实性 ${company.businessReality}；困境可逆性 ${company.distressReversibility}；吨吨修复适配 ${company.tontonRepairFit}`, source:'Business disclosures / IR / market evidence', rel:`${round(avg(s.relIR,s.relMedia,s.relStructured)*100)}%`, reasoning:'业务价值只能增强推进理由，不能抵消控制权、历史债务、合规上的重大硬伤。', remaining:'确认客户、供应商、渠道、牌照、员工和运营场景是否仍真实存在。'}
+      };
+      const e = evidenceByModule[meta.key];
+      return `
+        <div class="module-card">
+          <div class="module-head">
+            <div>
+              <div class="kicker">${esc(meta.id)}</div>
+              <div class="module-name">${esc(meta.name)}</div>
+              <div class="section-sub" style="margin-top:0">${esc(meta.desc)}</div>
+            </div>
+            <span class="decision-pill ${decisionClass(ddDecision(belief))}">${esc(ddDecision(belief))}</span>
+          </div>
+          <div class="belief-bar"><div class="b-clean" style="width:${belief.clean}%"></div><div class="b-manageable" style="width:${belief.manageable}%"></div><div class="b-high" style="width:${belief.high}%"></div><div class="b-critical" style="width:${belief.critical}%"></div><div class="b-unknown" style="width:${belief.unknown}%"></div></div>
+          <div class="dd-belief-meta"><span>Clean ${belief.clean}%</span><span>Manageable ${belief.manageable}%</span><span>High ${belief.high}%</span><span>Critical ${belief.critical}%</span><span>Unknown ${belief.unknown}%</span></div>
+          <div class="module-box" style="margin-top:10px"><strong>Key evidence:</strong> ${esc(e.key)}</div>
+          <div class="module-box" style="margin-top:10px"><strong>Evidence source:</strong> ${esc(e.source)} · <strong>Reliability:</strong> ${esc(e.rel)} · <strong>Evidence status:</strong> ${moduleTasks.length ? esc(moduleTasks.map(t => t.status).join(' / ')) : 'Requires Manual Review'}</div>
+          <div class="module-box" style="margin-top:10px"><strong>Reasoning:</strong> ${esc(e.reasoning)}</div>
+          <div class="module-box" style="margin-top:10px"><strong>Remaining DD questions:</strong> ${esc(e.remaining)}</div>
+        </div>
+      `;
     }
 
     function reset(){
-      byId('boardPreference').value = DEFAULTS.boardPreference;
-      byId('gemMode').value = DEFAULTS.gemMode;
-      byId('marketCapUpper').value = DEFAULTS.marketCapUpper;
-      byId('pbUpper').value = String(DEFAULTS.pbUpper);
-      byId('suspensionPolicy').value = DEFAULTS.suspensionPolicy;
-      byId('controlPathRequirement').value = DEFAULTS.controlPathRequirement;
-      byId('toxicTolerance').value = DEFAULTS.toxicTolerance;
-      byId('disclosureStrictness').value = DEFAULTS.disclosureStrictness;
-      byId('fatalVeto').checked = DEFAULTS.fatalVeto;
-      byId('unknownPolicy').value = DEFAULTS.unknownPolicy;
-      byId('warningThreshold').value = DEFAULTS.warningThreshold;
-      byId('hf6Threshold').value = DEFAULTS.hf6Threshold;
-      byId('relOfficial').value = DEFAULTS.relOfficial;
-      byId('relAudit').value = DEFAULTS.relAudit;
-      byId('relStructured').value = DEFAULTS.relStructured;
-      byId('relMeta').value = DEFAULTS.relMeta;
-      byId('relMedia').value = DEFAULTS.relMedia;
-      byId('relLLM').value = DEFAULTS.relLLM;
+      Object.entries(DEFAULTS).forEach(([k,v]) => {
+        if (!byId(k)) return;
+        if (typeof v === 'boolean') byId(k).checked = v;
+        else byId(k).value = String(v);
+      });
       selectedTicker = '00831.HK';
       render();
     }
 
+    renderUniverse();
     byId('runBtn').onclick = render;
     byId('resetBtn').onclick = reset;
-    ['warningThreshold','hf6Threshold'].forEach(id => byId(id).addEventListener('input', render));
-    ['boardPreference','gemMode','marketCapUpper','pbUpper','suspensionPolicy','controlPathRequirement','toxicTolerance','disclosureStrictness','fatalVeto','unknownPolicy','relOfficial','relAudit','relStructured','relMeta','relMedia','relLLM'].forEach(id => byId(id).addEventListener('change', render));
-
-    renderUniverse();
+    ['boardPreference','gemMode','marketCapUpper','pbUpper','suspensionPolicy','controlPathRequirement','toxicTolerance','disclosureStrictnessHF','unknownPolicyHF','warningThreshold','hf6Threshold','ddControlClarityRequirement','ddDebtLitigationTolerance','ddComplianceStrictness','ddMaintenanceCostLimit','ddBusinessSubstanceRequirement','ddDistressReversibilityRequirement','ddCleanupCostTolerance','ddUnknownPolicy','ddEvidenceMode','relOfficial','relAudit','relCourt','relShareholder','relFinancing','relStructured','relIR','relMedia','relMeta','relLLM','fatalVeto'].forEach(id => {
+      const el = byId(id);
+      if (!el) return;
+      el.addEventListener(el.type === 'range' ? 'input' : 'change', render);
+    });
     render();
   </script>
 </body>
