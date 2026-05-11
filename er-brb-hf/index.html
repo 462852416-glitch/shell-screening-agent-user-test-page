@@ -31,6 +31,9 @@
     .decision-exclude{background:var(--bad-soft);color:var(--bad)}
     .decision-unknown{background:var(--unk-soft);color:var(--unk)}
     .stack{display:grid;gap:18px}
+    .setting-stack{display:grid;gap:12px}
+    .setting-group{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff}
+    .setting-group-title{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:850;margin-bottom:10px}
     .card{padding:20px}
     .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:850;margin-bottom:10px}
     .section-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}
@@ -130,14 +133,11 @@
           <div>
             <div class="label">Step 0 · Universe Construction</div>
             <div class="section-title">Candidate universe</div>
-            <div class="section-sub">Universe 只负责高召回构建候选池；这里讲候选池规模与来源，不逐个展开公司。</div>
+            <div class="section-sub">这里仅保留候选池规模，以及候选池使用了哪些数据来源、哪些清洗 / 召回线索。</div>
           </div>
         </div>
-        <div class="metric-grid">
+        <div class="metric-grid" style="grid-template-columns:minmax(0,1fr)">
           <div class="metric"><div class="metric-cap">Universe size</div><div class="metric-num">3,126</div><div class="metric-note">清洗后的 candidate universe 总量。</div></div>
-          <div class="metric"><div class="metric-cap">Output artifact</div><div class="metric-num">1</div><div class="metric-note">Raw candidate universe，仅作为 HF 输入池。</div></div>
-          <div class="metric"><div class="metric-cap">Source families</div><div class="metric-num">10</div><div class="metric-note">官方文件、审计、法院、股东披露、融资条款、结构化数据等。</div></div>
-          <div class="metric"><div class="metric-cap">Recall intent</div><div class="metric-num">High</div><div class="metric-note">先高召回，再在 HF / DD 中做证据化判断。</div></div>
         </div>
         <div style="margin-top:16px" class="pill-row">
           <span class="pill">HKEX announcements</span>
@@ -161,8 +161,8 @@
         <div class="section-head">
           <div>
             <div class="label">Step 1 · Case Input</div>
-            <div class="section-title">Case input + split settings</div>
-            <div class="section-sub">HF 与 DD 各自保留自己的 setting；evidential reliability 单独放一组共享输入，避免重复。</div>
+            <div class="section-title">User settings</div>
+            <div class="section-sub">左侧是 case input；右侧统一放 User settings，并拆成 Evidential reliability、HF settings、DD settings 三组。</div>
           </div>
         </div>
         <div class="input-grid">
@@ -174,39 +174,45 @@
               <button class="secondary" id="resetBtn">Reset</button>
             </div>
           </div>
-          <div class="stack">
-            <div class="table-card">
-              <div class="label">Shared evidential reliability</div>
-              <div class="field-grid" style="grid-template-columns:1fr 1fr">
-                <label class="field"><div class="field-title">Official filings</div><input id="relOfficial" type="number" min="0.5" max="1" step="0.1" value="1.0" /></label>
-                <label class="field"><div class="field-title">Audit / notes</div><input id="relAudit" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
-                <label class="field"><div class="field-title">Court / petition</div><input id="relCourt" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
-                <label class="field"><div class="field-title">Shareholder filings</div><input id="relShareholder" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
-                <label class="field"><div class="field-title">Financing terms</div><input id="relFinancing" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
-                <label class="field"><div class="field-title">Structured data</div><input id="relStructured" type="number" min="0.3" max="1" step="0.1" value="0.8" /></label>
-                <label class="field"><div class="field-title">Company IR</div><input id="relIR" type="number" min="0.2" max="1" step="0.1" value="0.7" /></label>
-                <label class="field"><div class="field-title">Media</div><input id="relMedia" type="number" min="0.2" max="1" step="0.1" value="0.6" /></label>
+          <div class="table-card">
+            <div class="label">User settings</div>
+            <div class="setting-stack">
+              <div class="setting-group">
+                <div class="setting-group-title">Evidential reliability</div>
+                <div class="field-grid" style="grid-template-columns:1fr 1fr">
+                  <label class="field"><div class="field-title">Official filings</div><div class="field-help">以官方公告和正式披露为主，默认最高可信度。</div><input id="relOfficial" type="number" min="0.5" max="1" step="0.1" value="1.0" /></label>
+                  <label class="field"><div class="field-title">Audit / notes</div><div class="field-help">审计报告、财务附注等次一级高可信来源。</div><input id="relAudit" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
+                  <label class="field"><div class="field-title">Court / petition</div><div class="field-help">法院、清盘呈请、诉讼程序相关记录。</div><input id="relCourt" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
+                  <label class="field"><div class="field-title">Shareholding disclosures</div><div class="field-help">股东披露、权益变动、控制权相关文件。</div><input id="relShareholder" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
+                  <label class="field"><div class="field-title">Financing terms</div><div class="field-help">配售、可转债、认股权证、稀释条款等。</div><input id="relFinancing" type="number" min="0.5" max="1" step="0.1" value="0.9" /></label>
+                  <label class="field"><div class="field-title">Structured data</div><div class="field-help">结构化行情 / 财务数据库，适合做初筛和交叉验证。</div><input id="relStructured" type="number" min="0.3" max="1" step="0.1" value="0.8" /></label>
+                  <label class="field"><div class="field-title">Company IR</div><div class="field-help">公司 IR、官网说法，可参考但不作为最高级证据。</div><input id="relIR" type="number" min="0.2" max="1" step="0.1" value="0.7" /></label>
+                  <label class="field"><div class="field-title">Media</div><div class="field-help">媒体报道、二手信息，只作为补充线索。</div><input id="relMedia" type="number" min="0.2" max="1" step="0.1" value="0.6" /></label>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="split-2" style="margin-top:14px">
-          <div class="table-card">
-            <div class="label">HF settings</div>
-            <div class="field-grid">
-              <label class="field"><div class="field-title">GEM handling</div><select id="gemMode"><option value="warning">Warning</option><option value="strictWarning">Strict Warning</option><option value="exclude">Exclude</option><option value="pass">Pass</option></select></label>
-              <label class="field"><div class="field-title">Market cap upper bound (HKD m)</div><input id="marketCapUpper" type="number" min="100" step="50" value="2600" /></label>
-              <label class="field"><div class="field-title">P/B upper bound</div><select id="pbUpper"><option value="0.6">0.6</option><option value="0.8" selected>0.8</option><option value="1.0">1.0</option></select></label>
-              <label class="field"><div class="field-title">HF warning threshold</div><input id="warningThreshold" type="range" min="25" max="60" step="5" value="40" /><div class="range-meta"><span>宽松</span><strong id="warningThresholdValue">40%</strong><span>严格</span></div></label>
-            </div>
-          </div>
-          <div class="table-card">
-            <div class="label">DD settings</div>
-            <div class="field-grid">
-              <label class="field"><div class="field-title">Control clarity requirement</div><select id="ddControlClarityRequirement"><option value="strict">Strict</option><option value="normal" selected>Normal</option><option value="flexible">Flexible</option></select></label>
-              <label class="field"><div class="field-title">Debt / litigation tolerance</div><select id="ddDebtLitigationTolerance"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></label>
-              <label class="field"><div class="field-title">Compliance strictness</div><select id="ddComplianceStrictness"><option value="strict">Strict</option><option value="normal" selected>Normal</option><option value="flexible">Flexible</option></select></label>
-              <label class="field"><div class="field-title">Maintenance cost limit (HKD m / year)</div><input id="ddMaintenanceCostLimit" type="number" min="1" step="0.5" value="12" /></label>
+              <div class="setting-group">
+                <div class="setting-group-title">HF settings</div>
+                <div class="field-grid">
+                  <label class="field"><div class="field-title">GEM board treatment</div><div class="field-help">GEM 板块在 HF-1 里如何对待。</div><select id="gemMode"><option value="warning">Warning（默认进 warning，不直接排除）</option><option value="strictWarning">Strict warning（明显抬高 warning 权重）</option><option value="exclude">Exclude（GEM 默认不纳入）</option><option value="pass">Neutral pass（不因 GEM 额外扣分）</option></select></label>
+                  <label class="field"><div class="field-title">Market cap upper bound (HKD m)</div><div class="field-help">HF-2 的市值上限，超过越多，越不容易进入 DD。</div><input id="marketCapUpper" type="number" min="100" step="50" value="2600" /></label>
+                  <label class="field"><div class="field-title">P/B upper bound</div><div class="field-help">HF-2 的估值上限；越低越偏向壳价值与困境机会。</div><select id="pbUpper"><option value="0.6">0.6（更严格）</option><option value="0.8" selected>0.8（基准）</option><option value="1.0">1.0（更宽松）</option></select></label>
+                  <label class="field"><div class="field-title">HF warning threshold</div><div class="field-help">超过该阈值的 warning 因子，会把公司推进 Needs DD。</div><input id="warningThreshold" type="range" min="25" max="60" step="5" value="40" /><div class="range-meta"><span>更容易进 DD</span><strong id="warningThresholdValue">40%</strong><span>更晚触发</span></div></label>
+                  <label class="field"><div class="field-title">Reporting continuity</div><div class="field-help">HF-5 对持续披露、审计连续性的要求。</div><select id="hfReportingStrictness"><option value="strict">Strict（披露稍弱就明显加重 warning / exclude）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许披露瑕疵先进入 DD）</option></select></label>
+                  <label class="field"><div class="field-title">Legal / regulatory screen</div><div class="field-help">HF-6 对重大诉讼、监管红旗的敏感度。</div><select id="hfLegalRiskStrictness"><option value="strict">Strict（对法律 / 监管问题更敏感）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许轻中度问题先进入 DD）</option></select></label>
+                  <label class="field"><div class="field-title">Platform fit requirement</div><div class="field-help">HF-7 对平台适配和业务延续性的要求。</div><select id="hfPlatformFitRequirement"><option value="strict">Strict（适配性弱就更难进入 DD）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（适配性一般也可先看 DD）</option></select></label>
+                </div>
+              </div>
+              <div class="setting-group">
+                <div class="setting-group-title">DD settings</div>
+                <div class="field-grid">
+                  <label class="field"><div class="field-title">Control clarity requirement</div><div class="field-help">对控制权溯源、可谈判路径、冻结 / 纠纷容忍度的要求。</div><select id="ddControlClarityRequirement"><option value="strict">Strict（控制权稍不清晰就更快升级为高风险）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许边查边谈）</option></select></label>
+                  <label class="field"><div class="field-title">Debt / litigation tolerance</div><div class="field-help">对历史债务、诉讼、表外风险的容忍度。</div><select id="ddDebtLitigationTolerance"><option value="low">Low（轻度债务 / 诉讼也会明显加重风险）</option><option value="medium" selected>Medium（按基准权重处理）</option><option value="high">High（接受较多历史包袱先做交易设计）</option></select></label>
+                  <label class="field"><div class="field-title">Compliance strictness</div><div class="field-help">对审计、内控、停牌 / 除牌风险的严格程度。</div><select id="ddComplianceStrictness"><option value="strict">Strict（合规瑕疵会更快触发 hold / reject）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许先带条件推进）</option></select></label>
+                  <label class="field"><div class="field-title">Maintenance cost limit (HKD m / year)</div><div class="field-help">平台每年可接受的存续成本上限。</div><input id="ddMaintenanceCostLimit" type="number" min="1" step="0.5" value="12" /></label>
+                  <label class="field"><div class="field-title">Business substance requirement</div><div class="field-help">对真实业务存续、客户 / 供应商连续性的要求。</div><select id="ddBusinessSubstanceRequirement"><option value="strict">Strict（业务实质稍弱就更快转 high / critical）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（困境修复型标的也允许往下看）</option></select></label>
+                  <label class="field"><div class="field-title">Evidence gap escalation</div><div class="field-help">对证据缺口的敏感度，决定 unknown 多快升级成 hold。</div><select id="ddEvidenceGapEscalation"><option value="strict">Strict（证据稍弱就更快停下来补证）</option><option value="normal" selected>Normal（按基准权重处理）</option><option value="flexible">Flexible（允许先继续做条件化判断）</option></select></label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -314,10 +320,15 @@
         marketCapUpper:Number(document.getElementById('marketCapUpper').value),
         pbUpper:Number(document.getElementById('pbUpper').value),
         warningThreshold:Number(document.getElementById('warningThreshold').value),
+        hfReportingStrictness:document.getElementById('hfReportingStrictness').value,
+        hfLegalRiskStrictness:document.getElementById('hfLegalRiskStrictness').value,
+        hfPlatformFitRequirement:document.getElementById('hfPlatformFitRequirement').value,
         ddControlClarityRequirement:document.getElementById('ddControlClarityRequirement').value,
         ddDebtLitigationTolerance:document.getElementById('ddDebtLitigationTolerance').value,
         ddComplianceStrictness:document.getElementById('ddComplianceStrictness').value,
         ddMaintenanceCostLimit:Number(document.getElementById('ddMaintenanceCostLimit').value),
+        ddBusinessSubstanceRequirement:document.getElementById('ddBusinessSubstanceRequirement').value,
+        ddEvidenceGapEscalation:document.getElementById('ddEvidenceGapEscalation').value,
         relOfficial:Number(document.getElementById('relOfficial').value),
         relAudit:Number(document.getElementById('relAudit').value),
         relCourt:Number(document.getElementById('relCourt').value),
@@ -347,13 +358,17 @@
       let h4Pass=56-c.toxicFinancing*0.28-c.dilutionOverhang*0.18-c.warrantMessiness*0.14, h4Warn=c.debtStress*0.28+c.dilutionOverhang*0.42+(c.fixedCB?14:6), h4Exclude=c.toxicFinancing*0.66+c.warrantMessiness*0.34, h4Unknown=(1-s.relFinancing)*16;
       const HF4=normalize4(h4Pass,h4Warn,h4Exclude,h4Unknown);
 
-      let h5Pass=c.disclosureTimeliness*0.48+(100-c.auditIssue)*0.16, h5Warn=(c.auditIssue+c.auditorChange+c.directorChange+c.internalControlIssue)*0.36, h5Exclude=c.delistingRisk*0.38+c.fatalRegulatory*0.28, h5Unknown=(1-s.relOfficial)*14;
+      const reportingMult=s.hfReportingStrictness==='strict'?1.18:s.hfReportingStrictness==='flexible'?0.84:1;
+      const legalMult=s.hfLegalRiskStrictness==='strict'?1.18:s.hfLegalRiskStrictness==='flexible'?0.84:1;
+      const fitMult=s.hfPlatformFitRequirement==='strict'?1.16:s.hfPlatformFitRequirement==='flexible'?0.84:1;
+
+      let h5Pass=c.disclosureTimeliness*0.48+(100-c.auditIssue)*0.16, h5Warn=((c.auditIssue+c.auditorChange+c.directorChange+c.internalControlIssue)*0.36)*reportingMult, h5Exclude=(c.delistingRisk*0.38+c.fatalRegulatory*0.28)*reportingMult, h5Unknown=(1-s.relOfficial)*14;
       const HF5=normalize4(h5Pass,h5Warn,h5Exclude,h5Unknown);
 
-      let h6Pass=68-c.fatalRegulatory*0.42-c.majorLitigation*0.18-c.unresolvedRisk*0.18, h6Warn=c.majorLitigation*0.42+c.unresolvedRisk*0.42, h6Exclude=c.fatalRegulatory*0.82+c.offBalanceRisk*0.26+c.majorLitigation*0.30, h6Unknown=(1-s.relCourt)*10;
+      let h6Pass=68-c.fatalRegulatory*0.42-c.majorLitigation*0.18-c.unresolvedRisk*0.18, h6Warn=(c.majorLitigation*0.42+c.unresolvedRisk*0.42)*legalMult, h6Exclude=(c.fatalRegulatory*0.82+c.offBalanceRisk*0.26+c.majorLitigation*0.30)*legalMult, h6Unknown=(1-s.relCourt)*10;
       const HF6=normalize4(h6Pass,h6Warn,h6Exclude,h6Unknown);
 
-      let h7Pass=c.platformFit*0.44+c.businessContinuity*0.18+c.synergyEvidence*0.16, h7Warn=(100-c.synergyEvidence)*0.24+(100-c.businessContinuity)*0.18, h7Exclude=(100-c.platformFit)*0.10+(c.businessContinuity<35?14:4), h7Unknown=(1-s.relIR)*14;
+      let h7Pass=c.platformFit*0.44+c.businessContinuity*0.18+c.synergyEvidence*0.16, h7Warn=((100-c.synergyEvidence)*0.24+(100-c.businessContinuity)*0.18)*fitMult, h7Exclude=((100-c.platformFit)*0.10+(c.businessContinuity<35?14:4))*fitMult, h7Unknown=(1-s.relIR)*14;
       const HF7=normalize4(h7Pass,h7Warn,h7Exclude,h7Unknown);
       return {HF1,HF2,HF3,HF4,HF5,HF6,HF7};
     }
@@ -380,6 +395,8 @@
       const controlMult=s.ddControlClarityRequirement==='strict'?1.15:s.ddControlClarityRequirement==='flexible'?0.85:1;
       const debtMult=s.ddDebtLitigationTolerance==='low'?1.16:s.ddDebtLitigationTolerance==='high'?0.84:1;
       const complianceMult=s.ddComplianceStrictness==='strict'?1.16:s.ddComplianceStrictness==='flexible'?0.84:1;
+      const businessMult=s.ddBusinessSubstanceRequirement==='strict'?1.18:s.ddBusinessSubstanceRequirement==='flexible'?0.84:1;
+      const unknownMult=s.ddEvidenceGapEscalation==='strict'?1.3:s.ddEvidenceGapEscalation==='flexible'?0.75:1;
       const totalCost=c.annualAuditCost+c.annualLegalCost+c.annualComplianceCost+c.annualIRCost+c.minimumOpsCost;
 
       const DD1=normalize5(
@@ -387,35 +404,35 @@
         (100-c.controlClarity)*0.18+c.sellerSignal*0.22+c.pledgeRisk*0.18,
         ((100-c.controlClarity)*0.30+c.controlDispute*0.28)*controlMult,
         (c.freezeRisk*0.65+c.controlDispute*0.72)*controlMult,
-        (1-s.relShareholder)*18
+        (1-s.relShareholder)*18*unknownMult
       );
       const DD2=normalize5(
         62-c.majorLitigation*0.22-c.offBalanceRisk*0.16-c.debtStress*0.14,
         c.debtStress*0.34+c.majorLitigation*0.24+c.cleanupCostEstimate*3.2,
         (c.majorLitigation*0.34+c.offBalanceRisk*0.28+c.unresolvedRisk*0.30)*debtMult,
         (c.offBalanceRisk*0.52+c.majorLitigation*0.38+c.cleanupCostEstimate*2.8)*debtMult,
-        (1-avg([s.relCourt,s.relAudit,s.relOfficial]))*18
+        (1-avg([s.relCourt,s.relAudit,s.relOfficial]))*18*unknownMult
       );
       const DD3=normalize5(
         c.disclosureTimeliness*0.32+(100-c.auditIssue)*0.18+(100-c.fatalRegulatory)*0.12,
         (c.auditIssue+c.auditorChange+c.directorChange+c.internalControlIssue)*0.28,
         (c.auditIssue*0.42+c.internalControlIssue*0.32+c.delistingRisk*0.26)*complianceMult,
         (c.fatalRegulatory*0.76+c.delistingRisk*0.42)*complianceMult,
-        (1-avg([s.relOfficial,s.relAudit,s.relCourt]))*15
+        (1-avg([s.relOfficial,s.relAudit,s.relCourt]))*15*unknownMult
       );
       const DD4=normalize5(
         totalCost<=s.ddMaintenanceCostLimit?62-c.cleanupCostEstimate*1.5:28,
         Math.max(totalCost,s.ddMaintenanceCostLimit)/s.ddMaintenanceCostLimit*20+c.cleanupCostEstimate*2.1,
         Math.max(0,totalCost-s.ddMaintenanceCostLimit)*6+c.cleanupCostEstimate*2.6,
         c.cleanupCostEstimate>s.ddMaintenanceCostLimit?c.cleanupCostEstimate*4.2:c.cleanupCostEstimate*1.2,
-        (1-avg([s.relAudit,s.relOfficial,s.relFinancing]))*12
+        (1-avg([s.relAudit,s.relOfficial,s.relFinancing]))*12*unknownMult
       );
       const DD5=normalize5(
         c.businessReality*0.28+c.customerContinuity*0.14+c.supplierContinuity*0.12+c.distressReversibility*0.16,
         (100-c.businessReality)*0.16+c.tontonRepairFit*0.22,
-        (100-c.businessReality)*0.28+(100-c.distressReversibility)*0.28,
-        (100-c.businessContinuity)*0.34+(100-c.platformFit)*0.18,
-        (1-avg([s.relIR,s.relMedia,s.relStructured]))*18
+        ((100-c.businessReality)*0.28+(100-c.distressReversibility)*0.28)*businessMult,
+        ((100-c.businessContinuity)*0.34+(100-c.platformFit)*0.18)*businessMult,
+        (1-avg([s.relIR,s.relMedia,s.relStructured]))*18*unknownMult
       );
       return {DD1,DD2,DD3,DD4,DD5,totalCost:Math.round(totalCost*10)/10};
     }
@@ -463,8 +480,8 @@
 
       document.getElementById('universeGrid').innerHTML=`
         <div class="overall-box">
-          Raw candidate universe = <strong>3,126</strong> listed companies. 这一层只说明候选池规模、来源和高召回意图，不逐个讲公司。<br />
-          进入 HF 后，本页 demo run 中共有 <strong>${enterDdResults.length}</strong> 家 candidate 通过筛选并进入 DD；<strong>${excludedCount}</strong> 家被排除；<strong>${unresolvedCount}</strong> 家停留在 evidence cleanup。
+          上面第一行是 <strong>数据来源</strong>：HKEX announcements、年报 / 中报、法院 / 呈请记录、股东披露、融资条款、结构化数据，用来把候选池先清洗出来。<br />
+          上面第二行是 <strong>候选池清洗 / 召回线索</strong>：低市值 / 低 P/B、控制权线索、融资复杂度、合规 / 停牌 / 除牌风险、平台适配信号；这些只是候选池构建维度，不在 Step 0 里提前做 HF 结论。
         </div>`;
 
       const passCount=results.filter(r=>r.hfResult.decision==='Pass').length;
@@ -630,10 +647,15 @@
       document.getElementById('marketCapUpper').value='2600';
       document.getElementById('pbUpper').value='0.8';
       document.getElementById('warningThreshold').value='40';
+      document.getElementById('hfReportingStrictness').value='normal';
+      document.getElementById('hfLegalRiskStrictness').value='normal';
+      document.getElementById('hfPlatformFitRequirement').value='normal';
       document.getElementById('ddControlClarityRequirement').value='normal';
       document.getElementById('ddDebtLitigationTolerance').value='medium';
       document.getElementById('ddComplianceStrictness').value='normal';
       document.getElementById('ddMaintenanceCostLimit').value='12';
+      document.getElementById('ddBusinessSubstanceRequirement').value='normal';
+      document.getElementById('ddEvidenceGapEscalation').value='normal';
       document.getElementById('relOfficial').value='1.0';
       document.getElementById('relAudit').value='0.9';
       document.getElementById('relCourt').value='0.9';
@@ -647,7 +669,7 @@
 
     document.getElementById('runBtn').onclick=render;
     document.getElementById('resetBtn').onclick=reset;
-    ['gemMode','marketCapUpper','pbUpper','warningThreshold','ddControlClarityRequirement','ddDebtLitigationTolerance','ddComplianceStrictness','ddMaintenanceCostLimit','relOfficial','relAudit','relCourt','relShareholder','relFinancing','relStructured','relIR','relMedia'].forEach(id=>{
+    ['gemMode','marketCapUpper','pbUpper','warningThreshold','hfReportingStrictness','hfLegalRiskStrictness','hfPlatformFitRequirement','ddControlClarityRequirement','ddDebtLitigationTolerance','ddComplianceStrictness','ddMaintenanceCostLimit','ddBusinessSubstanceRequirement','ddEvidenceGapEscalation','relOfficial','relAudit','relCourt','relShareholder','relFinancing','relStructured','relIR','relMedia'].forEach(id=>{
       const el=document.getElementById(id); el.addEventListener(el.type==='range'?'input':'change',render);
     });
     render();
