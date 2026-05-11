@@ -49,7 +49,7 @@
     .meta-list{display:grid;grid-template-columns:120px minmax(0,1fr);gap:8px 10px;font-size:13px;line-height:1.55;margin-top:10px}
     .meta-list strong{color:#4b5b73}
     textarea{width:100%;min-height:180px;resize:vertical;border:1px solid var(--line);border-radius:14px;padding:14px;font:inherit;line-height:1.7;background:#fbfcff;color:var(--text)}
-    .input-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+    .input-grid{display:grid;grid-template-columns:1fr;gap:14px}
     .field-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
     .field{display:grid;gap:8px}
     .field-title{font-size:13px;font-weight:760;color:#23324b}
@@ -90,6 +90,7 @@
     .funnel-stat span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;margin-bottom:6px}
     .name-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
     .name-chip{display:inline-flex;align-items:center;padding:8px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:700;color:#31425e}
+    .empty-state{font-size:12px;color:var(--muted)}
     .memo-strip{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-bottom:14px}
     .headline-box{padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,#fbfcff 0%,#f4f8ff 100%)}
     .headline-title{font-size:16px;font-weight:850;letter-spacing:-.02em}
@@ -160,9 +161,9 @@
       <section class="card">
         <div class="section-head">
           <div>
-            <div class="label">Step 1 · Case Input</div>
-            <div class="section-title">User settings</div>
-            <div class="section-sub">左侧是 case input；右侧统一放 User settings，并拆成 Evidential reliability、HF settings、DD settings 三组。</div>
+            <div class="label">Step 1 · Case Input &amp; User settings</div>
+            <div class="section-title">Case input &amp; User settings</div>
+            <div class="section-sub">下面把 Case input 和 User settings 改成上下结构；User settings 里再拆成 Evidential reliability、HF settings、DD settings 三组。</div>
           </div>
         </div>
         <div class="input-grid">
@@ -222,8 +223,8 @@
         <div class="section-head">
           <div>
             <div class="label">Step 2 · Hard Filters</div>
-            <div class="section-title">ER/BRB hard filter decision layer</div>
-            <div class="section-sub">HF 只展示通过筛选、能够进入 DD 的 candidate；这里再明确“通过 HF 的有哪几个、分别是谁”。</div>
+            <div class="section-title">HF candidates entering DD</div>
+            <div class="section-sub">HF 只展示通过筛选、能够进入 DD 的 candidate；这里明确“通过 HF 的有哪几个、分别是谁”，以及哪些属于直接 pass、哪些属于 warning-driven pass-through。</div>
           </div>
         </div>
         <div id="hfFunnel" class="funnel-grid"></div>
@@ -247,13 +248,12 @@
         <div class="section-head">
           <div>
             <div class="label">Step 3 · Deep Due Diligence</div>
-            <div class="section-title">Each candidate gets a DD dossier</div>
-            <div class="section-sub">DD 必须继承 HF 产生的问题和风险点。下面只展开通过 HF、进入 DD 的公司。</div>
+            <div class="section-title">ER/BRB hard filter decision layer</div>
+            <div class="section-sub">DD 必须继承 HF 产生的问题和风险点。页面在 DD 这里收束，只给出 Proceed / Proceed with Conditions / Hold / Reject / Insufficient Evidence。</div>
           </div>
         </div>
         <div id="ddOverviewGrid" class="overview-grid"></div>
         <div id="ddDossiers" class="stack" style="margin-top:14px"></div>
-        <div class="footer-note">页面在 DD 结束处停住，只给出 Proceed / Proceed with Conditions / Hold / Reject / Insufficient Evidence，不在这里做 Ranking。</div>
       </section>
     </main>
   </div>
@@ -444,19 +444,19 @@
       const strongestClean=entries.reduce((a,b)=>a[1].clean>b[1].clean?a:b);
       const strongestRisk=entries.reduce((a,b)=>(a[1].high+a[1].critical)>(b[1].high+b[1].critical)?a:b);
       const mainUnknown=entries.reduce((a,b)=>a[1].unknown>b[1].unknown?a:b);
-      let decision='Proceed to Commercial Thesis & Transaction Structure';
-      if(dd.DD1.critical>=60||dd.DD2.critical>=60||dd.DD3.critical>=60) decision='Reject / Stop';
+      let decision='Proceed';
+      if(dd.DD1.critical>=60||dd.DD2.critical>=60||dd.DD3.critical>=60) decision='Reject';
       else if(dd.DD1.unknown>=50||dd.DD2.unknown>=50||dd.DD3.unknown>=50) decision='Insufficient Evidence';
-      else if(dd.DD1.high>=40||dd.DD2.high>=40||dd.DD3.high>=40||entries.some(x=>x[1].high+x[1].critical>=55)) decision='Hold for Further DD / Cleanup';
+      else if(dd.DD1.high>=40||dd.DD2.high>=40||dd.DD3.high>=40||entries.some(x=>x[1].high+x[1].critical>=55)) decision='Hold';
       else if(entries.some(x=>x[1].high+x[1].critical>=40)||[dd.DD1,dd.DD2,dd.DD3,dd.DD4].some(x=>x.manageable>=Math.max(x.clean,x.high,x.critical,x.unknown))) decision='Proceed with Conditions';
       return {decision,strongestClean,strongestRisk,mainUnknown};
     }
 
     function ddHeadline(r){
-      if(r.ddResult.decision==='Proceed to Commercial Thesis & Transaction Structure') return 'The platform looks sufficiently tradable to move into commercial thesis and transaction structuring, with no single blocker dominating the file.';
-      if(r.ddResult.decision==='Proceed with Conditions') return 'The platform is still actionable, but entry should be conditional on negotiated cleanup, clearer control mechanics, and quantified downside allocation.';
-      if(r.ddResult.decision==='Hold for Further DD / Cleanup') return 'The platform is not dead, but it is not ready. The file needs evidence cleanup or operating remediation before it deserves live transaction bandwidth.';
-      if(r.ddResult.decision==='Reject / Stop') return 'The file currently reads as structurally untradable under this mandate, and should not advance without a materially different fact pattern.';
+      if(r.ddResult.decision==='Proceed') return 'The platform clears DD under the current evidence set, with no single blocker dominating the file.';
+      if(r.ddResult.decision==='Proceed with Conditions') return 'The platform is still actionable, but only with negotiated cleanup, clearer control mechanics, and quantified downside allocation.';
+      if(r.ddResult.decision==='Hold') return 'The platform is not dead, but it is not ready. The file needs evidence cleanup or operating remediation before it should move further.';
+      if(r.ddResult.decision==='Reject') return 'The file currently reads as structurally untradable under this mandate, and should not advance without a materially different fact pattern.';
       return 'The remaining unknowns are still too large relative to the available evidence base.';
     }
 
@@ -484,30 +484,31 @@
           上面第二行是 <strong>候选池清洗 / 召回线索</strong>：低市值 / 低 P/B、控制权线索、融资复杂度、合规 / 停牌 / 除牌风险、平台适配信号；这些只是候选池构建维度，不在 Step 0 里提前做 HF 结论。
         </div>`;
 
-      const passCount=results.filter(r=>r.hfResult.decision==='Pass').length;
-      const needsDdCount=results.filter(r=>r.hfResult.decision==='Needs DD').length;
+      const passResults=results.filter(r=>r.hfResult.decision==='Pass');
+      const needsDdResults=results.filter(r=>r.hfResult.decision==='Needs DD');
       document.getElementById('hfFunnel').innerHTML=`
         <div class="table-card">
           <div class="label">HF gate summary</div>
           <div class="headline-title">Which names actually clear the HF gate?</div>
           <div class="headline-copy">在这页 demo sample 里，HF 不再解释 universe 里的所有名字，而是只明确哪些公司真正进入 DD、属于直接 pass，哪些是 warning-driven pass-through。</div>
-          <div class="funnel-bar">
-            <div class="b-pass" style="width:${pct(passCount,results.length)}%"></div>
-            <div class="b-warn" style="width:${pct(needsDdCount,results.length)}%"></div>
-            <div class="b-exclude" style="width:${pct(excludedCount,results.length)}%"></div>
-            <div class="b-unk" style="width:${pct(unresolvedCount,results.length)}%"></div>
+          <div class="summary-grid" style="margin-top:12px;grid-template-columns:repeat(3,minmax(0,1fr))">
+            <div class="summary-card"><div class="kicker">Enter DD</div><div class="number-value">${enterDdResults.length}</div><div class="summary-copy">通过 HF、实际进入 DD 的 candidate 数量。</div></div>
+            <div class="summary-card"><div class="kicker">Direct pass</div><div class="number-value">${passResults.length}</div><div class="summary-copy">无需 warning 驱动、直接通过 HF 的名字。</div></div>
+            <div class="summary-card"><div class="kicker">Warning-driven pass-through</div><div class="number-value">${needsDdResults.length}</div><div class="summary-copy">因为 warning 被推进 DD、而不是被直接排除的名字。</div></div>
           </div>
-          <div class="belief-meta"><span>Pass ${pct(passCount,results.length)}%</span><span>Needs DD ${pct(needsDdCount,results.length)}%</span><span>Exclude ${pct(excludedCount,results.length)}%</span><span>Evidence cleanup ${pct(unresolvedCount,results.length)}%</span></div>
         </div>
         <div class="table-card">
           <div class="label">Names entering DD</div>
-          <div class="funnel-stat-row">
-            <div class="funnel-stat"><span>Sample reviewed</span><strong>${results.length}</strong></div>
-            <div class="funnel-stat"><span>Pass</span><strong>${passCount}</strong></div>
-            <div class="funnel-stat"><span>Needs DD</span><strong>${needsDdCount}</strong></div>
-            <div class="funnel-stat"><span>Enter DD</span><strong>${enterDdResults.length}</strong></div>
+          <div class="summary-grid" style="grid-template-columns:1fr 1fr">
+            <div class="summary-card">
+              <div class="kicker">Direct pass</div>
+              <div class="name-list">${passResults.length?passResults.map(r=>`<span class="name-chip">${esc(r.c.ticker)} · ${esc(r.c.name)}</span>`).join(''):'<span class="empty-state">None</span>'}</div>
+            </div>
+            <div class="summary-card">
+              <div class="kicker">Warning-driven pass-through</div>
+              <div class="name-list">${needsDdResults.length?needsDdResults.map(r=>`<span class="name-chip">${esc(r.c.ticker)} · ${esc(r.c.name)}</span>`).join(''):'<span class="empty-state">None</span>'}</div>
+            </div>
           </div>
-          <div class="name-list">${enterDdResults.map(r=>`<span class="name-chip">${esc(r.c.ticker)} · ${esc(r.c.name)}</span>`).join('')}</div>
         </div>`;
 
       document.getElementById('hfOverviewGrid').innerHTML=enterDdResults.map(r=>`
@@ -515,7 +516,7 @@
           <div class="result-code">${esc(r.c.ticker)} · ${esc(r.c.boardCn)}</div>
           <div class="result-name">${esc(r.c.name)}</div>
           <span class="decision-pill ${cls(r.hfResult.decision)}">${esc(r.hfResult.decision)}</span>
-          <div class="overview-copy">Cleared HF gate and moved into DD.<br />Strongest warning: ${esc(r.hfResult.strongestWarn[0])}<br />Strongest exclude: ${esc(r.hfResult.strongestExclude[0])}</div>
+          <div class="overview-copy">HF cleared and moved into DD as a ${r.hfResult.decision==='Pass'?'direct pass':'warning-driven pass-through'}.<br />Strongest warning: ${esc(r.hfResult.strongestWarn[0])}<br />Strongest exclude: ${esc(r.hfResult.strongestExclude[0])}</div>
         </div>`).join('') || '<div class="overall-box">No candidates currently pass HF under this setting set.</div>';
 
       document.getElementById('hfSummaryTableBody').innerHTML=enterDdResults.map(r=>`
