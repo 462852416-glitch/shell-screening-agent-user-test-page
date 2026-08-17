@@ -65,16 +65,16 @@
       signal: 'listing continuity, board classification and public-float support',
       evidence: ['listing_status', 'board', 'public_float_risk'],
       antecedents: [
-        ant('Listing Continuity', ['Active','Impaired','Unknown'], (c) => c.listingStatus === 'active' ? deg({Active:.96, Unknown:.04}) : deg({Impaired:.9, Unknown:.1})),
-        ant('Board Risk', ['Main Board','GEM','Unknown'], (c, s) => c.board === 'Main Board' ? deg({'Main Board':.94, Unknown:.06}) : c.board === 'GEM' ? deg({GEM: s.gemMode === 'pass' ? .45 : .86, Unknown: s.gemMode === 'pass' ? .55 : .14}) : deg({Unknown:1})),
-        ant('Public Float Support', ['Confirmed','Unresolved','Unknown'], (c) => has(c, 'public_float_risk') ? deg({Confirmed:.78, Unresolved:.12, Unknown:.10}) : deg({Unknown:1}))
+        ant('Listing Continuity', ['Active','Impaired','Unknown'], (c) => c.listingStatus === 'active' ? deg({Active:1, Unknown:0}) : deg({Impaired:.9, Unknown:.1})),
+        ant('Board Risk', ['Main Board','GEM','Unknown'], (c, s) => c.board === 'Main Board' ? deg({'Main Board':.9, Unknown:.1}) : c.board === 'GEM' ? deg({GEM: s.gemMode === 'pass' ? .5 : .9, Unknown: s.gemMode === 'pass' ? .6 : .1}) : deg({Unknown:1})),
+        ant('Public Float Support', ['Confirmed','Unresolved','Unknown'], (c) => has(c, 'public_float_risk') ? deg({Confirmed:.8, Unresolved:.1, Unknown:.1}) : deg({Unknown:1}))
       ],
       rules: [
-        brb('HF-1-R1', 'IF listing is impaired THEN exclude', {'Listing Continuity':'Impaired'}, {Pass:.02, Warning:.08, Exclude:.84, Unknown:.06}),
-        brb('HF-1-R2', 'IF active + Main Board + float confirmed THEN pass', {'Listing Continuity':'Active','Board Risk':'Main Board','Public Float Support':'Confirmed'}, {Pass:.82, Warning:.12, Exclude:.02, Unknown:.04}),
-        brb('HF-1-R3', 'IF active + GEM THEN warning / DD', {'Listing Continuity':'Active','Board Risk':'GEM'}, {Pass:.18, Warning:.62, Exclude:.12, Unknown:.08}),
-        brb('HF-1-R4', 'IF float unresolved THEN warning / unknown', {'Listing Continuity':'Active','Public Float Support':'Unresolved'}, {Pass:.28, Warning:.44, Exclude:.08, Unknown:.20}),
-        brb('HF-1-R5', 'IF listing or board is unknown THEN insufficient evidence', {'Listing Continuity':'Unknown'}, {Pass:.05, Warning:.12, Exclude:.03, Unknown:.80})
+        brb('HF-1-R1', 'IF listing is impaired THEN exclude', {'Listing Continuity':'Impaired'}, {Pass:0, Warning:.1, Exclude:.8, Unknown:.1}),
+        brb('HF-1-R2', 'IF active + Main Board + float confirmed THEN pass', {'Listing Continuity':'Active','Board Risk':'Main Board','Public Float Support':'Confirmed'}, {Pass:.8, Warning:.1, Exclude:0, Unknown:.1}),
+        brb('HF-1-R3', 'IF active + GEM THEN warning / DD', {'Listing Continuity':'Active','Board Risk':'GEM'}, {Pass:.2, Warning:.6, Exclude:.1, Unknown:.1}),
+        brb('HF-1-R4', 'IF float unresolved THEN warning / unknown', {'Listing Continuity':'Active','Public Float Support':'Unresolved'}, {Pass:.3, Warning:.4, Exclude:.1, Unknown:.2}),
+        brb('HF-1-R5', 'IF listing or board is unknown THEN insufficient evidence', {'Listing Continuity':'Unknown'}, {Pass:.1, Warning:.1, Exclude:0, Unknown:.8})
       ]
     },
     {
@@ -82,16 +82,16 @@
       signal: 'net assets, trading liquidity and explicit absence of market-cap / P/B evidence',
       evidence: ['latest_net_assets_hkd', 'avg_turnover_60d_hkd', 'fifty_two_week_low_hkd', 'fifty_two_week_high_hkd'],
       antecedents: [
-        ant('Asset Base', ['Small','Medium','Large','Unknown'], (c) => !c.netAssets ? deg({Unknown:1}) : c.netAssets < 160e6 ? deg({Small:.78, Medium:.16, Unknown:.06}) : c.netAssets < 650e6 ? deg({Medium:.70, Small:.12, Large:.10, Unknown:.08}) : deg({Large:.72, Medium:.20, Unknown:.08})),
-        ant('Liquidity', ['Adequate','Thin','Very Thin','Unknown'], (c) => !Number.isFinite(c.avgTurnover60d) ? deg({Unknown:1}) : c.avgTurnover60d < 30000 ? deg({'Very Thin':.78, Thin:.16, Unknown:.06}) : c.avgTurnover60d < 150000 ? deg({Thin:.68, 'Very Thin':.12, Adequate:.10, Unknown:.10}) : deg({Adequate:.74, Thin:.18, Unknown:.08})),
-        ant('Valuation Completeness', ['Observed','Missing','Unknown'], () => deg({Missing:.92, Unknown:.08}))
+        ant('Asset Base', ['Small','Medium','Large','Unknown'], (c) => !c.netAssets ? deg({Unknown:1}) : c.netAssets < 160e6 ? deg({Small:.7, Medium:.2, Unknown:.1}) : c.netAssets < 650e6 ? deg({Medium:.7, Small:.1, Large:.1, Unknown:.1}) : deg({Large:.7, Medium:.2, Unknown:.1})),
+        ant('Liquidity', ['Adequate','Thin','Very Thin','Unknown'], (c) => !Number.isFinite(c.avgTurnover60d) ? deg({Unknown:1}) : c.avgTurnover60d < 30000 ? deg({'Very Thin':.7, Thin:.2, Unknown:.1}) : c.avgTurnover60d < 150000 ? deg({Thin:.7, 'Very Thin':.1, Adequate:.1, Unknown:.1}) : deg({Adequate:.7, Thin:.2, Unknown:.1})),
+        ant('Valuation Completeness', ['Observed','Missing','Unknown'], () => deg({Missing:.9, Unknown:.1}))
       ],
       rules: [
-        brb('HF-2-R1', 'IF valuation evidence is missing THEN unknown dominates', {'Valuation Completeness':'Missing'}, {Pass:.14, Warning:.30, Exclude:.03, Unknown:.53}),
-        brb('HF-2-R2', 'IF small asset base + very thin liquidity THEN warning', {'Asset Base':'Small','Liquidity':'Very Thin'}, {Pass:.12, Warning:.68, Exclude:.10, Unknown:.10}),
-        brb('HF-2-R3', 'IF medium asset base + thin liquidity THEN warning / needs DD', {'Asset Base':'Medium','Liquidity':'Thin'}, {Pass:.28, Warning:.54, Exclude:.05, Unknown:.13}),
-        brb('HF-2-R4', 'IF adequate liquidity + medium/large asset base THEN pass with valuation caveat', {'Liquidity':'Adequate','Asset Base':'Medium'}, {Pass:.58, Warning:.26, Exclude:.03, Unknown:.13}),
-        brb('HF-2-R5', 'IF large asset base + adequate liquidity THEN lower shell-value fit', {'Asset Base':'Large','Liquidity':'Adequate'}, {Pass:.38, Warning:.42, Exclude:.06, Unknown:.14})
+        brb('HF-2-R1', 'IF valuation evidence is missing THEN unknown dominates', {'Valuation Completeness':'Missing'}, {Pass:.1, Warning:.3, Exclude:.1, Unknown:.5}),
+        brb('HF-2-R2', 'IF small asset base + very thin liquidity THEN warning', {'Asset Base':'Small','Liquidity':'Very Thin'}, {Pass:.1, Warning:.7, Exclude:.1, Unknown:.1}),
+        brb('HF-2-R3', 'IF medium asset base + thin liquidity THEN warning / needs DD', {'Asset Base':'Medium','Liquidity':'Thin'}, {Pass:.3, Warning:.5, Exclude:.1, Unknown:.1}),
+        brb('HF-2-R4', 'IF adequate liquidity + medium/large asset base THEN pass with valuation caveat', {'Liquidity':'Adequate','Asset Base':'Medium'}, {Pass:.6, Warning:.3, Exclude:0, Unknown:.1}),
+        brb('HF-2-R5', 'IF large asset base + adequate liquidity THEN lower shell-value fit', {'Asset Base':'Large','Liquidity':'Adequate'}, {Pass:.4, Warning:.4, Exclude:.1, Unknown:.1})
       ]
     },
     {
@@ -104,12 +104,12 @@
         ant('Ownership Risk', ['Low','Medium','High','Unknown'], (c) => ownershipRisk(c))
       ],
       rules: [
-        brb('HF-3-R1', 'IF clarity low + seller weak THEN warning / exclude', {'Control Clarity':'Low','Seller Willingness':'Weak'}, {Pass:.10, Warning:.70, Exclude:.20, Unknown:0}),
-        brb('HF-3-R2', 'IF clarity high + seller weak THEN warning but tradable', {'Control Clarity':'High','Seller Willingness':'Weak'}, {Pass:.35, Warning:.55, Exclude:.10, Unknown:0}),
-        brb('HF-3-R3', 'IF clarity medium + seller weak THEN warning / unknown', {'Control Clarity':'Medium','Seller Willingness':'Weak'}, {Pass:.22, Warning:.58, Exclude:.08, Unknown:.12}),
-        brb('HF-3-R4', 'IF clarity high + seller unknown THEN DD question', {'Control Clarity':'High','Seller Willingness':'Unknown'}, {Pass:.32, Warning:.44, Exclude:.04, Unknown:.20}),
-        brb('HF-3-R5', 'IF ownership risk high THEN warning / exclude', {'Ownership Risk':'High'}, {Pass:.10, Warning:.56, Exclude:.22, Unknown:.12}),
-        brb('HF-3-R6', 'IF clarity high + ownership risk low THEN pass', {'Control Clarity':'High','Ownership Risk':'Low'}, {Pass:.68, Warning:.20, Exclude:.03, Unknown:.09})
+        brb('HF-3-R1', 'IF clarity low + seller weak THEN warning / exclude', {'Control Clarity':'Low','Seller Willingness':'Weak'}, {Pass:.1, Warning:.7, Exclude:.2, Unknown:0}),
+        brb('HF-3-R2', 'IF clarity high + seller weak THEN warning but tradable', {'Control Clarity':'High','Seller Willingness':'Weak'}, {Pass:.3, Warning:.6, Exclude:.1, Unknown:0}),
+        brb('HF-3-R3', 'IF clarity medium + seller weak THEN warning / unknown', {'Control Clarity':'Medium','Seller Willingness':'Weak'}, {Pass:.2, Warning:.6, Exclude:.1, Unknown:.1}),
+        brb('HF-3-R4', 'IF clarity high + seller unknown THEN DD question', {'Control Clarity':'High','Seller Willingness':'Unknown'}, {Pass:.3, Warning:.4, Exclude:.1, Unknown:.2}),
+        brb('HF-3-R5', 'IF ownership risk high THEN warning / exclude', {'Ownership Risk':'High'}, {Pass:.1, Warning:.6, Exclude:.2, Unknown:.1}),
+        brb('HF-3-R6', 'IF clarity high + ownership risk low THEN pass', {'Control Clarity':'High','Ownership Risk':'Low'}, {Pass:.7, Warning:.2, Exclude:0, Unknown:.1})
       ]
     },
     {
@@ -118,15 +118,15 @@
       evidence: ['debt_risk'],
       antecedents: [
         ant('Leverage Burden', ['Low','Moderate','High','Unknown'], (c) => leverageBurden(c)),
-        ant('Pledge / Encumbrance', ['Absent','Present','Unknown'], (c) => /pledged/i.test(text(c,'debt_risk')) ? deg({Present:.78, Unknown:.22}) : /no bank borrowings|net cash/i.test(text(c,'debt_risk')) ? deg({Absent:.78, Unknown:.22}) : deg({Unknown:1})),
+        ant('Pledge / Encumbrance', ['Absent','Present','Unknown'], (c) => /pledged/i.test(text(c,'debt_risk')) ? deg({Present:.8, Unknown:.2}) : /no bank borrowings|net cash/i.test(text(c,'debt_risk')) ? deg({Absent:.8, Unknown:.2}) : deg({Unknown:1})),
         ant('Financing Complexity', ['Simple','Mixed','Complex','Unknown'], (c) => financingComplexity(c))
       ],
       rules: [
-        brb('HF-4-R1', 'IF leverage low + no encumbrance THEN pass', {'Leverage Burden':'Low','Pledge / Encumbrance':'Absent'}, {Pass:.76, Warning:.14, Exclude:.02, Unknown:.08}),
-        brb('HF-4-R2', 'IF leverage moderate + pledge present THEN warning', {'Leverage Burden':'Moderate','Pledge / Encumbrance':'Present'}, {Pass:.18, Warning:.62, Exclude:.08, Unknown:.12}),
-        brb('HF-4-R3', 'IF financing complexity mixed THEN warning', {'Financing Complexity':'Mixed'}, {Pass:.28, Warning:.50, Exclude:.06, Unknown:.16}),
-        brb('HF-4-R4', 'IF leverage high THEN exclude / warning', {'Leverage Burden':'High'}, {Pass:.06, Warning:.42, Exclude:.36, Unknown:.16}),
-        brb('HF-4-R5', 'IF financing evidence unknown THEN unknown', {'Leverage Burden':'Unknown'}, {Pass:.08, Warning:.16, Exclude:.04, Unknown:.72})
+        brb('HF-4-R1', 'IF leverage low + no encumbrance THEN pass', {'Leverage Burden':'Low','Pledge / Encumbrance':'Absent'}, {Pass:.8, Warning:.1, Exclude:0, Unknown:.1}),
+        brb('HF-4-R2', 'IF leverage moderate + pledge present THEN warning', {'Leverage Burden':'Moderate','Pledge / Encumbrance':'Present'}, {Pass:.2, Warning:.6, Exclude:.1, Unknown:.1}),
+        brb('HF-4-R3', 'IF financing complexity mixed THEN warning', {'Financing Complexity':'Mixed'}, {Pass:.3, Warning:.5, Exclude:.1, Unknown:.1}),
+        brb('HF-4-R4', 'IF leverage high THEN exclude / warning', {'Leverage Burden':'High'}, {Pass:.1, Warning:.4, Exclude:.3, Unknown:.2}),
+        brb('HF-4-R5', 'IF financing evidence unknown THEN unknown', {'Leverage Burden':'Unknown'}, {Pass:.1, Warning:.2, Exclude:0, Unknown:.7})
       ]
     },
     {
@@ -134,16 +134,16 @@
       signal: 'audit opinion, body-text support and disclosure coverage',
       evidence: ['audit_risk', 'listing_status'],
       antecedents: [
-        ant('Audit Opinion', ['Clean','Qualified','Unknown'], (c) => /Clean|unqualified/i.test(text(c,'audit_risk')) ? deg({Clean:.88, Unknown:.12}) : has(c,'audit_risk') ? deg({Qualified:.58, Unknown:.42}) : deg({Unknown:1})),
-        ant('Disclosure Coverage', ['High','Medium','Low','Unknown'], (c) => c.evidence.length >= 7 ? deg({High:.78, Medium:.16, Unknown:.06}) : c.evidence.length >= 4 ? deg({Medium:.66, Low:.12, Unknown:.22}) : deg({Low:.50, Unknown:.50})),
-        ant('Listing Disclosure', ['Current','Impaired','Unknown'], (c) => c.listingStatus === 'active' ? deg({Current:.92, Unknown:.08}) : deg({Impaired:.78, Unknown:.22}))
+        ant('Audit Opinion', ['Clean','Qualified','Unknown'], (c) => /Clean|unqualified/i.test(text(c,'audit_risk')) ? deg({Clean:.9, Unknown:.1}) : has(c,'audit_risk') ? deg({Qualified:.6, Unknown:.4}) : deg({Unknown:1})),
+        ant('Disclosure Coverage', ['High','Medium','Low','Unknown'], (c) => c.evidence.length >= 7 ? deg({High:.7, Medium:.2, Unknown:.1}) : c.evidence.length >= 4 ? deg({Medium:.7, Low:.1, Unknown:.2}) : deg({Low:.5, Unknown:.5})),
+        ant('Listing Disclosure', ['Current','Impaired','Unknown'], (c) => c.listingStatus === 'active' ? deg({Current:.9, Unknown:.1}) : deg({Impaired:.8, Unknown:.2}))
       ],
       rules: [
-        brb('HF-5-R1', 'IF clean audit + high coverage THEN pass', {'Audit Opinion':'Clean','Disclosure Coverage':'High'}, {Pass:.84, Warning:.10, Exclude:.02, Unknown:.04}),
-        brb('HF-5-R2', 'IF clean audit + medium coverage THEN pass / warning', {'Audit Opinion':'Clean','Disclosure Coverage':'Medium'}, {Pass:.62, Warning:.22, Exclude:.03, Unknown:.13}),
-        brb('HF-5-R3', 'IF qualified audit THEN warning / exclude', {'Audit Opinion':'Qualified'}, {Pass:.08, Warning:.50, Exclude:.26, Unknown:.16}),
-        brb('HF-5-R4', 'IF low coverage THEN unknown / warning', {'Disclosure Coverage':'Low'}, {Pass:.08, Warning:.30, Exclude:.04, Unknown:.58}),
-        brb('HF-5-R5', 'IF listing disclosure impaired THEN exclude', {'Listing Disclosure':'Impaired'}, {Pass:.02, Warning:.08, Exclude:.78, Unknown:.12})
+        brb('HF-5-R1', 'IF clean audit + high coverage THEN pass', {'Audit Opinion':'Clean','Disclosure Coverage':'High'}, {Pass:.8, Warning:.1, Exclude:0, Unknown:.1}),
+        brb('HF-5-R2', 'IF clean audit + medium coverage THEN pass / warning', {'Audit Opinion':'Clean','Disclosure Coverage':'Medium'}, {Pass:.6, Warning:.2, Exclude:.1, Unknown:.1}),
+        brb('HF-5-R3', 'IF qualified audit THEN warning / exclude', {'Audit Opinion':'Qualified'}, {Pass:.1, Warning:.5, Exclude:.2, Unknown:.2}),
+        brb('HF-5-R4', 'IF low coverage THEN unknown / warning', {'Disclosure Coverage':'Low'}, {Pass:.1, Warning:.3, Exclude:0, Unknown:.6}),
+        brb('HF-5-R5', 'IF listing disclosure impaired THEN exclude', {'Listing Disclosure':'Impaired'}, {Pass:0, Warning:.1, Exclude:.8, Unknown:.1})
       ]
     },
     {
@@ -152,15 +152,15 @@
       evidence: ['regulatory_risk', 'litigation_risk', 'public_float_risk'],
       antecedents: [
         ant('Litigation Exposure', ['Low','Review Required','High','Unknown'], (c) => litigationExposure(c)),
-        ant('Regulatory Exposure', ['Low','Medium','High','Unknown'], (c) => /No major litigation|No major litigation \/ regulatory/i.test(text(c,'regulatory_risk')) ? deg({Low:.74, Unknown:.26}) : has(c,'regulatory_risk') ? deg({Medium:.50, Unknown:.50}) : deg({Unknown:1})),
-        ant('Float Legal Support', ['Confirmed','Unresolved','Unknown'], (c) => has(c,'public_float_risk') ? deg({Confirmed:.78, Unresolved:.12, Unknown:.10}) : deg({Unknown:1}))
+        ant('Regulatory Exposure', ['Low','Medium','High','Unknown'], (c) => /No major litigation|No major litigation \/ regulatory/i.test(text(c,'regulatory_risk')) ? deg({Low:.7, Unknown:.3}) : has(c,'regulatory_risk') ? deg({Medium:.5, Unknown:.5}) : deg({Unknown:1})),
+        ant('Float Legal Support', ['Confirmed','Unresolved','Unknown'], (c) => has(c,'public_float_risk') ? deg({Confirmed:.8, Unresolved:.1, Unknown:.1}) : deg({Unknown:1}))
       ],
       rules: [
-        brb('HF-6-R1', 'IF litigation low + float confirmed THEN pass', {'Litigation Exposure':'Low','Float Legal Support':'Confirmed'}, {Pass:.70, Warning:.18, Exclude:.03, Unknown:.09}),
-        brb('HF-6-R2', 'IF litigation needs review THEN warning', {'Litigation Exposure':'Review Required'}, {Pass:.14, Warning:.62, Exclude:.10, Unknown:.14}),
-        brb('HF-6-R3', 'IF regulatory exposure medium THEN warning / unknown', {'Regulatory Exposure':'Medium'}, {Pass:.22, Warning:.46, Exclude:.08, Unknown:.24}),
-        brb('HF-6-R4', 'IF litigation high THEN exclude / warning', {'Litigation Exposure':'High'}, {Pass:.04, Warning:.36, Exclude:.44, Unknown:.16}),
-        brb('HF-6-R5', 'IF legal evidence unknown THEN unknown', {'Litigation Exposure':'Unknown','Regulatory Exposure':'Unknown'}, {Pass:.04, Warning:.12, Exclude:.04, Unknown:.80})
+        brb('HF-6-R1', 'IF litigation low + float confirmed THEN pass', {'Litigation Exposure':'Low','Float Legal Support':'Confirmed'}, {Pass:.7, Warning:.2, Exclude:0, Unknown:.1}),
+        brb('HF-6-R2', 'IF litigation needs review THEN warning', {'Litigation Exposure':'Review Required'}, {Pass:.1, Warning:.6, Exclude:.1, Unknown:.2}),
+        brb('HF-6-R3', 'IF regulatory exposure medium THEN warning / unknown', {'Regulatory Exposure':'Medium'}, {Pass:.2, Warning:.5, Exclude:.1, Unknown:.2}),
+        brb('HF-6-R4', 'IF litigation high THEN exclude / warning', {'Litigation Exposure':'High'}, {Pass:0, Warning:.4, Exclude:.4, Unknown:.2}),
+        brb('HF-6-R5', 'IF legal evidence unknown THEN unknown', {'Litigation Exposure':'Unknown','Regulatory Exposure':'Unknown'}, {Pass:0, Warning:.1, Exclude:.1, Unknown:.8})
       ]
     },
     {
@@ -170,14 +170,14 @@
       antecedents: [
         ant('Strategic Fit', ['High','Medium','Low','Unknown'], (c) => strategicFit(c)),
         ant('Business Substance', ['Strong','Operating','Weak','Unknown'], (c) => businessSubstance(c)),
-        ant('Transferability', ['Modular','Operationally Heavy','Unknown'], (c) => /operationally heavy|family-linked|restaurant/i.test(text(c,'synergy_business') + text(c,'business_summary')) ? deg({'Operationally Heavy':.64, Modular:.18, Unknown:.18}) : /modular|retail-channel|branded business/i.test(text(c,'synergy_business')) ? deg({Modular:.70, Unknown:.30}) : deg({Unknown:1}))
+        ant('Transferability', ['Modular','Operationally Heavy','Unknown'], (c) => /operationally heavy|family-linked|restaurant/i.test(text(c,'synergy_business') + text(c,'business_summary')) ? deg({'Operationally Heavy':.6, Modular:.2, Unknown:.2}) : /modular|retail-channel|branded business/i.test(text(c,'synergy_business')) ? deg({Modular:.7, Unknown:.3}) : deg({Unknown:1}))
       ],
       rules: [
-        brb('HF-7-R1', 'IF high strategic fit + strong substance THEN pass', {'Strategic Fit':'High','Business Substance':'Strong'}, {Pass:.78, Warning:.14, Exclude:.02, Unknown:.06}),
-        brb('HF-7-R2', 'IF high fit + operationally heavy THEN warning but keep', {'Strategic Fit':'High','Transferability':'Operationally Heavy'}, {Pass:.40, Warning:.44, Exclude:.04, Unknown:.12}),
-        brb('HF-7-R3', 'IF medium fit + operating substance THEN warning / pass', {'Strategic Fit':'Medium','Business Substance':'Operating'}, {Pass:.38, Warning:.42, Exclude:.05, Unknown:.15}),
-        brb('HF-7-R4', 'IF low fit THEN warning / exclude', {'Strategic Fit':'Low'}, {Pass:.10, Warning:.52, Exclude:.20, Unknown:.18}),
-        brb('HF-7-R5', 'IF substance unknown THEN unknown', {'Business Substance':'Unknown'}, {Pass:.06, Warning:.16, Exclude:.04, Unknown:.74})
+        brb('HF-7-R1', 'IF high strategic fit + strong substance THEN pass', {'Strategic Fit':'High','Business Substance':'Strong'}, {Pass:.8, Warning:.1, Exclude:0, Unknown:.1}),
+        brb('HF-7-R2', 'IF high fit + operationally heavy THEN warning but keep', {'Strategic Fit':'High','Transferability':'Operationally Heavy'}, {Pass:.4, Warning:.4, Exclude:.1, Unknown:.1}),
+        brb('HF-7-R3', 'IF medium fit + operating substance THEN warning / pass', {'Strategic Fit':'Medium','Business Substance':'Operating'}, {Pass:.4, Warning:.4, Exclude:.1, Unknown:.1}),
+        brb('HF-7-R4', 'IF low fit THEN warning / exclude', {'Strategic Fit':'Low'}, {Pass:.1, Warning:.5, Exclude:.2, Unknown:.2}),
+        brb('HF-7-R5', 'IF substance unknown THEN unknown', {'Business Substance':'Unknown'}, {Pass:.1, Warning:.2, Exclude:0, Unknown:.7})
       ]
     }
   ];
@@ -188,15 +188,15 @@
       signal: 'controller identity, transferability and public-float path', evidence: ['controlling_shareholder', 'public_float_risk'],
       antecedents: [
         ant('Controller Identifiability', ['High','Medium','Low','Unknown'], (c) => controlClarity(c)),
-        ant('Transfer Willingness', ['Supported','Not Evidenced','Weak','Unknown'], (c) => /Sale willingness is not evidenced|seller willingness remains unverified/i.test(text(c,'controlling_shareholder')) ? deg({'Not Evidenced':.70, Unknown:.30}) : has(c,'controlling_shareholder') ? deg({Unknown:.72, Supported:.18, 'Not Evidenced':.10}) : deg({Unknown:1})),
-        ant('Float Path', ['Supported','Needs Check','Unknown'], (c) => has(c,'public_float_risk') ? deg({Supported:.70, 'Needs Check':.20, Unknown:.10}) : deg({Unknown:1}))
+        ant('Transfer Willingness', ['Supported','Not Evidenced','Weak','Unknown'], (c) => /Sale willingness is not evidenced|seller willingness remains unverified/i.test(text(c,'controlling_shareholder')) ? deg({'Not Evidenced':.7, Unknown:.3}) : has(c,'controlling_shareholder') ? deg({Unknown:.7, Supported:.2, 'Not Evidenced':.1}) : deg({Unknown:1})),
+        ant('Float Path', ['Supported','Needs Check','Unknown'], (c) => has(c,'public_float_risk') ? deg({Supported:.7, 'Needs Check':.2, Unknown:.1}) : deg({Unknown:1}))
       ],
       rules: [
-        brb('DD-1-R1', 'IF identifiable controller + supported float + transfer not evidenced THEN manageable with condition', {'Controller Identifiability':'High','Transfer Willingness':'Not Evidenced','Float Path':'Supported'}, {Clean:.12, Manageable:.64, High:.12, Critical:.02, Unknown:.10}),
-        brb('DD-1-R2', 'IF medium controller + transfer not evidenced THEN high DD work', {'Controller Identifiability':'Medium','Transfer Willingness':'Not Evidenced'}, {Clean:.06, Manageable:.44, High:.32, Critical:.04, Unknown:.14}),
-        brb('DD-1-R3', 'IF low controller identifiability THEN high / unknown', {'Controller Identifiability':'Low'}, {Clean:.02, Manageable:.18, High:.44, Critical:.14, Unknown:.22}),
-        brb('DD-1-R4', 'IF transfer supported + controller high THEN clean', {'Controller Identifiability':'High','Transfer Willingness':'Supported'}, {Clean:.70, Manageable:.20, High:.03, Critical:.01, Unknown:.06}),
-        brb('DD-1-R5', 'IF ownership data unknown THEN insufficient evidence', {'Controller Identifiability':'Unknown'}, {Clean:.02, Manageable:.08, High:.10, Critical:.02, Unknown:.78})
+        brb('DD-1-R1', 'IF identifiable controller + supported float + transfer not evidenced THEN manageable with condition', {'Controller Identifiability':'High','Transfer Willingness':'Not Evidenced','Float Path':'Supported'}, {Clean:.1, Manageable:.6, High:.1, Critical:.1, Unknown:.1}),
+        brb('DD-1-R2', 'IF medium controller + transfer not evidenced THEN high DD work', {'Controller Identifiability':'Medium','Transfer Willingness':'Not Evidenced'}, {Clean:.1, Manageable:.4, High:.3, Critical:.1, Unknown:.1}),
+        brb('DD-1-R3', 'IF low controller identifiability THEN high / unknown', {'Controller Identifiability':'Low'}, {Clean:.1, Manageable:.2, High:.4, Critical:.1, Unknown:.2}),
+        brb('DD-1-R4', 'IF transfer supported + controller high THEN clean', {'Controller Identifiability':'High','Transfer Willingness':'Supported'}, {Clean:.7, Manageable:.2, High:0, Critical:0, Unknown:.1}),
+        brb('DD-1-R5', 'IF ownership data unknown THEN insufficient evidence', {'Controller Identifiability':'Unknown'}, {Clean:0, Manageable:.1, High:.1, Critical:0, Unknown:.8})
       ]
     },
     {
@@ -205,46 +205,46 @@
       antecedents: [
         ant('Debt Burden', ['Low','Moderate','High','Unknown'], (c) => leverageBurden(c)),
         ant('Litigation Burden', ['Low','Review Required','High','Unknown'], (c) => litigationExposure(c)),
-        ant('Cash Quality', ['Clean','Pledged / Mixed','Unknown'], (c) => /pledged/i.test(text(c,'debt_risk')) ? deg({'Pledged / Mixed':.76, Unknown:.24}) : /net cash|no bank borrowings/i.test(text(c,'debt_risk')) ? deg({Clean:.76, Unknown:.24}) : deg({Unknown:1}))
+        ant('Cash Quality', ['Clean','Pledged / Mixed','Unknown'], (c) => /pledged/i.test(text(c,'debt_risk')) ? deg({'Pledged / Mixed':.8, Unknown:.2}) : /net cash|no bank borrowings/i.test(text(c,'debt_risk')) ? deg({Clean:.8, Unknown:.2}) : deg({Unknown:1}))
       ],
       rules: [
-        brb('DD-2-R1', 'IF debt low + litigation low THEN clean', {'Debt Burden':'Low','Litigation Burden':'Low'}, {Clean:.74, Manageable:.16, High:.03, Critical:.01, Unknown:.06}),
-        brb('DD-2-R2', 'IF moderate debt + pledged cash THEN manageable / high', {'Debt Burden':'Moderate','Cash Quality':'Pledged / Mixed'}, {Clean:.08, Manageable:.48, High:.30, Critical:.04, Unknown:.10}),
-        brb('DD-2-R3', 'IF litigation review required THEN high DD work', {'Litigation Burden':'Review Required'}, {Clean:.06, Manageable:.32, High:.46, Critical:.06, Unknown:.10}),
-        brb('DD-2-R4', 'IF debt high OR litigation high THEN critical possible', {'Debt Burden':'High'}, {Clean:.02, Manageable:.12, High:.48, Critical:.24, Unknown:.14}),
-        brb('DD-2-R5', 'IF debt and litigation unknown THEN insufficient evidence', {'Debt Burden':'Unknown','Litigation Burden':'Unknown'}, {Clean:.02, Manageable:.08, High:.12, Critical:.02, Unknown:.76})
+        brb('DD-2-R1', 'IF debt low + litigation low THEN clean', {'Debt Burden':'Low','Litigation Burden':'Low'}, {Clean:.7, Manageable:.2, High:0, Critical:0, Unknown:.1}),
+        brb('DD-2-R2', 'IF moderate debt + pledged cash THEN manageable / high', {'Debt Burden':'Moderate','Cash Quality':'Pledged / Mixed'}, {Clean:.1, Manageable:.5, High:.3, Critical:0, Unknown:.1}),
+        brb('DD-2-R3', 'IF litigation review required THEN high DD work', {'Litigation Burden':'Review Required'}, {Clean:.1, Manageable:.3, High:.4, Critical:.1, Unknown:.1}),
+        brb('DD-2-R4', 'IF debt high OR litigation high THEN critical possible', {'Debt Burden':'High'}, {Clean:.1, Manageable:.1, High:.5, Critical:.2, Unknown:.1}),
+        brb('DD-2-R5', 'IF debt and litigation unknown THEN insufficient evidence', {'Debt Burden':'Unknown','Litigation Burden':'Unknown'}, {Clean:0, Manageable:.1, High:.1, Critical:0, Unknown:.8})
       ]
     },
     {
       id: 'DD-3', name: 'Compliance & Audit', source: 'audit',
       signal: 'audit opinion, listing status and disclosure completeness', evidence: ['audit_risk','listing_status','public_float_risk'],
       antecedents: [
-        ant('Audit Quality', ['Clean','Adverse / Qualified','Unknown'], (c) => /Clean|unqualified/i.test(text(c,'audit_risk')) ? deg({Clean:.88, Unknown:.12}) : has(c,'audit_risk') ? deg({'Adverse / Qualified':.62, Unknown:.38}) : deg({Unknown:1})),
-        ant('Compliance Standing', ['Current','Impaired','Unknown'], (c) => c.listingStatus === 'active' ? deg({Current:.92, Unknown:.08}) : deg({Impaired:.80, Unknown:.20})),
-        ant('Disclosure Completeness', ['High','Medium','Low','Unknown'], (c) => c.evidence.length >= 7 ? deg({High:.76, Medium:.16, Unknown:.08}) : c.evidence.length >= 4 ? deg({Medium:.62, Low:.12, Unknown:.26}) : deg({Low:.45, Unknown:.55}))
+        ant('Audit Quality', ['Clean','Adverse / Qualified','Unknown'], (c) => /Clean|unqualified/i.test(text(c,'audit_risk')) ? deg({Clean:.9, Unknown:.1}) : has(c,'audit_risk') ? deg({'Adverse / Qualified':.6, Unknown:.4}) : deg({Unknown:1})),
+        ant('Compliance Standing', ['Current','Impaired','Unknown'], (c) => c.listingStatus === 'active' ? deg({Current:.9, Unknown:.1}) : deg({Impaired:.8, Unknown:.2})),
+        ant('Disclosure Completeness', ['High','Medium','Low','Unknown'], (c) => c.evidence.length >= 7 ? deg({High:.7, Medium:.2, Unknown:.1}) : c.evidence.length >= 4 ? deg({Medium:.6, Low:.1, Unknown:.3}) : deg({Low:.5, Unknown:.5}))
       ],
       rules: [
-        brb('DD-3-R1', 'IF clean audit + current standing + high disclosure THEN clean', {'Audit Quality':'Clean','Compliance Standing':'Current','Disclosure Completeness':'High'}, {Clean:.82, Manageable:.12, High:.02, Critical:.01, Unknown:.03}),
-        brb('DD-3-R2', 'IF clean audit + medium disclosure THEN manageable', {'Audit Quality':'Clean','Disclosure Completeness':'Medium'}, {Clean:.48, Manageable:.34, High:.04, Critical:.01, Unknown:.13}),
-        brb('DD-3-R3', 'IF adverse / qualified audit THEN high / critical', {'Audit Quality':'Adverse / Qualified'}, {Clean:.02, Manageable:.12, High:.44, Critical:.28, Unknown:.14}),
-        brb('DD-3-R4', 'IF compliance standing impaired THEN reject risk', {'Compliance Standing':'Impaired'}, {Clean:.01, Manageable:.05, High:.32, Critical:.48, Unknown:.14}),
-        brb('DD-3-R5', 'IF disclosure low THEN unknown / high', {'Disclosure Completeness':'Low'}, {Clean:.02, Manageable:.12, High:.24, Critical:.04, Unknown:.58})
+        brb('DD-3-R1', 'IF clean audit + current standing + high disclosure THEN clean', {'Audit Quality':'Clean','Compliance Standing':'Current','Disclosure Completeness':'High'}, {Clean:.8, Manageable:.1, High:0, Critical:0, Unknown:.1}),
+        brb('DD-3-R2', 'IF clean audit + medium disclosure THEN manageable', {'Audit Quality':'Clean','Disclosure Completeness':'Medium'}, {Clean:.5, Manageable:.3, High:.1, Critical:0, Unknown:.1}),
+        brb('DD-3-R3', 'IF adverse / qualified audit THEN high / critical', {'Audit Quality':'Adverse / Qualified'}, {Clean:.1, Manageable:.1, High:.4, Critical:.3, Unknown:.1}),
+        brb('DD-3-R4', 'IF compliance standing impaired THEN reject risk', {'Compliance Standing':'Impaired'}, {Clean:0, Manageable:.1, High:.3, Critical:.5, Unknown:.1}),
+        brb('DD-3-R5', 'IF disclosure low THEN unknown / high', {'Disclosure Completeness':'Low'}, {Clean:0, Manageable:.1, High:.2, Critical:.1, Unknown:.6})
       ]
     },
     {
       id: 'DD-4', name: 'Maintenance Cost', source: 'structured',
       signal: 'asset scale, turnover liquidity and missing direct cost evidence', evidence: ['latest_net_assets_hkd','avg_turnover_60d_hkd'],
       antecedents: [
-        ant('Liquidity Carry', ['Low Burden','Manageable','Heavy','Unknown'], (c) => !Number.isFinite(c.avgTurnover60d) ? deg({Unknown:1}) : c.avgTurnover60d < 30000 ? deg({Heavy:.72, Manageable:.16, Unknown:.12}) : c.avgTurnover60d < 150000 ? deg({Manageable:.50, Heavy:.30, Unknown:.20}) : deg({'Low Burden':.64, Manageable:.24, Unknown:.12})),
-        ant('Asset Cushion', ['Thin','Adequate','Large','Unknown'], (c) => !c.netAssets ? deg({Unknown:1}) : c.netAssets < 160e6 ? deg({Thin:.76, Adequate:.14, Unknown:.10}) : c.netAssets < 650e6 ? deg({Adequate:.68, Thin:.12, Large:.10, Unknown:.10}) : deg({Large:.70, Adequate:.20, Unknown:.10})),
-        ant('Cost Evidence', ['Direct','Estimated','Missing'], () => deg({Missing:.88, Estimated:.12}))
+        ant('Liquidity Carry', ['Low Burden','Manageable','Heavy','Unknown'], (c) => !Number.isFinite(c.avgTurnover60d) ? deg({Unknown:1}) : c.avgTurnover60d < 30000 ? deg({Heavy:.7, Manageable:.2, Unknown:.1}) : c.avgTurnover60d < 150000 ? deg({Manageable:.5, Heavy:.3, Unknown:.2}) : deg({'Low Burden':.6, Manageable:.3, Unknown:.1})),
+        ant('Asset Cushion', ['Thin','Adequate','Large','Unknown'], (c) => !c.netAssets ? deg({Unknown:1}) : c.netAssets < 160e6 ? deg({Thin:.8, Adequate:.1, Unknown:.1}) : c.netAssets < 650e6 ? deg({Adequate:.7, Thin:.1, Large:.1, Unknown:.1}) : deg({Large:.7, Adequate:.2, Unknown:.1})),
+        ant('Cost Evidence', ['Direct','Estimated','Missing'], () => deg({Missing:.9, Estimated:.1}))
       ],
       rules: [
-        brb('DD-4-R1', 'IF heavy liquidity carry + thin asset cushion THEN high cost risk', {'Liquidity Carry':'Heavy','Asset Cushion':'Thin'}, {Clean:.03, Manageable:.18, High:.56, Critical:.08, Unknown:.15}),
-        brb('DD-4-R2', 'IF manageable carry + adequate cushion THEN manageable', {'Liquidity Carry':'Manageable','Asset Cushion':'Adequate'}, {Clean:.18, Manageable:.54, High:.14, Critical:.02, Unknown:.12}),
-        brb('DD-4-R3', 'IF low burden + adequate/large cushion THEN clean / manageable', {'Liquidity Carry':'Low Burden','Asset Cushion':'Adequate'}, {Clean:.42, Manageable:.40, High:.06, Critical:.01, Unknown:.11}),
-        brb('DD-4-R4', 'IF cost evidence missing THEN unknown retained', {'Cost Evidence':'Missing'}, {Clean:.06, Manageable:.22, High:.18, Critical:.02, Unknown:.52}),
-        brb('DD-4-R5', 'IF asset cushion thin THEN high DD attention', {'Asset Cushion':'Thin'}, {Clean:.04, Manageable:.20, High:.46, Critical:.08, Unknown:.22})
+        brb('DD-4-R1', 'IF heavy liquidity carry + thin asset cushion THEN high cost risk', {'Liquidity Carry':'Heavy','Asset Cushion':'Thin'}, {Clean:0, Manageable:.2, High:.6, Critical:.1, Unknown:.1}),
+        brb('DD-4-R2', 'IF manageable carry + adequate cushion THEN manageable', {'Liquidity Carry':'Manageable','Asset Cushion':'Adequate'}, {Clean:.2, Manageable:.5, High:.1, Critical:.1, Unknown:.1}),
+        brb('DD-4-R3', 'IF low burden + adequate/large cushion THEN clean / manageable', {'Liquidity Carry':'Low Burden','Asset Cushion':'Adequate'}, {Clean:.4, Manageable:.4, High:.1, Critical:0, Unknown:.1}),
+        brb('DD-4-R4', 'IF cost evidence missing THEN unknown retained', {'Cost Evidence':'Missing'}, {Clean:.1, Manageable:.2, High:.2, Critical:0, Unknown:.5}),
+        brb('DD-4-R5', 'IF asset cushion thin THEN high DD attention', {'Asset Cushion':'Thin'}, {Clean:0, Manageable:.2, High:.5, Critical:.1, Unknown:.2})
       ]
     },
     {
@@ -256,11 +256,11 @@
         ant('Repairability', ['High','Medium','Low','Unknown'], (c) => repairability(c))
       ],
       rules: [
-        brb('DD-5-R1', 'IF strong substance + high repair fit THEN manageable / clean', {'Business Substance':'Strong','Strategic Repair Fit':'High'}, {Clean:.32, Manageable:.54, High:.06, Critical:.01, Unknown:.07}),
-        brb('DD-5-R2', 'IF operating substance + medium fit THEN manageable with conditions', {'Business Substance':'Operating','Strategic Repair Fit':'Medium'}, {Clean:.12, Manageable:.50, High:.20, Critical:.03, Unknown:.15}),
-        brb('DD-5-R3', 'IF low fit + low repairability THEN high / critical', {'Strategic Repair Fit':'Low','Repairability':'Low'}, {Clean:.02, Manageable:.12, High:.52, Critical:.18, Unknown:.16}),
-        brb('DD-5-R4', 'IF operationally heavy but high fit THEN manageable / high', {'Repairability':'Medium','Strategic Repair Fit':'High'}, {Clean:.16, Manageable:.50, High:.20, Critical:.02, Unknown:.12}),
-        brb('DD-5-R5', 'IF business substance unknown THEN insufficient evidence', {'Business Substance':'Unknown'}, {Clean:.02, Manageable:.08, High:.12, Critical:.02, Unknown:.76})
+        brb('DD-5-R1', 'IF strong substance + high repair fit THEN manageable / clean', {'Business Substance':'Strong','Strategic Repair Fit':'High'}, {Clean:.3, Manageable:.5, High:.1, Critical:0, Unknown:.1}),
+        brb('DD-5-R2', 'IF operating substance + medium fit THEN manageable with conditions', {'Business Substance':'Operating','Strategic Repair Fit':'Medium'}, {Clean:.1, Manageable:.5, High:.2, Critical:.1, Unknown:.1}),
+        brb('DD-5-R3', 'IF low fit + low repairability THEN high / critical', {'Strategic Repair Fit':'Low','Repairability':'Low'}, {Clean:0, Manageable:.1, High:.5, Critical:.2, Unknown:.2}),
+        brb('DD-5-R4', 'IF operationally heavy but high fit THEN manageable / high', {'Repairability':'Medium','Strategic Repair Fit':'High'}, {Clean:.2, Manageable:.5, High:.2, Critical:0, Unknown:.1}),
+        brb('DD-5-R5', 'IF business substance unknown THEN insufficient evidence', {'Business Substance':'Unknown'}, {Clean:0, Manageable:.1, High:.1, Critical:0, Unknown:.8})
       ]
     }
   ];
@@ -269,14 +269,14 @@
     id: 'HF-DECISION', name: 'HF second-level BRB decision', source: 'decision',
     output: ['Pass','Needs DD','Exclude','Insufficient Evidence'],
     rules: [
-      brb('HF-D-R1', 'IF listing module excludes THEN final Exclude', {'HF-1':'Exclude'}, {Pass:.01, 'Needs DD':.06, Exclude:.86, 'Insufficient Evidence':.07}),
-      brb('HF-D-R2', 'IF legal module excludes THEN final Exclude', {'HF-6':'Exclude'}, {Pass:.02, 'Needs DD':.12, Exclude:.72, 'Insufficient Evidence':.14}),
-      brb('HF-D-R3', 'IF control warning + valuation warning THEN Needs DD', {'HF-3':'Warning','HF-2':'Warning'}, {Pass:.12, 'Needs DD':.70, Exclude:.06, 'Insufficient Evidence':.12}),
-      brb('HF-D-R4', 'IF financing warning + legal warning THEN Needs DD / Exclude', {'HF-4':'Warning','HF-6':'Warning'}, {Pass:.08, 'Needs DD':.62, Exclude:.16, 'Insufficient Evidence':.14}),
-      brb('HF-D-R5', 'IF platform pass + audit pass + listing pass THEN Pass', {'HF-7':'Pass','HF-5':'Pass','HF-1':'Pass'}, {Pass:.74, 'Needs DD':.18, Exclude:.02, 'Insufficient Evidence':.06}),
-      brb('HF-D-R6', 'IF valuation unknown + control unknown THEN insufficient evidence', {'HF-2':'Unknown','HF-3':'Unknown'}, {Pass:.02, 'Needs DD':.12, Exclude:.04, 'Insufficient Evidence':.82}),
-      brb('HF-D-R7', 'IF platform warning + valuation warning THEN Needs DD', {'HF-7':'Warning','HF-2':'Warning'}, {Pass:.10, 'Needs DD':.68, Exclude:.10, 'Insufficient Evidence':.12}),
-      brb('HF-D-R8', 'IF audit unknown + legal unknown THEN insufficient evidence', {'HF-5':'Unknown','HF-6':'Unknown'}, {Pass:.02, 'Needs DD':.10, Exclude:.04, 'Insufficient Evidence':.84})
+      brb('HF-D-R1', 'IF listing module excludes THEN final Exclude', {'HF-1':'Exclude'}, {Pass:0, 'Needs DD':.1, Exclude:.8, 'Insufficient Evidence':.1}),
+      brb('HF-D-R2', 'IF legal module excludes THEN final Exclude', {'HF-6':'Exclude'}, {Pass:.1, 'Needs DD':.1, Exclude:.7, 'Insufficient Evidence':.1}),
+      brb('HF-D-R3', 'IF control warning + valuation warning THEN Needs DD', {'HF-3':'Warning','HF-2':'Warning'}, {Pass:.1, 'Needs DD':.7, Exclude:.1, 'Insufficient Evidence':.1}),
+      brb('HF-D-R4', 'IF financing warning + legal warning THEN Needs DD / Exclude', {'HF-4':'Warning','HF-6':'Warning'}, {Pass:.1, 'Needs DD':.6, Exclude:.2, 'Insufficient Evidence':.1}),
+      brb('HF-D-R5', 'IF platform pass + audit pass + listing pass THEN Pass', {'HF-7':'Pass','HF-5':'Pass','HF-1':'Pass'}, {Pass:.7, 'Needs DD':.2, Exclude:0, 'Insufficient Evidence':.1}),
+      brb('HF-D-R6', 'IF valuation unknown + control unknown THEN insufficient evidence', {'HF-2':'Unknown','HF-3':'Unknown'}, {Pass:0, 'Needs DD':.1, Exclude:.1, 'Insufficient Evidence':.8}),
+      brb('HF-D-R7', 'IF platform warning + valuation warning THEN Needs DD', {'HF-7':'Warning','HF-2':'Warning'}, {Pass:.1, 'Needs DD':.7, Exclude:.1, 'Insufficient Evidence':.1}),
+      brb('HF-D-R8', 'IF audit unknown + legal unknown THEN insufficient evidence', {'HF-5':'Unknown','HF-6':'Unknown'}, {Pass:0, 'Needs DD':.1, Exclude:.1, 'Insufficient Evidence':.8})
     ]
   };
 
@@ -284,14 +284,14 @@
     id: 'DD-DECISION', name: 'DD second-level BRB decision', source: 'decision',
     output: ['Proceed','Proceed with Conditions','Hold','Reject','Insufficient Evidence'],
     rules: [
-      brb('DD-D-R1', 'IF compliance critical THEN Reject', {'DD-3':'Critical'}, {Proceed:.01, 'Proceed with Conditions':.05, Hold:.22, Reject:.60, 'Insufficient Evidence':.12}),
-      brb('DD-D-R2', 'IF debt high + control high THEN Hold', {'DD-2':'High','DD-1':'High'}, {Proceed:.02, 'Proceed with Conditions':.22, Hold:.56, Reject:.10, 'Insufficient Evidence':.10}),
-      brb('DD-D-R3', 'IF control manageable + compliance clean THEN Proceed with Conditions', {'DD-1':'Manageable','DD-3':'Clean'}, {Proceed:.18, 'Proceed with Conditions':.62, Hold:.08, Reject:.02, 'Insufficient Evidence':.10}),
-      brb('DD-D-R4', 'IF business manageable + compliance clean + debt manageable THEN Proceed with Conditions', {'DD-5':'Manageable','DD-3':'Clean','DD-2':'Manageable'}, {Proceed:.24, 'Proceed with Conditions':.60, Hold:.06, Reject:.02, 'Insufficient Evidence':.08}),
-      brb('DD-D-R5', 'IF debt clean + compliance clean + business clean THEN Proceed', {'DD-2':'Clean','DD-3':'Clean','DD-5':'Clean'}, {Proceed:.78, 'Proceed with Conditions':.14, Hold:.02, Reject:.01, 'Insufficient Evidence':.05}),
-      brb('DD-D-R6', 'IF maintenance high + business high THEN Hold', {'DD-4':'High','DD-5':'High'}, {Proceed:.02, 'Proceed with Conditions':.18, Hold:.58, Reject:.10, 'Insufficient Evidence':.12}),
-      brb('DD-D-R7', 'IF control unknown + debt unknown THEN insufficient evidence', {'DD-1':'Unknown','DD-2':'Unknown'}, {Proceed:.01, 'Proceed with Conditions':.08, Hold:.10, Reject:.02, 'Insufficient Evidence':.79}),
-      brb('DD-D-R8', 'IF several modules manageable THEN conditional proceed', {'DD-1':'Manageable','DD-4':'Manageable','DD-5':'Manageable'}, {Proceed:.22, 'Proceed with Conditions':.62, Hold:.06, Reject:.02, 'Insufficient Evidence':.08})
+      brb('DD-D-R1', 'IF compliance critical THEN Reject', {'DD-3':'Critical'}, {Proceed:0, 'Proceed with Conditions':.1, Hold:.2, Reject:.6, 'Insufficient Evidence':.1}),
+      brb('DD-D-R2', 'IF debt high + control high THEN Hold', {'DD-2':'High','DD-1':'High'}, {Proceed:0, 'Proceed with Conditions':.2, Hold:.6, Reject:.1, 'Insufficient Evidence':.1}),
+      brb('DD-D-R3', 'IF control manageable + compliance clean THEN Proceed with Conditions', {'DD-1':'Manageable','DD-3':'Clean'}, {Proceed:.2, 'Proceed with Conditions':.6, Hold:.1, Reject:0, 'Insufficient Evidence':.1}),
+      brb('DD-D-R4', 'IF business manageable + compliance clean + debt manageable THEN Proceed with Conditions', {'DD-5':'Manageable','DD-3':'Clean','DD-2':'Manageable'}, {Proceed:.2, 'Proceed with Conditions':.6, Hold:.1, Reject:0, 'Insufficient Evidence':.1}),
+      brb('DD-D-R5', 'IF debt clean + compliance clean + business clean THEN Proceed', {'DD-2':'Clean','DD-3':'Clean','DD-5':'Clean'}, {Proceed:.8, 'Proceed with Conditions':.1, Hold:0, Reject:0, 'Insufficient Evidence':.1}),
+      brb('DD-D-R6', 'IF maintenance high + business high THEN Hold', {'DD-4':'High','DD-5':'High'}, {Proceed:0, 'Proceed with Conditions':.2, Hold:.6, Reject:.1, 'Insufficient Evidence':.1}),
+      brb('DD-D-R7', 'IF control unknown + debt unknown THEN insufficient evidence', {'DD-1':'Unknown','DD-2':'Unknown'}, {Proceed:0, 'Proceed with Conditions':.1, Hold:.1, Reject:0, 'Insufficient Evidence':.8}),
+      brb('DD-D-R8', 'IF several modules manageable THEN conditional proceed', {'DD-1':'Manageable','DD-4':'Manageable','DD-5':'Manageable'}, {Proceed:.2, 'Proceed with Conditions':.6, Hold:.1, Reject:0, 'Insufficient Evidence':.1})
     ]
   };
 
@@ -464,72 +464,72 @@
 
   function decisionRuleWeight(base, rule, s) {
     if (base.id !== 'HF-DECISION') return 1;
-    const caution = Math.max(.25, Math.min(.60, s.decisionCaution || .40));
+    const caution = Math.max(.2, Math.min(.6, s.decisionCaution || .4));
     const main = dominant(completeDistribution(rule.thenBelief, base.output), base.output);
     if (main === 'Pass') return 1.15 - caution;
-    if (main === 'Needs DD') return .85 + caution;
-    if (main === 'Exclude') return .80 + caution;
-    if (main === 'Insufficient Evidence') return .90 + caution;
+    if (main === 'Needs DD') return .8 + caution;
+    if (main === 'Exclude') return .8 + caution;
+    if (main === 'Insufficient Evidence') return .9 + caution;
     return 1;
   }
 
   function controlClarity(c) {
     const t = text(c,'controlling_shareholder');
     if (!t) return deg({Unknown:1});
-    if (/holds|control chain|owns|%|shares/i.test(t)) return deg({High:.68, Medium:.24, Unknown:.08});
-    return deg({Medium:.50, Low:.18, Unknown:.32});
+    if (/holds|control chain|owns|%|shares/i.test(t)) return deg({High:.7, Medium:.2, Unknown:.1});
+    return deg({Medium:.5, Low:.2, Unknown:.3});
   }
   function sellerWillingness(c) {
     const t = text(c,'controlling_shareholder');
     if (!t) return deg({Unknown:1});
-    if (/Sale willingness is not evidenced|seller willingness remains unverified/i.test(t)) return deg({Weak:.58, Unknown:.34, Moderate:.08});
-    return deg({Unknown:.62, Moderate:.28, Weak:.10});
+    if (/Sale willingness is not evidenced|seller willingness remains unverified/i.test(t)) return deg({Weak:.6, Unknown:.3, Moderate:.1});
+    return deg({Unknown:.6, Moderate:.3, Weak:.1});
   }
   function ownershipRisk(c) {
     const t = text(c,'controlling_shareholder');
     if (!t) return deg({Unknown:1});
-    if (/trust|family|discretionary|family members|spouse/i.test(t)) return deg({Medium:.58, High:.20, Low:.12, Unknown:.10});
-    if (/control chain|controlling shareholder/i.test(t)) return deg({Medium:.44, Low:.38, Unknown:.18});
+    if (/trust|family|discretionary|family members|spouse/i.test(t)) return deg({Medium:.6, High:.2, Low:.1, Unknown:.1});
+    if (/control chain|controlling shareholder/i.test(t)) return deg({Medium:.4, Low:.4, Unknown:.2});
     return deg({Unknown:1});
   }
   function leverageBurden(c) {
     const t = text(c,'debt_risk');
     if (!t) return deg({Unknown:1});
-    if (/Low debt|no bank borrowings|net cash about HK\$208m/i.test(t)) return deg({Low:.78, Moderate:.12, Unknown:.10});
-    if (/Moderate|bank borrowings|pledged|gearing|total liabilities/i.test(t)) return deg({Moderate:.62, High:.14, Low:.10, Unknown:.14});
+    if (/Low debt|no bank borrowings|net cash about HK\$208m/i.test(t)) return deg({Low:.8, Moderate:.1, Unknown:.1});
+    if (/Moderate|bank borrowings|pledged|gearing|total liabilities/i.test(t)) return deg({Moderate:.6, High:.1, Low:.1, Unknown:.2});
     return deg({Unknown:1});
   }
   function financingComplexity(c) {
     const t = text(c,'debt_risk') + text(c,'transaction_complexity');
     if (!t) return deg({Unknown:1});
-    if (/pledged|short-term|borrowings|connected|continuing connected|Chapter 14A/i.test(t)) return deg({Mixed:.64, Complex:.16, Unknown:.20});
-    if (/no bank borrowings|Low debt|net cash/i.test(t)) return deg({Simple:.70, Unknown:.30});
+    if (/pledged|short-term|borrowings|connected|continuing connected|Chapter 14A/i.test(t)) return deg({Mixed:.6, Complex:.2, Unknown:.2});
+    if (/no bank borrowings|Low debt|net cash/i.test(t)) return deg({Simple:.7, Unknown:.3});
     return deg({Unknown:1});
   }
   function litigationExposure(c) {
     const t = text(c,'litigation_risk') + text(c,'regulatory_risk');
-    if (/litigation|review required/i.test(t)) return deg({'Review Required':.68, High:.12, Unknown:.20});
-    if (/No major litigation|No major litigation \/ regulatory/i.test(t)) return deg({Low:.74, Unknown:.26});
-    if (has(c,'public_float_risk')) return deg({Low:.45, Unknown:.55});
+    if (/litigation|review required/i.test(t)) return deg({'Review Required':.7, High:.1, Unknown:.2});
+    if (/No major litigation|No major litigation \/ regulatory/i.test(t)) return deg({Low:.7, Unknown:.3});
+    if (has(c,'public_float_risk')) return deg({Low:.5, Unknown:.5});
     return deg({Unknown:1});
   }
   function strategicFit(c) {
     const t = text(c,'synergy_business') + ' ' + text(c,'business_summary') + ' ' + c.industry;
-    if (/High\.|consumer|F&B|bakery|food|retail-channel|lifestyle|health/i.test(t)) return deg({High:.68, Medium:.22, Unknown:.10});
-    if (/Medium-low|apparel|garment|household/i.test(t)) return deg({Low:.54, Medium:.24, Unknown:.22});
+    if (/High\.|consumer|F&B|bakery|food|retail-channel|lifestyle|health/i.test(t)) return deg({High:.7, Medium:.2, Unknown:.1});
+    if (/Medium-low|apparel|garment|household/i.test(t)) return deg({Low:.5, Medium:.3, Unknown:.2});
     return deg({Unknown:1});
   }
   function businessSubstance(c) {
     const t = text(c,'business_summary') + ' ' + text(c,'synergy_business') + ' ' + c.industry;
-    if (/Direct consumer|Direct F&B|principally involved|bakery|restaurant|retail platform/i.test(t)) return deg({Strong:.66, Operating:.24, Unknown:.10});
-    if (/Operating garment|manufacture|retail|家庭电器/i.test(t)) return deg({Operating:.56, Weak:.18, Unknown:.26});
+    if (/Direct consumer|Direct F&B|principally involved|bakery|restaurant|retail platform/i.test(t)) return deg({Strong:.7, Operating:.2, Unknown:.1});
+    if (/Operating garment|manufacture|retail|家庭电器/i.test(t)) return deg({Operating:.5, Weak:.2, Unknown:.3});
     return deg({Unknown:1});
   }
   function repairability(c) {
     const t = text(c,'synergy_business') + ' ' + text(c,'transaction_complexity') + ' ' + text(c,'business_summary');
-    if (/modular|cleanest|consumer|retail-channel/i.test(t)) return deg({High:.60, Medium:.26, Unknown:.14});
-    if (/operationally heavy|family-linked|connected|Chapter 14A|restaurant/i.test(t)) return deg({Medium:.52, Low:.20, Unknown:.28});
-    if (/Medium-low|apparel|household/i.test(t)) return deg({Low:.48, Medium:.20, Unknown:.32});
+    if (/modular|cleanest|consumer|retail-channel/i.test(t)) return deg({High:.6, Medium:.3, Unknown:.1});
+    if (/operationally heavy|family-linked|connected|Chapter 14A|restaurant/i.test(t)) return deg({Medium:.5, Low:.2, Unknown:.3});
+    if (/Medium-low|apparel|household/i.test(t)) return deg({Low:.5, Medium:.2, Unknown:.3});
     return deg({Unknown:1});
   }
 
